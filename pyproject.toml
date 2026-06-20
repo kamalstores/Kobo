@@ -1,0 +1,82 @@
+[project]
+name = "kobo"
+version = "0.1.0"
+description = "A self-hosted persistent agent runtime with durable context and guarded execution"
+readme = "README.md"
+requires-python = ">=3.12"
+authors = [
+    { name = "kvyb", email = "you@example.com" }
+]
+license = { text = "MIT" }
+dependencies = [
+    "langchain>=0.3",
+    "langgraph>=0.2",
+    "langchain-openai>=0.3",
+    "langgraph-checkpoint-sqlite>=2.0",
+    "fastapi>=0.109",
+    "uvicorn[standard]>=0.27",
+    "httpx>=0.26",
+    "crawl4ai>=0.7.0",
+    "chardet<6",
+    "mem0ai>=1.0.8",
+    "pypdf>=5.0",
+    "apscheduler>=3.10",
+    "pydantic-settings>=2.0",
+    "browser-use==0.12.2",
+    "composio>=0.11.4",
+    "composio-langchain>=0.11.4",
+    "langfuse>=3.0.0",
+    "headroom-ai>=0.5.25",
+    "openpyxl>=3.1.5",
+    "langchain-openrouter>=0.2.1",
+    "langchain-deepseek>=1.0.1",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0",
+    "pytest-asyncio>=0.21",
+    "ruff>=0.1",
+    "mypy>=1.0",
+    "pre-commit>=3.0",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/kobo"]
+
+[tool.uv]
+dev-dependencies = [
+    "pytest>=7.0",
+    "pytest-asyncio>=0.21",
+    "ruff>=0.1",
+    "mypy>=1.0",
+]
+
+[tool.ruff]
+target-version = "py312"
+line-length = 100
+src = ["src"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "N", "UP", "B", "C4", "SIM"]
+ignore = ["E501"]
+
+[tool.mypy]
+python_version = "3.12"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = false
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+markers = [
+    "e2e: end-to-end test suite",
+    "live_llm: requires OPENAI_COMPATIBLE_API_KEY",
+    "real_composio: may create/write real Composio-backed resources",
+    "telegram: exercises telegram webhook path",
+    "ingress: exercises instagram ingress/intake path",
+]

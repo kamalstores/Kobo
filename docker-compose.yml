@@ -1,0 +1,16 @@
+services:
+  kobo:
+    build:
+      context: .
+    env_file:
+      - .env
+    environment:
+      KOBO_DATA_ROOT: /app/kobo_data
+    ports:
+      - "8000:8000"
+    volumes:
+      - kobo_data:/app/kobo_data
+    command: ["./start.sh", "run", "server"]
+
+volumes:
+  kobo_data:

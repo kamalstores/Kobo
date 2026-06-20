@@ -1,0 +1,42 @@
+# Python caches/build
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.venv/
+.tmp/
+*.egg-info/
+
+# Environment / secrets
+.env
+.env.*
+!.env.example
+
+# Runtime state
+.kobo/
+/intake.db
+*.log
+*.log.old
+
+# Agent-generated/user runtime artifacts
+tulpa_stuff/**
+!tulpa_stuff/**/
+tulpa_stuff/artifacts/**
+tests/e2e/assets/*.xls
+tests/e2e/assets/*.xlsx
+tests/e2e/**/artifacts/**
+tests/e2e/**/*_artifacts/**
+docs/SCRATCHPAD.md
+graphify-out/
+.graphify_*
+.playwright-mcp/
+notion-kobo-board.png
+
+# IDE / OS
+.DS_Store
+.cursor/
+.codex/
