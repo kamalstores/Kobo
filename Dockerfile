@@ -13,11 +13,11 @@ COPY src /app/src
 COPY scripts /app/scripts
 COPY docs /app/docs
 
-RUN mkdir -p /app/tulpa_stuff \
+RUN mkdir -p /app/kobo_stuff \
     && apt-get update \
     && apt-get install -y --no-install-recommends nodejs npm \
     && rm -rf /var/lib/apt/lists/* \
-    && printf '%s\n' '"""Agent-created integrations and skills."""' > /app/tulpa_stuff/__init__.py \
+    && printf '%s\n' '"""Agent-created integrations and skills."""' > /app/kobo_stuff/__init__.py \
     && uv sync --frozen --no-dev \
     && uv run playwright install --with-deps chromium
 
