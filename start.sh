@@ -125,7 +125,7 @@ server_telegram_enabled() {
 yaml_value_is_set() {
   local key="$1"
   local line value
-  line="$(grep -E "^[[:space:]]*${key}:[[:space:]]*" "${REPO_ROOT}/kobo.config.yaml" 2>/dev/null | head -n 1 || true)"
+  line="$(grep -E "^[[:space:]]*${key}:[[:space:]]*" "${REPO_ROOT}/Kobo.config.yaml" 2>/dev/null | head -n 1 || true)"
   [[ -n "${line}" ]] || return 1
   value="${line#*:}"
   value="${value%%#*}"
@@ -137,7 +137,7 @@ yaml_value_is_set() {
 yaml_value() {
   local key="$1"
   local line value
-  line="$(grep -E "^[[:space:]]*${key}:[[:space:]]*" "${REPO_ROOT}/kobo.config.yaml" 2>/dev/null | head -n 1 || true)"
+  line="$(grep -E "^[[:space:]]*${key}:[[:space:]]*" "${REPO_ROOT}/Kobo.config.yaml" 2>/dev/null | head -n 1 || true)"
   [[ -n "${line}" ]] || return 0
   value="${line#*:}"
   value="${value%%#*}"
@@ -174,10 +174,10 @@ openrouter_base_url_is_set() {
 
 emit_model_config_notice() {
   if ! multimodal_model_is_set; then
-    log "warning: MULTIMODAL_LLM is not set and kobo.config.yaml has no multimodal_llm; image/file/browser functionality may not work."
+    log "warning: MULTIMODAL_LLM is not set and Kobo.config.yaml has no multimodal_llm; image/file/browser functionality may not work."
   fi
   if ! openrouter_base_url_is_set; then
-    log "warning: OPENAI_COMPATIBLE_BASE_URL is not OpenRouter. Check kobo.config.yaml model settings for this provider: llm_model, wake_execution_model, workflow_setup_input_classifier_model, memory_llm_model, multimodal_llm, business_knowledge_oracle_model, openai_compatible_embedding_model, and optional browser_use_model."
+    log "warning: OPENAI_COMPATIBLE_BASE_URL is not OpenRouter. Check Kobo.config.yaml model settings for this provider: llm_model, wake_execution_model, workflow_setup_input_classifier_model, memory_llm_model, multimodal_llm, business_knowledge_oracle_model, openai_compatible_embedding_model, and optional browser_use_model."
   fi
 }
 
@@ -221,7 +221,7 @@ check_model_catalog() {
 
   local catalog
   if ! catalog="$(curl -fsS -H "Authorization: Bearer ${OPENAI_COMPATIBLE_API_KEY}" "${base_url}/models" 2>/dev/null)"; then
-    log "warning: could not fetch ${base_url}/models; verify kobo.config.yaml model IDs against your provider."
+    log "warning: could not fetch ${base_url}/models; verify Kobo.config.yaml model IDs against your provider."
     return 0
   fi
 
@@ -259,9 +259,9 @@ if missing:
 ' <<<"${catalog}" || printf '%s' "__parse_error__"
   )"
   if [[ "${missing}" == "__parse_error__" ]]; then
-    log "warning: ${base_url}/models returned an unexpected response; verify kobo.config.yaml model IDs manually."
+    log "warning: ${base_url}/models returned an unexpected response; verify Kobo.config.yaml model IDs manually."
   elif [[ -n "${missing}" ]]; then
-    log "warning: ${base_url}/models did not list configured model(s): ${missing}. Update kobo.config.yaml or provider env overrides."
+    log "warning: ${base_url}/models did not list configured model(s): ${missing}. Update Kobo.config.yaml or provider env overrides."
   else
     log "OpenAI-compatible /models check passed for configured model IDs."
   fi
@@ -641,10 +641,10 @@ ensure_cloudflared() {
 run_app() {
   ensure_uv
   if ((${#PASSTHRU[@]})); then
-    run_cmd uv run python -m kobo "${PASSTHRU[@]}"
+    run_cmd uv run python -m Kobo "${PASSTHRU[@]}"
     return 0
   fi
-  run_cmd uv run python -m kobo
+  run_cmd uv run python -m Kobo
 }
 
 run_manager() {
@@ -709,8 +709,8 @@ run_doctor() {
       doctor_check "KOBO_DATA_ROOT is writable" "$(mkdir -p "${KOBO_DATA_ROOT}" 2>/dev/null && [[ -w "${KOBO_DATA_ROOT}" ]] && echo 1 || echo 0)" "mount a writable persistent volume at KOBO_DATA_ROOT" || failures=$((failures + 1))
     fi
   fi
-  doctor_check ".kobo is writable" "$(mkdir -p "${REPO_ROOT}/.kobo" 2>/dev/null && [[ -w "${REPO_ROOT}/.kobo" ]] && echo 1 || echo 0)" "make .kobo writable" || failures=$((failures + 1))
-  doctor_check "tulpa_stuff is writable" "$(mkdir -p "${REPO_ROOT}/tulpa_stuff" 2>/dev/null && [[ -w "${REPO_ROOT}/tulpa_stuff" ]] && echo 1 || echo 0)" "make tulpa_stuff writable" || failures=$((failures + 1))
+  doctor_check ".Kobo is writable" "$(mkdir -p "${REPO_ROOT}/.Kobo" 2>/dev/null && [[ -w "${REPO_ROOT}/.Kobo" ]] && echo 1 || echo 0)" "make .Kobo writable" || failures=$((failures + 1))
+  doctor_check "Kobo_stuff is writable" "$(mkdir -p "${REPO_ROOT}/Kobo_stuff" 2>/dev/null && [[ -w "${REPO_ROOT}/Kobo_stuff" ]] && echo 1 || echo 0)" "make Kobo_stuff writable" || failures=$((failures + 1))
 
   if command -v lsof >/dev/null 2>&1; then
     local listeners
