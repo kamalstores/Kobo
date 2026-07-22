@@ -4,10 +4,10 @@ from pathlib import Path
 
 from fastapi.testclient import TestClient
 
-from opentulpa.api.app import create_app
-from opentulpa.intake.service import IntakeWorkflowService
-from opentulpa.scheduler.service import SchedulerService
-from opentulpa.skills.service import SkillStoreService
+from kobo.api.app import create_app
+from kobo.intake.service import IntakeWorkflowService
+from kobo.scheduler.service import SchedulerService
+from kobo.skills.service import SkillStoreService
 
 
 class _DisabledComposio:

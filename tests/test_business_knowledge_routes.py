@@ -3,8 +3,8 @@ from __future__ import annotations
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
 
-from opentulpa.api.routes.knowledge import register_knowledge_routes
-from opentulpa.business_knowledge.models import KnowledgeQueryAnswer, KnowledgeQueryResult
+from kobo.api.routes.knowledge import register_knowledge_routes
+from kobo.business_knowledge.models import KnowledgeQueryAnswer, KnowledgeQueryResult
 
 
 class _Knowledge:

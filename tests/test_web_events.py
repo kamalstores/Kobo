@@ -5,8 +5,8 @@ from pathlib import Path
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
 
-from opentulpa.api.routes.web_events import register_web_event_routes
-from opentulpa.web.events import WebEventStore, append_web_event, set_default_web_event_store
+from kobo.api.routes.web_events import register_web_event_routes
+from kobo.web.events import WebEventStore, append_web_event, set_default_web_event_store
 
 
 def test_web_event_store_lists_events_after_cursor(tmp_path: Path) -> None:
@@ -45,7 +45,7 @@ def test_web_events_route_requires_bearer_token(tmp_path: Path) -> None:
     app = FastAPI()
     register_web_event_routes(
         app,
-        settings=type("Settings", (), {"opentulpa_web_token": "secret"})(),
+        settings=type("Settings", (), {"kobo_web_token": "secret"})(),
         get_web_events=lambda: store,
     )
 

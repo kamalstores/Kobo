@@ -6,7 +6,7 @@ from typing import Any
 
 from langchain.tools import tool
 
-from opentulpa.agent.tools.common import require_customer_id
+from kobo.agent.tools.common import require_customer_id
 
 
 def register_skill_tools(runtime: Any) -> dict[str, Any]:

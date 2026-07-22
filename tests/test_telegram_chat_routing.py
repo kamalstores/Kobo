@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from opentulpa.interfaces.telegram.chat_routing import (
+from kobo.interfaces.telegram.chat_routing import (
     TelegramAccessDecision,
     TelegramCommandRoute,
 )

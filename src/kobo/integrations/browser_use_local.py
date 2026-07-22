@@ -15,32 +15,32 @@ from pathlib import Path
 from typing import Any
 from urllib.parse import urlparse
 
-from opentulpa.core.ids import new_short_id
-from opentulpa.integrations.browser_use_session_registry import (
+from kobo.core.ids import new_short_id
+from kobo.integrations.browser_use_session_registry import (
     TERMINAL_STATUSES as _TERMINAL_STATUSES,
 )
-from opentulpa.integrations.browser_use_session_registry import (
+from kobo.integrations.browser_use_session_registry import (
     BrowserUseSessionRegistry,
 )
-from opentulpa.integrations.browser_use_session_registry import (
+from kobo.integrations.browser_use_session_registry import (
     BrowserUseSessionState as _BrowserUseSessionState,
 )
-from opentulpa.integrations.browser_use_session_registry import (
+from kobo.integrations.browser_use_session_registry import (
     BrowserUseTaskState as _BrowserUseTaskState,
 )
-from opentulpa.integrations.browser_use_session_registry import (
+from kobo.integrations.browser_use_session_registry import (
     normalize_customer_id as _normalize_customer_id,
 )
-from opentulpa.integrations.browser_use_session_registry import (
+from kobo.integrations.browser_use_session_registry import (
     normalize_optional_customer_id as _normalize_optional_customer_id,
 )
-from opentulpa.integrations.browser_use_session_registry import (
+from kobo.integrations.browser_use_session_registry import (
     safe_profile_name as _safe_profile_name,
 )
-from opentulpa.integrations.browser_use_session_registry import (
+from kobo.integrations.browser_use_session_registry import (
     session_key as _browser_session_key,
 )
-from opentulpa.tasks.sandbox import TULPA_STUFF_DIR
+from kobo.tasks.sandbox import KOBO_STUFF_DIR
 
 logger = logging.getLogger(__name__)
 
@@ -607,7 +607,7 @@ class BrowserUseLocalManager:
         if browser_session is None or not hasattr(browser_session, "take_screenshot"):
             return {"error": "browser_use_task_screenshot unavailable: browser session missing"}
 
-        screenshot_dir = (TULPA_STUFF_DIR / "screenshots" / "browser_use").resolve()
+        screenshot_dir = (KOBO_STUFF_DIR / "screenshots" / "browser_use").resolve()
         screenshot_dir.mkdir(parents=True, exist_ok=True)
         timestamp = datetime.now(UTC).strftime("%Y%m%dT%H%M%SZ")
         target = (screenshot_dir / f"{safe_task_id}_{timestamp}.png").resolve()
@@ -625,7 +625,7 @@ class BrowserUseLocalManager:
         if not target.exists():
             return {"error": "browser_use_task_screenshot failed: screenshot file not created"}
 
-        rel_path = str(target.relative_to(TULPA_STUFF_DIR.parent))
+        rel_path = str(target.relative_to(KOBO_STUFF_DIR.parent))
         file_entry = {
             "id": new_short_id("shot"),
             "fileName": target.name,
@@ -907,7 +907,7 @@ class BrowserUseLocalManager:
             task_id=task_id,
         )
         output_parts = [
-            "Browser snapshot captured by OpenTulpa.",
+            "Browser snapshot captured by Kobo.",
             f"Title: {title}" if title else "Title: ",
             f"URL: {current_url}" if current_url else f"URL: {target_url}",
         ]
@@ -929,7 +929,7 @@ class BrowserUseLocalManager:
         step = {
             "number": 1,
             "url": current_url or target_url or None,
-            "nextGoal": "Use this browser evidence to decide the next OpenTulpa tool call or final answer.",
+            "nextGoal": "Use this browser evidence to decide the next Kobo tool call or final answer.",
             "actions": [f"navigate_to({target_url})"] if target_url else ["snapshot_current_page"],
             "screenshotUrl": screenshot_path or None,
         }
@@ -1030,7 +1030,7 @@ class BrowserUseLocalManager:
     async def _try_capture_task_screenshot(self, *, browser_session: Any, task_id: str) -> str:
         if not hasattr(browser_session, "take_screenshot"):
             return ""
-        screenshot_dir = (TULPA_STUFF_DIR / "screenshots" / "browser_use").resolve()
+        screenshot_dir = (KOBO_STUFF_DIR / "screenshots" / "browser_use").resolve()
         try:
             screenshot_dir.mkdir(parents=True, exist_ok=True)
         except Exception:
@@ -1052,7 +1052,7 @@ class BrowserUseLocalManager:
         if not target.exists():
             return ""
         try:
-            return str(target.relative_to(TULPA_STUFF_DIR.resolve()))
+            return str(target.relative_to(KOBO_STUFF_DIR.resolve()))
         except ValueError:
             return str(target)
 
@@ -1463,7 +1463,7 @@ class BrowserUseLocalManager:
 
     def _get_browser_use_cloud_client(self) -> Any:
         if self._browser_use_cloud_client is None:
-            from opentulpa.integrations.browser_use_cloud import BrowserUseCloudClient
+            from kobo.integrations.browser_use_cloud import BrowserUseCloudClient
 
             self._browser_use_cloud_client = BrowserUseCloudClient(
                 api_key=self._browser_use_api_key,
@@ -1483,7 +1483,7 @@ class BrowserUseLocalManager:
     def _browser_use_cloud_profile_name(cls, customer_id: str, session_id: str) -> str:
         customer = cls._safe_profile_name(cls._normalize_customer_id(customer_id))
         session = cls._safe_profile_name(session_id)
-        return f"opentulpa-{customer}-{session}"[:100]
+        return f"kobo-{customer}-{session}"[:100]
 
     def _session_has_active_tasks_locked(self, customer_id: str, session_id: str) -> bool:
         return self._registry.session_has_active_tasks(

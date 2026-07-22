@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from opentulpa.interfaces.telegram.client import parse_telegram_callback_query
+from kobo.interfaces.telegram.client import parse_telegram_callback_query
 
 
 def test_parse_telegram_callback_query_extracts_fields() -> None:

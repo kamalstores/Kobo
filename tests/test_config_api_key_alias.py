@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from opentulpa.core.config import Settings, get_openai_compatible_api_key_from_env
+from kobo.core.config import Settings, get_openai_compatible_api_key_from_env
 
 
 def test_settings_accepts_primary_openai_compatible_api_key_name() -> None:
@@ -92,11 +92,11 @@ def test_settings_accepts_capsolver_api_key_env(monkeypatch) -> None:
 
 
 def test_settings_accepts_browser_use_user_data_dir_env(monkeypatch) -> None:
-    monkeypatch.setenv("BROWSER_USE_USER_DATA_DIR", "/tmp/opentulpa-browser-profiles")
+    monkeypatch.setenv("BROWSER_USE_USER_DATA_DIR", "/tmp/kobo-browser-profiles")
 
     settings = Settings()
 
-    assert settings.browser_use_user_data_dir == "/tmp/opentulpa-browser-profiles"
+    assert settings.browser_use_user_data_dir == "/tmp/kobo-browser-profiles"
 
 
 def test_settings_accepts_langfuse_base_url_or_host_alias(monkeypatch) -> None:
@@ -135,7 +135,7 @@ def test_settings_defaults_langfuse_base_url_to_us_cloud(monkeypatch) -> None:
 
 
 def test_settings_loads_runtime_defaults_from_yaml(monkeypatch, tmp_path: Path) -> None:
-    config_file = tmp_path / "opentulpa.config.yaml"
+    config_file = tmp_path / "kobo.config.yaml"
     config_file.write_text(
         "llm_model: from-yaml\nagent_recursion_limit: 42\n"
         "openai_compatible_base_url: https://yaml.example/v1\n"
@@ -159,7 +159,7 @@ def test_settings_accepts_agent_recursion_limit_250() -> None:
 
 
 def test_dotenv_overrides_yaml_runtime_defaults(monkeypatch, tmp_path: Path) -> None:
-    config_file = tmp_path / "opentulpa.config.yaml"
+    config_file = tmp_path / "kobo.config.yaml"
     config_file.write_text("llm_model: from-yaml\n", encoding="utf-8")
     env_file = tmp_path / ".env"
     env_file.write_text("LLM_MODEL=from-dotenv\n", encoding="utf-8")
@@ -171,7 +171,7 @@ def test_dotenv_overrides_yaml_runtime_defaults(monkeypatch, tmp_path: Path) -> 
 
 
 def test_settings_discovers_yaml_by_walking_parent_directories(monkeypatch, tmp_path: Path) -> None:
-    config_file = tmp_path / "opentulpa.config.yaml"
+    config_file = tmp_path / "kobo.config.yaml"
     config_file.write_text("llm_model: from-parent\n", encoding="utf-8")
     nested_dir = tmp_path / "nested" / "deeper"
     nested_dir.mkdir(parents=True)

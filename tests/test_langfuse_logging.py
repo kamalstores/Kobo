@@ -6,15 +6,15 @@ from typing import Any
 
 import pytest
 
-from opentulpa.agent.lc_messages import HumanMessage
-from opentulpa.agent.runtime import (
-    OpenTulpaLangGraphRuntime,
+from kobo.agent.lc_messages import HumanMessage
+from kobo.agent.runtime import (
+    KoboLangGraphRuntime,
     _langchain_callback_metadata,
     _tool_schema_trace_fields,
 )
-from opentulpa.agent.runtime_context_provider import RuntimeContextSourceProvider
-from opentulpa.agent.turn_context_preparer import prepare_turn_context
-from opentulpa.logging.langfuse import (
+from kobo.agent.runtime_context_provider import RuntimeContextSourceProvider
+from kobo.agent.turn_context_preparer import prepare_turn_context
+from kobo.logging.langfuse import (
     LangfuseTracer,
     create_langfuse_tracer,
     redact_for_langfuse,
@@ -117,7 +117,7 @@ def test_create_langfuse_tracer_enabled_with_keys_and_base_url() -> None:
 
 
 def test_langfuse_environment_defaults_to_railway_service_name(monkeypatch) -> None:
-    monkeypatch.setenv("RAILWAY_SERVICE_NAME", "OpenTulpa Alpha")
+    monkeypatch.setenv("RAILWAY_SERVICE_NAME", "Kobo Alpha")
 
     tracer = LangfuseTracer(
         public_key="pk",
@@ -126,8 +126,8 @@ def test_langfuse_environment_defaults_to_railway_service_name(monkeypatch) -> N
         client=_FakeLangfuseClient(),
     )
 
-    assert tracer.deployment_tag == "OpenTulpa Alpha"
-    assert tracer.environment == "opentulpa-alpha"
+    assert tracer.deployment_tag == "Kobo Alpha"
+    assert tracer.environment == "kobo-alpha"
 
 
 def test_langfuse_environment_override_is_normalized_and_installed(monkeypatch) -> None:
@@ -145,7 +145,7 @@ def test_langfuse_environment_override_is_normalized_and_installed(monkeypatch) 
     )
 
     with tracer.trace_context(
-        name="opentulpa.turn.interactive",
+        name="kobo.turn.interactive",
         trace_id="turn_1",
         user_id="cust_1",
         session_id="thread_1",
@@ -199,7 +199,7 @@ def test_langfuse_callbacks_attach_to_active_root_span() -> None:
     )
 
     with tracer.trace_context(
-        name="opentulpa.turn.interactive",
+        name="kobo.turn.interactive",
         trace_id="turn_1",
         user_id="cust_1",
         session_id="thread_1",
@@ -246,7 +246,7 @@ def test_langfuse_trace_context_uses_active_root_span_and_deployment_tag() -> No
     )
 
     with tracer.trace_context(
-        name="opentulpa.turn.interactive",
+        name="kobo.turn.interactive",
         trace_id="turn_123",
         user_id="cust_1",
         session_id="thread_1",
@@ -260,7 +260,7 @@ def test_langfuse_trace_context_uses_active_root_span_and_deployment_tag() -> No
     assert observation.kwargs["metadata"]["deployment_tag"] == "carwash-test"
     assert observation.kwargs["metadata"]["environment"] == "carwash-test"
     assert observation.kwargs["metadata"]["turn_mode"] == "interactive"
-    assert observation.kwargs["metadata"]["opentulpa_trace_id"] == "turn_123"
+    assert observation.kwargs["metadata"]["kobo_trace_id"] == "turn_123"
     assert observation.ended is True
     assert "env:carwash-test" in tracer.tags(["interactive"])
 
@@ -353,7 +353,7 @@ def test_trace_context_rolls_up_child_generation_usage_and_cost() -> None:
     )
 
     with tracer.trace_context(
-        name="opentulpa.interactive.turn",
+        name="kobo.interactive.turn",
         trace_id="turn_1",
         user_id="cust_1",
         session_id="thread_1",
@@ -386,7 +386,7 @@ def test_trace_context_rolls_up_child_generation_usage_and_cost() -> None:
         )
 
     root = client.observations[0]
-    assert root.kwargs["name"] == "opentulpa.interactive.turn"
+    assert root.kwargs["name"] == "kobo.interactive.turn"
     assert root.updates[-1]["usage_details"] == {"input": 17, "output": 8, "total": 25}
     assert root.updates[-1]["cost_details"] == pytest.approx(
         {"input": 0.014, "output": 0.026, "total": 0.04}
@@ -487,7 +487,7 @@ def test_tool_span_inherits_active_trace_context() -> None:
 
     with (
         tracer.trace_context(
-            name="opentulpa.turn.interactive",
+            name="kobo.turn.interactive",
             trace_id="turn_1",
             user_id="cust_1",
             session_id="thread_1",
@@ -581,7 +581,7 @@ class _ConfigurableModel:
 
 @pytest.mark.asyncio
 async def test_prepare_turn_context_adds_langfuse_callbacks_to_graph_config() -> None:
-    runtime = object.__new__(OpenTulpaLangGraphRuntime)
+    runtime = object.__new__(KoboLangGraphRuntime)
     runtime.recursion_limit = 8
     runtime._langfuse_tracer = _FakeCallbackTracer()
     runtime._tools = {}
@@ -630,7 +630,7 @@ async def test_prepare_turn_context_adds_langfuse_callbacks_to_graph_config() ->
 
 @pytest.mark.asyncio
 async def test_ainvoke_model_attaches_langfuse_callbacks_with_with_config(tmp_path: Path) -> None:
-    runtime = OpenTulpaLangGraphRuntime(
+    runtime = KoboLangGraphRuntime(
         app_url="http://127.0.0.1:8000",
         openrouter_api_key="k",
         model_name="google/gemini-3-flash-preview",
@@ -666,7 +666,7 @@ async def test_ainvoke_model_attaches_langfuse_callbacks_with_with_config(tmp_pa
 async def test_ainvoke_model_skips_langfuse_cloud_when_graph_callback_covers_call(
     tmp_path: Path,
 ) -> None:
-    runtime = OpenTulpaLangGraphRuntime(
+    runtime = KoboLangGraphRuntime(
         app_url="http://127.0.0.1:8000",
         openrouter_api_key="k",
         model_name="google/gemini-3-flash-preview",

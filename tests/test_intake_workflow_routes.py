@@ -4,11 +4,11 @@ from pathlib import Path
 
 from fastapi.testclient import TestClient
 
-from opentulpa.api.app import create_app
-from opentulpa.context.customer_profiles import CustomerProfileService
-from opentulpa.intake.service import IntakeWorkflowService
-from opentulpa.scheduler.service import SchedulerService
-from opentulpa.skills.service import SkillStoreService
+from kobo.api.app import create_app
+from kobo.context.customer_profiles import CustomerProfileService
+from kobo.intake.service import IntakeWorkflowService
+from kobo.scheduler.service import SchedulerService
+from kobo.skills.service import SkillStoreService
 
 
 class _DisabledComposio:
@@ -55,7 +55,7 @@ def test_intake_workflow_routes_crud(tmp_path: Path) -> None:
                 "assistant_instructions": "Be concise and helpful.",
                 "knowledge_file_ids": ["file_1"],
                 "sink_type": "local_csv",
-                "sink_config": {"file_path": "tulpa_stuff/bookings.csv"},
+                "sink_config": {"file_path": "kobo_stuff/bookings.csv"},
             },
         )
         assert upsert.status_code == 200
@@ -99,7 +99,7 @@ def test_intake_workflow_routes_resolve_customer_alias(tmp_path: Path) -> None:
                 "intent_description": "Handle alias-routed requests.",
                 "required_fields": ["name"],
                 "sink_type": "local_csv",
-                "sink_config": {"file_path": "tulpa_stuff/bookings.csv"},
+                "sink_config": {"file_path": "kobo_stuff/bookings.csv"},
             },
         )
         assert upsert.status_code == 200
@@ -126,7 +126,7 @@ def test_telegram_business_workflow_route_requires_delete_then_recreate(tmp_path
                 "intent_description": "Handle Telegram Business booking requests.",
                 "required_fields": ["name", "time"],
                 "sink_type": "local_csv",
-                "sink_config": {"file_path": "tulpa_stuff/bookings.csv"},
+                "sink_config": {"file_path": "kobo_stuff/bookings.csv"},
             },
         )
         assert first.status_code == 200
@@ -146,7 +146,7 @@ def test_telegram_business_workflow_route_requires_delete_then_recreate(tmp_path
                 "required_fields": ["name", "time", "service"],
                 "assistant_instructions": "Be concise and confirm the service.",
                 "sink_type": "local_csv",
-                "sink_config": {"file_path": "tulpa_stuff/bookings.csv"},
+                "sink_config": {"file_path": "kobo_stuff/bookings.csv"},
             },
         )
         assert second.status_code == 400
@@ -165,7 +165,7 @@ def test_telegram_business_workflow_route_requires_delete_then_recreate(tmp_path
                 "required_fields": ["name", "time", "service"],
                 "assistant_instructions": "Be concise and confirm the service.",
                 "sink_type": "local_csv",
-                "sink_config": {"file_path": "tulpa_stuff/bookings.csv"},
+                "sink_config": {"file_path": "kobo_stuff/bookings.csv"},
             },
         )
         assert explicit_update.status_code == 400
@@ -210,7 +210,7 @@ def test_intake_workflow_setup_routes_create_confirm_commit(tmp_path: Path) -> N
                     "intent_description": "Handle booking requests that arrive in Instagram DMs.",
                     "required_fields": ["day", "time", "car_type", "wash_type"],
                     "sink_type": "local_csv",
-                    "sink_config": {"file_path": "tulpa_stuff/bookings.csv"},
+                    "sink_config": {"file_path": "kobo_stuff/bookings.csv"},
                 },
                 "scratchpad_patch": {"open_questions": ["Need tone guidance."]},
             },
@@ -227,7 +227,7 @@ def test_intake_workflow_setup_routes_create_confirm_commit(tmp_path: Path) -> N
         assert preflight_payload["status"] == "ready"
         assert preflight_payload["sink_preflight"]["dry_run"]["will_execute"] is False
         assert preflight_payload["sink_preflight"]["dry_run"]["target"] == {
-            "file_path": "tulpa_stuff/bookings.csv"
+            "file_path": "kobo_stuff/bookings.csv"
         }
 
         proposed = client.post(
@@ -272,7 +272,7 @@ def test_intake_workflow_setup_propose_current_route_preflights_and_marks(tmp_pa
                     "intent_description": "Handle booking requests that arrive in Instagram DMs.",
                     "required_fields": ["day", "time"],
                     "sink_type": "local_csv",
-                    "sink_config": {"file_path": "tulpa_stuff/bookings.csv"},
+                    "sink_config": {"file_path": "kobo_stuff/bookings.csv"},
                 },
             },
         ).status_code == 200
@@ -312,7 +312,7 @@ def test_intake_workflow_setup_finalize_confirmation_route_commits(tmp_path: Pat
                     "intent_description": "Handle booking requests that arrive in Instagram DMs.",
                     "required_fields": ["day", "time", "car_type", "wash_type"],
                     "sink_type": "local_csv",
-                    "sink_config": {"file_path": "tulpa_stuff/bookings.csv"},
+                    "sink_config": {"file_path": "kobo_stuff/bookings.csv"},
                 },
             },
         )

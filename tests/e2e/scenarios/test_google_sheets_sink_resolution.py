@@ -7,7 +7,7 @@ from typing import Any
 import pytest
 from harness.runner import E2EHarness
 
-from opentulpa.intake import service as intake_service_module
+from kobo.intake import service as intake_service_module
 from tests.test_intake_workflow_service import (
     _FakeComposio,
     _FakeRuntime,
@@ -77,7 +77,7 @@ def _list_workflows(harness: E2EHarness, *, customer_id: str) -> list[dict[str, 
 
 
 def _telegram_owner_thread_id(*, chat_id: int) -> str:
-    from opentulpa.interfaces.telegram import chat_service as chat_module
+    from kobo.interfaces.telegram import chat_service as chat_module
 
     state = chat_module.STATE_STORE.load()
     sessions = state.get("sessions") if isinstance(state, dict) else {}

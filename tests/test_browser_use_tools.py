@@ -2,9 +2,9 @@ from __future__ import annotations
 
 import pytest
 
-from opentulpa.agent.tools.browser_tools import _build_browser_use_task, _normalize_allowed_domains
-from opentulpa.agent.tools_registry import register_runtime_tools
-from opentulpa.integrations.browser_use_local import BrowserUseLocalManager
+from kobo.agent.tools.browser_tools import _build_browser_use_task, _normalize_allowed_domains
+from kobo.agent.tools_registry import register_runtime_tools
+from kobo.integrations.browser_use_local import BrowserUseLocalManager
 
 
 class _DummyRuntime:
@@ -124,7 +124,7 @@ class _DummyBrowserManager:
             "ok": True,
             "task_id": task_id,
             "session_id": "bses_1",
-            "path": f"tulpa_stuff/screenshots/browser_use/{task_id}.png",
+            "path": f"kobo_stuff/screenshots/browser_use/{task_id}.png",
             "file_name": f"{task_id}.png",
         }
 
@@ -186,7 +186,7 @@ def test_browser_use_tool_descriptions_include_login_session_and_secret_boundari
 
     assert "persisted\nbrowser profile state" in session_description
     assert "Browser Use-backed browser session" in normalized_run_description
-    assert "OpenTulpa-captured page evidence" in normalized_run_description
+    assert "Kobo-captured page evidence" in normalized_run_description
     assert "image_candidates" in normalized_run_description
     assert "Do not ask the owner to paste credentials into durable memory" in normalized_run_description
 
@@ -322,7 +322,7 @@ async def test_browser_use_task_screenshot_returns_local_path() -> None:
     result = await tools["browser_use_task_screenshot"].ainvoke(
         {"task_id": "task_123", "full_page": False}
     )
-    assert result.get("path") == "tulpa_stuff/screenshots/browser_use/task_123.png"
+    assert result.get("path") == "kobo_stuff/screenshots/browser_use/task_123.png"
     assert manager.last_screenshot == {
         "task_id": "task_123",
         "full_page": False,

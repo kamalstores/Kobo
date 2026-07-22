@@ -8,12 +8,12 @@ from typing import Any
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 
-from opentulpa.api.customer_ids import resolve_body_customer_id
-from opentulpa.api.routes.intake_use_cases import (
+from kobo.api.customer_ids import resolve_body_customer_id
+from kobo.api.routes.intake_use_cases import (
     workflow_upsert_kwargs,
     workflow_with_knowledge_files,
 )
-from opentulpa.api.web_auth import authorized_web_request
+from kobo.api.web_auth import authorized_web_request
 
 
 def register_intake_workflow_routes(

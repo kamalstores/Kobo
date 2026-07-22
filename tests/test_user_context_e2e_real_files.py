@@ -9,10 +9,10 @@ from fastapi import FastAPI
 from fastapi.testclient import TestClient
 from openpyxl import Workbook
 
-from opentulpa.api.routes.user_context import register_user_context_routes
-from opentulpa.business_knowledge.service import BusinessKnowledgeService
-from opentulpa.context.file_vault import FileVaultService
-from opentulpa.context.user_context import UserContextService
+from kobo.api.routes.user_context import register_user_context_routes
+from kobo.business_knowledge.service import BusinessKnowledgeService
+from kobo.context.file_vault import FileVaultService
+from kobo.context.user_context import UserContextService
 
 CUSTOMER_ID = "telegram_real_files"
 

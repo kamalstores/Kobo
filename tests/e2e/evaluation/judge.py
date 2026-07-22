@@ -7,7 +7,7 @@ from typing import Any
 
 import httpx
 
-from opentulpa.core.config import get_settings
+from kobo.core.config import get_settings
 
 DEFAULT_JUDGE_MODEL = "google/gemini-3.1-flash-lite-preview"
 _VALID_VERDICTS = {"pass", "fail", "inconclusive"}
@@ -318,8 +318,8 @@ def assert_e2e_objective_satisfied(
     minimum_correctness: int = 4,
 ) -> dict[str, Any]:
     judge_model = (
-        os.getenv("OPENTULPA_E2E_ASSERT_JUDGE_MODEL", "").strip()
-        or os.getenv("OPENTULPA_E2E_JUDGE_MODEL", "").strip()
+        os.getenv("KOBO_E2E_ASSERT_JUDGE_MODEL", "").strip()
+        or os.getenv("KOBO_E2E_JUDGE_MODEL", "").strip()
         or model
     )
     result = evaluate_e2e_scenario_with_llm_judge(

@@ -6,12 +6,12 @@ from typing import Any
 
 from langchain.tools import tool
 
-from opentulpa.agent.tools.common import (
+from kobo.agent.tools.common import (
     normalize_cleanup_paths,
     normalize_command_for_working_dir,
     require_customer_id,
 )
-from opentulpa.agent.utils import looks_like_shell_command as _looks_like_shell_command
+from kobo.agent.utils import looks_like_shell_command as _looks_like_shell_command
 
 
 def register_routine_tools(runtime: Any) -> dict[str, Any]:
@@ -44,7 +44,7 @@ def register_routine_tools(runtime: Any) -> dict[str, Any]:
         safe_instruction = str(instruction or "").strip()
         safe_command = normalize_command_for_working_dir(
             command=str(implementation_command or "").strip(),
-            working_dir="tulpa_stuff",
+            working_dir="kobo_stuff",
         )
         safe_customer = require_customer_id(runtime)
         if not safe_name:

@@ -10,13 +10,13 @@ from typing import Any
 
 from fastapi.responses import JSONResponse
 
-from opentulpa.agent.knowledge_prep import inspect_uploaded_file_structure
-from opentulpa.api.customer_ids import resolve_body_customer_id
-from opentulpa.api.file_helpers import (
+from kobo.agent.knowledge_prep import inspect_uploaded_file_structure
+from kobo.api.customer_ids import resolve_body_customer_id
+from kobo.api.file_helpers import (
     download_image_from_web_url,
     sanitize_uploaded_file_record,
 )
-from opentulpa.tasks.sandbox import TULPA_STUFF_DIR, is_within
+from kobo.tasks.sandbox import KOBO_STUFF_DIR, is_within
 
 MAX_LOCAL_SEND_BYTES = 45_000_000
 
@@ -57,7 +57,7 @@ class FileRouteUseCases:
     get_agent_runtime: Callable[[], Any]
     telegram_enabled: bool
     resolve_customer_id: Callable[[str], str] | None = None
-    tulpa_stuff_dir: Path = TULPA_STUFF_DIR
+    kobo_stuff_dir: Path = KOBO_STUFF_DIR
     download_image: Callable[..., Any] = download_image_from_web_url
 
     def _customer_id(self, body: dict[str, Any]) -> str:
@@ -144,11 +144,11 @@ class FileRouteUseCases:
                 status_code=400, content={"detail": "customer_id and path are required"}
             )
         try:
-            target = (self.tulpa_stuff_dir.parent / local_path).resolve()
+            target = (self.kobo_stuff_dir.parent / local_path).resolve()
         except Exception:
             return JSONResponse(status_code=400, content={"detail": "invalid path"})
-        if not is_within(target, self.tulpa_stuff_dir):
-            return JSONResponse(status_code=400, content={"detail": "path must be under tulpa_stuff/"})
+        if not is_within(target, self.kobo_stuff_dir):
+            return JSONResponse(status_code=400, content={"detail": "path must be under kobo_stuff/"})
         if not target.exists():
             return JSONResponse(status_code=404, content={"detail": "file not found"})
         if target.is_dir():

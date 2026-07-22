@@ -10,8 +10,8 @@ EMPTY_REQUIRED_ENV = {
     "TELEGRAM_BOT_TOKEN": "",
     "TELEGRAM_WEBHOOK_SECRET": "",
     "PUBLIC_BASE_URL": "",
-    "OPENTULPA_DATA_ROOT": "",
-    "OPENTULPA_WEB_TOKEN": "",
+    "KOBO_DATA_ROOT": "",
+    "KOBO_WEB_TOKEN": "",
     "COMPOSIO_API_KEY": "",
     "TELEGRAM_ALLOWED_USERNAMES": "",
     "TELEGRAM_ALLOWED_USER_IDS": "",
@@ -56,11 +56,11 @@ def test_start_script_dry_run_server_mode() -> None:
     assert "OPENAI_COMPATIBLE_API_KEY" in result.stdout
     assert "TELEGRAM_WEBHOOK_SECRET" in result.stdout
     assert "PUBLIC_BASE_URL or RAILWAY_PUBLIC_DOMAIN" in result.stdout
-    assert "OPENTULPA_DATA_ROOT" in result.stdout
+    assert "KOBO_DATA_ROOT" in result.stdout
     assert "TELEGRAM_ALLOWED_USERNAMES or TELEGRAM_ALLOWED_USER_IDS" in result.stdout
     assert "warning: COMPOSIO_API_KEY is not set" in result.stdout
     assert "[start] running server mode." in result.stdout
-    assert "uv run python -m opentulpa" in result.stdout
+    assert "uv run python -m kobo" in result.stdout
     assert "scripts/manager.py" not in result.stdout
 
 
@@ -74,14 +74,14 @@ def test_start_script_dry_run_server_mode_allows_web_only_without_telegram() -> 
     assert result.returncode == 0
     assert "required .env value(s) missing for server:" in result.stdout
     assert "OPENAI_COMPATIBLE_API_KEY" in result.stdout
-    assert "OPENTULPA_WEB_TOKEN" in result.stdout
-    assert "OPENTULPA_DATA_ROOT" in result.stdout
+    assert "KOBO_WEB_TOKEN" in result.stdout
+    assert "KOBO_DATA_ROOT" in result.stdout
     assert "TELEGRAM_BOT_TOKEN" not in result.stdout
     assert "TELEGRAM_WEBHOOK_SECRET" not in result.stdout
     assert "PUBLIC_BASE_URL or RAILWAY_PUBLIC_DOMAIN" not in result.stdout
     assert "TELEGRAM_ALLOWED_USERNAMES or TELEGRAM_ALLOWED_USER_IDS" not in result.stdout
     assert "server Telegram disabled; web/API startup does not require Telegram env." in result.stdout
-    assert "uv run python -m opentulpa" in result.stdout
+    assert "uv run python -m kobo" in result.stdout
 
 
 def test_start_script_dry_run_server_mode_accepts_web_only_env() -> None:
@@ -91,8 +91,8 @@ def test_start_script_dry_run_server_mode_accepts_web_only_env() -> None:
         env={
             **EMPTY_REQUIRED_ENV,
             "OPENAI_COMPATIBLE_API_KEY": "test-key",
-            "OPENTULPA_DATA_ROOT": "/tmp/opentulpa-test-data",
-            "OPENTULPA_WEB_TOKEN": "test-web-token",
+            "KOBO_DATA_ROOT": "/tmp/kobo-test-data",
+            "KOBO_WEB_TOKEN": "test-web-token",
         },
     )
 
@@ -103,7 +103,7 @@ def test_start_script_dry_run_server_mode_accepts_web_only_env() -> None:
     assert "PUBLIC_BASE_URL or RAILWAY_PUBLIC_DOMAIN" not in result.stdout
     assert "TELEGRAM_ALLOWED_USERNAMES or TELEGRAM_ALLOWED_USER_IDS" not in result.stdout
     assert "server Telegram disabled; web/API startup does not require Telegram env." in result.stdout
-    assert "uv run python -m opentulpa" in result.stdout
+    assert "uv run python -m kobo" in result.stdout
 
 
 def test_start_script_doctor_server_web_only_requires_web_token() -> None:
@@ -112,7 +112,7 @@ def test_start_script_doctor_server_web_only_requires_web_token() -> None:
     assert result.returncode == 1
     assert "server Telegram disabled; skipping Telegram token and allowlist checks" in result.stdout
     assert "server Telegram disabled; skipping webhook URL/secret checks" in result.stdout
-    assert "fail: OPENTULPA_WEB_TOKEN is set" in result.stdout
+    assert "fail: KOBO_WEB_TOKEN is set" in result.stdout
     assert "TELEGRAM_BOT_TOKEN is set" not in result.stdout
     assert "TELEGRAM_WEBHOOK_SECRET is set" not in result.stdout
 
@@ -129,7 +129,7 @@ def test_start_script_dry_run_local_mode() -> None:
     assert "TELEGRAM_BOT_TOKEN" in result.stdout
     assert "TELEGRAM_ALLOWED_USERNAMES or TELEGRAM_ALLOWED_USER_IDS" in result.stdout
     assert "warning: COMPOSIO_API_KEY is not set" in result.stdout
-    assert "OPENTULPA_DATA_ROOT" not in result.stdout
+    assert "KOBO_DATA_ROOT" not in result.stdout
     assert "[start] running local Telegram mode." in result.stdout
     assert "uv run python scripts/manager.py" in result.stdout
 
@@ -158,7 +158,7 @@ def test_start_script_deprecated_app_alias_maps_to_server_mode() -> None:
     assert result.returncode == 0
     assert "--app is deprecated" in result.stderr
     assert "[start] running server mode." in result.stdout
-    assert "uv run python -m opentulpa" in result.stdout
+    assert "uv run python -m kobo" in result.stdout
 
 
 def test_start_script_deprecated_manager_alias_maps_to_local_mode() -> None:
@@ -198,7 +198,7 @@ def test_start_script_missing_uv_dry_run_bootstraps_by_default_then_syncs() -> N
     assert "uv was not found in PATH; bootstrapping uv." in result.stdout
     assert "curl -LsSf https://astral.sh/uv/install.sh | sh" in result.stdout
     assert "[start] uv sync" in result.stdout
-    assert "uv run python -m opentulpa" in result.stdout
+    assert "uv run python -m kobo" in result.stdout
 
 
 def test_start_script_warns_when_base_url_is_not_openrouter() -> None:
@@ -214,7 +214,7 @@ def test_start_script_warns_when_base_url_is_not_openrouter() -> None:
 
     assert result.returncode == 0
     assert "OPENAI_COMPATIBLE_BASE_URL is not OpenRouter" in result.stdout
-    assert "opentulpa.config.yaml model settings" in result.stdout
+    assert "kobo.config.yaml model settings" in result.stdout
     assert "llm_model" in result.stdout
     assert "wake_execution_model" in result.stdout
     assert "workflow_setup_input_classifier_model" in result.stdout
@@ -245,7 +245,7 @@ exit 22
         "TELEGRAM_BOT_TOKEN": "test-token",
         "TELEGRAM_WEBHOOK_SECRET": "test-secret",
         "PUBLIC_BASE_URL": "https://app.example",
-        "OPENTULPA_DATA_ROOT": str(tmp_path / "data"),
+        "KOBO_DATA_ROOT": str(tmp_path / "data"),
         "TELEGRAM_ALLOWED_USERNAMES": "owner",
         "TELEGRAM_ALLOWED_USER_IDS": "",
         "COMPOSIO_API_KEY": "",
@@ -269,8 +269,8 @@ def test_start_script_run_server_accepts_platform_env_without_dotenv(tmp_path: P
         "OPENAI_COMPATIBLE_BASE_URL": "https://openrouter.ai/api/v1",
         "TELEGRAM_BOT_TOKEN": "test-token",
         "TELEGRAM_WEBHOOK_SECRET": "test-secret",
-        "RAILWAY_PUBLIC_DOMAIN": "opentulpa.example.railway.app",
-        "OPENTULPA_DATA_ROOT": str(tmp_path / "data"),
+        "RAILWAY_PUBLIC_DOMAIN": "kobo.example.railway.app",
+        "KOBO_DATA_ROOT": str(tmp_path / "data"),
         "TELEGRAM_ALLOWED_USERNAMES": "owner",
         "TELEGRAM_ALLOWED_USER_IDS": "",
         "COMPOSIO_API_KEY": "",
@@ -289,7 +289,7 @@ def test_start_script_run_server_accepts_platform_env_without_dotenv(tmp_path: P
     assert ".env is missing" not in result.stderr
     assert ".env.example was not found" not in result.stderr
     assert "required .env value(s) missing" not in result.stdout
-    assert "uv run python -m opentulpa" in result.stdout
+    assert "uv run python -m kobo" in result.stdout
 
 
 def test_start_script_server_accepts_railway_public_domain_fallback() -> None:
@@ -297,7 +297,7 @@ def test_start_script_server_accepts_railway_public_domain_fallback() -> None:
         **EMPTY_REQUIRED_ENV,
         "TELEGRAM_BOT_TOKEN": "test-token",
         "TELEGRAM_WEBHOOK_SECRET": "test-secret",
-        "RAILWAY_PUBLIC_DOMAIN": "opentulpa.example.railway.app",
+        "RAILWAY_PUBLIC_DOMAIN": "kobo.example.railway.app",
         "TELEGRAM_ALLOWED_USERNAMES": "owner",
     }
 

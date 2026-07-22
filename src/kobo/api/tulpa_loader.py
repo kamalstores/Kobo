@@ -1,4 +1,4 @@
-"""Dynamic loader for agent-created FastAPI routers in tulpa_stuff."""
+"""Dynamic loader for agent-created FastAPI routers in kobo_stuff."""
 
 from __future__ import annotations
 
@@ -16,7 +16,7 @@ logger = logging.getLogger(__name__)
 
 
 class TulpaRouterLoader:
-    """Load and hot-reload APIRouter objects from the tulpa_stuff package."""
+    """Load and hot-reload APIRouter objects from the kobo_stuff package."""
 
     def __init__(
         self,
@@ -25,7 +25,7 @@ class TulpaRouterLoader:
     ) -> None:
         self.project_root = project_root.resolve()
         self.mount_router = mount_router
-        self.package_name = "tulpa_stuff"
+        self.package_name = "kobo_stuff"
         self.package_dir = self.project_root / self.package_name
 
     def _ensure_importable(self) -> None:
@@ -86,7 +86,7 @@ class TulpaRouterLoader:
         return importlib.import_module(full_name)
 
     def reload(self) -> dict[str, Any]:
-        """Reload all tulpa_stuff module routers onto the mount router."""
+        """Reload all kobo_stuff module routers onto the mount router."""
         self._ensure_importable()
         self.mount_router.routes.clear()
 

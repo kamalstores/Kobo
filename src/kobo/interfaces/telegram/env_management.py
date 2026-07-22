@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import os
 
-from opentulpa.core.config import (
+from kobo.core.config import (
     LEGACY_OPENROUTER_API_KEY_ENV,
     PRIMARY_OPENAI_COMPATIBLE_API_KEY_ENV,
     get_openai_compatible_api_key_from_env,
@@ -14,7 +14,7 @@ from opentulpa.core.config import (
 def missing_key_prompt() -> str:
     return (
         "The model backend is not configured yet.\n\n"
-        "Set OPENAI_COMPATIBLE_API_KEY in the deployment or local environment, then restart OpenTulpa. "
+        "Set OPENAI_COMPATIBLE_API_KEY in the deployment or local environment, then restart Kobo. "
         "OPENROUTER_API_KEY is still accepted as a legacy alias."
     )
 
@@ -28,7 +28,7 @@ def status_text(agent_up: bool) -> str:
         "CAPSOLVER_API_KEY": bool(os.environ.get("CAPSOLVER_API_KEY")),
     }
     lines = [
-        "OpenTulpa status:",
+        "Kobo status:",
         f"- Agent backend: {'up' if agent_up else 'down'}",
         (
             f"- {PRIMARY_OPENAI_COMPATIBLE_API_KEY_ENV} "

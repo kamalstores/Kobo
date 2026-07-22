@@ -6,7 +6,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 
 
-def test_opentulpa_has_no_direct_posthog_dependency() -> None:
+def test_kobo_has_no_direct_posthog_dependency() -> None:
     pyproject = tomllib.loads((ROOT / "pyproject.toml").read_text(encoding="utf-8"))
     dependencies = pyproject.get("project", {}).get("dependencies", [])
 
@@ -19,9 +19,9 @@ def test_opentulpa_has_no_direct_posthog_dependency() -> None:
     assert direct_posthog_deps == []
 
 
-def test_opentulpa_source_has_no_direct_posthog_wiring() -> None:
+def test_kobo_source_has_no_direct_posthog_wiring() -> None:
     offenders: list[str] = []
-    for path in sorted((ROOT / "src" / "opentulpa").rglob("*.py")):
+    for path in sorted((ROOT / "src" / "kobo").rglob("*.py")):
         text = path.read_text(encoding="utf-8")
         if "posthog" in text.lower():
             offenders.append(str(path.relative_to(ROOT)))

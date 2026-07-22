@@ -10,20 +10,20 @@ from typing import Any
 
 import pytest
 
-from opentulpa.agent.knowledge_prep import inspect_uploaded_file_structure
-from opentulpa.business_knowledge.service import BusinessKnowledgeService
-from opentulpa.context.file_vault import FileVaultService
-from opentulpa.intake import service as intake_service_module
-from opentulpa.intake.service import IntakeWorkflowService
-from opentulpa.intake.workflow_boundaries import (
+from kobo.agent.knowledge_prep import inspect_uploaded_file_structure
+from kobo.business_knowledge.service import BusinessKnowledgeService
+from kobo.context.file_vault import FileVaultService
+from kobo.intake import service as intake_service_module
+from kobo.intake.service import IntakeWorkflowService
+from kobo.intake.workflow_boundaries import (
     ConversationCursorSignals,
     DecisionActions,
     WorkflowRunAccumulator,
 )
-from opentulpa.interfaces.telegram.business import TelegramBusinessService
-from opentulpa.interfaces.telegram.relay import NO_NOTIFY_TOKEN
-from opentulpa.scheduler.service import SchedulerService
-from opentulpa.skills.service import SkillStoreService
+from kobo.interfaces.telegram.business import TelegramBusinessService
+from kobo.interfaces.telegram.relay import NO_NOTIFY_TOKEN
+from kobo.scheduler.service import SchedulerService
+from kobo.skills.service import SkillStoreService
 from tests.workbook_fixtures import (
     SAMPLE_VEHICLE_SERVICES_XLSX_FILENAME,
     SAMPLE_VEHICLE_SERVICES_XLSX_MIME_TYPE,
@@ -729,7 +729,7 @@ async def test_intake_workflow_upsert_creates_routine_and_skill(tmp_path: Path) 
         intent_description="Handle Instagram DMs that ask to book a car wash service.",
         required_fields=["day", "time", "car_type", "wash_type"],
         sink_type="local_csv",
-        sink_config={"file_path": "tulpa_stuff/bookings.csv"},
+        sink_config={"file_path": "kobo_stuff/bookings.csv"},
     )
 
     assert workflow["channel"] == "instagram_dm"
@@ -789,7 +789,7 @@ async def test_intake_workflow_upsert_persists_telegram_business_fields(tmp_path
         business_facts={"prices": {"basic_wash": "1000 RUB"}},
         knowledge_file_ids=[str(record["id"])],
         sink_type="local_csv",
-        sink_config={"file_path": "tulpa_stuff/bookings.csv"},
+        sink_config={"file_path": "kobo_stuff/bookings.csv"},
     )
 
     assert workflow["channel"] == "telegram_business_dm"
@@ -850,7 +850,7 @@ async def test_intake_workflow_business_facts_do_not_store_large_source_blobs(tm
         required_fields=["day", "time"],
         business_facts={"extracted_spreadsheet_text": "row data\n" * 3000},
         sink_type="local_csv",
-        sink_config={"file_path": "tulpa_stuff/bookings.csv"},
+        sink_config={"file_path": "kobo_stuff/bookings.csv"},
     )
 
     rendered = json.dumps(workflow["business_facts"], ensure_ascii=False)
@@ -886,7 +886,7 @@ async def test_telegram_business_workflow_upsert_auto_resolves_single_connected_
         required_fields=["name", "time"],
         assistant_instructions="Be concise.",
         sink_type="local_csv",
-        sink_config={"file_path": "tulpa_stuff/bookings.csv"},
+        sink_config={"file_path": "kobo_stuff/bookings.csv"},
     )
 
     assert workflow["source_config"] == {"business_connection_id": "bc_123"}
@@ -918,7 +918,7 @@ async def test_telegram_business_workflow_drops_false_intent_match_source_config
         required_fields=["name", "time"],
         assistant_instructions="Be concise.",
         sink_type="local_csv",
-        sink_config={"file_path": "tulpa_stuff/bookings.csv"},
+        sink_config={"file_path": "kobo_stuff/bookings.csv"},
     )
 
     assert workflow["source_config"] == {"business_connection_id": "bc_123"}
@@ -944,7 +944,7 @@ async def test_telegram_business_workflow_does_not_create_scheduler_routine(
         required_fields=["name", "time"],
         assistant_instructions="Be concise.",
         sink_type="local_csv",
-        sink_config={"file_path": "tulpa_stuff/bookings.csv"},
+        sink_config={"file_path": "kobo_stuff/bookings.csv"},
     )
 
     assert workflow["schedule"] == ""
@@ -972,7 +972,7 @@ async def test_telegram_business_workflow_upsert_requires_delete_then_recreate_f
         required_fields=["name", "time"],
         assistant_instructions="Be concise.",
         sink_type="local_csv",
-        sink_config={"file_path": "tulpa_stuff/bookings.csv"},
+        sink_config={"file_path": "kobo_stuff/bookings.csv"},
     )
 
     with pytest.raises(ValueError, match="cannot be updated in place"):
@@ -986,7 +986,7 @@ async def test_telegram_business_workflow_upsert_requires_delete_then_recreate_f
             required_fields=["name", "time", "service"],
             assistant_instructions="Be concise and collect service details.",
             sink_type="local_csv",
-            sink_config={"file_path": "tulpa_stuff/bookings.csv"},
+            sink_config={"file_path": "kobo_stuff/bookings.csv"},
         )
 
     with pytest.raises(ValueError, match="cannot be edited in place"):
@@ -1001,7 +1001,7 @@ async def test_telegram_business_workflow_upsert_requires_delete_then_recreate_f
             required_fields=["name", "time", "service"],
             assistant_instructions="Be concise and collect service details.",
             sink_type="local_csv",
-            sink_config={"file_path": "tulpa_stuff/bookings.csv"},
+            sink_config={"file_path": "kobo_stuff/bookings.csv"},
         )
 
     workflows = service.list_workflows(customer_id="telegram_123", include_disabled=True)
@@ -1040,7 +1040,7 @@ async def test_intake_workflow_upsert_normalizes_none_workflow_id_to_short_gener
         intent_description="Handle Instagram DMs that ask to book a car wash service.",
         required_fields=["day", "time", "car_type", "wash_type"],
         sink_type="local_csv",
-        sink_config={"file_path": "tulpa_stuff/bookings.csv"},
+        sink_config={"file_path": "kobo_stuff/bookings.csv"},
     )
 
     assert workflow["workflow_id"].startswith("iwf_")
@@ -1078,10 +1078,10 @@ async def test_intake_workflow_upsert_accepts_local_csv_filename_alias(
         intent_description="Handle Instagram DMs that ask to book a car wash service.",
         required_fields=["day", "time", "car_type", "wash_type"],
         sink_type="local_csv",
-        sink_config={"filename": "tulpa_stuff/bookings.csv"},
+        sink_config={"filename": "kobo_stuff/bookings.csv"},
     )
 
-    assert workflow["sink_config"] == {"file_path": "tulpa_stuff/bookings.csv"}
+    assert workflow["sink_config"] == {"file_path": "kobo_stuff/bookings.csv"}
 
 
 @pytest.mark.asyncio
@@ -1137,7 +1137,7 @@ async def test_intake_workflow_run_saves_local_csv_and_skips_reprocessing_same_m
         intent_description="Handle Instagram DMs that ask to book a car wash service.",
         required_fields=["day", "time", "car_type", "wash_type"],
         sink_type="local_csv",
-        sink_config={"file_path": "tulpa_stuff/bookings.csv"},
+        sink_config={"file_path": "kobo_stuff/bookings.csv"},
     )
 
     first_run = await service.run_workflow(
@@ -1153,7 +1153,7 @@ async def test_intake_workflow_run_saves_local_csv_and_skips_reprocessing_same_m
     )
     assert len(bookings) == 1
     assert bookings[0]["status"] == "completed"
-    csv_path = tmp_path / "tulpa_stuff" / "bookings.csv"
+    csv_path = tmp_path / "kobo_stuff" / "bookings.csv"
     with csv_path.open("r", encoding="utf-8", newline="") as handle:
         rows = list(csv.DictReader(handle))
     assert len(rows) == 1
@@ -1212,7 +1212,7 @@ async def test_local_csv_sink_status_is_runtime_owned(tmp_path: Path) -> None:
         intent_description="Handle Instagram DMs that ask to book a car wash service.",
         required_fields=["day", "time"],
         sink_type="local_csv",
-        sink_config={"file_path": "tulpa_stuff/bookings.csv"},
+        sink_config={"file_path": "kobo_stuff/bookings.csv"},
     )
 
     result = await service.run_workflow(
@@ -1227,7 +1227,7 @@ async def test_local_csv_sink_status_is_runtime_owned(tmp_path: Path) -> None:
         conversation_id="conv_1",
     )
     assert bookings[0]["status"] == "completed"
-    with (tmp_path / "tulpa_stuff" / "bookings.csv").open(
+    with (tmp_path / "kobo_stuff" / "bookings.csv").open(
         "r", encoding="utf-8", newline=""
     ) as handle:
         rows = list(csv.DictReader(handle))
@@ -1292,7 +1292,7 @@ async def test_local_csv_sink_uses_runtime_cancelled_status(tmp_path: Path) -> N
         intent_description="Handle Instagram DMs that ask to book a car wash service.",
         required_fields=["day", "time"],
         sink_type="local_csv",
-        sink_config={"file_path": "tulpa_stuff/bookings.csv"},
+        sink_config={"file_path": "kobo_stuff/bookings.csv"},
     )
 
     first_run = await service.run_workflow(
@@ -1313,7 +1313,7 @@ async def test_local_csv_sink_uses_runtime_cancelled_status(tmp_path: Path) -> N
         conversation_id="conv_1",
     )
     assert bookings[0]["status"] == "cancelled"
-    with (tmp_path / "tulpa_stuff" / "bookings.csv").open(
+    with (tmp_path / "kobo_stuff" / "bookings.csv").open(
         "r", encoding="utf-8", newline=""
     ) as handle:
         rows = list(csv.DictReader(handle))
@@ -1369,7 +1369,7 @@ async def test_instagram_scheduled_workflow_uses_poll_interval_for_fresh_inbound
         intent_description="Handle Instagram DMs that ask to book a car wash service.",
         required_fields=["day"],
         sink_type="local_csv",
-        sink_config={"file_path": "tulpa_stuff/bookings.csv"},
+        sink_config={"file_path": "kobo_stuff/bookings.csv"},
     )
 
     result = await service.run_workflow(
@@ -1510,7 +1510,7 @@ async def test_instagram_decision_uses_unanswered_customer_burst(
         intent_description="Handle Instagram DMs that ask to book salon appointments.",
         required_fields=["time", "phone"],
         sink_type="local_csv",
-        sink_config={"file_path": "tulpa_stuff/bookings.csv"},
+        sink_config={"file_path": "kobo_stuff/bookings.csv"},
     )
 
     result = await service.run_workflow(
@@ -1616,7 +1616,7 @@ async def test_instagram_stale_decision_refreshes_before_replying(
         intent_description="Handle Instagram DMs that ask to book a car wash service.",
         required_fields=["day"],
         sink_type="local_csv",
-        sink_config={"file_path": "tulpa_stuff/bookings.csv"},
+        sink_config={"file_path": "kobo_stuff/bookings.csv"},
         reply_mode="auto",
     )
 
@@ -1703,7 +1703,7 @@ async def test_instagram_apply_stale_wait_does_not_advance_cursor(
         intent_description="Handle Instagram DMs that ask to book a car wash service.",
         required_fields=["vehicle"],
         sink_type="local_csv",
-        sink_config={"file_path": "tulpa_stuff/bookings.csv"},
+        sink_config={"file_path": "kobo_stuff/bookings.csv"},
         reply_mode="auto",
     )
     stale_checks = 0
@@ -1791,7 +1791,7 @@ async def test_intake_workflow_ignores_latest_inbound_older_than_poll_interval(
         intent_description="Handle Instagram DMs that ask to book a car wash service.",
         required_fields=["day"],
         sink_type="local_csv",
-        sink_config={"file_path": "tulpa_stuff/bookings.csv"},
+        sink_config={"file_path": "kobo_stuff/bookings.csv"},
     )
 
     result = await service.run_workflow(
@@ -1872,7 +1872,7 @@ async def test_telegram_business_settled_run_handles_delayed_inbound_after_one_m
         required_fields=["name", "time"],
         assistant_instructions="Reply in Russian.",
         sink_type="local_csv",
-        sink_config={"file_path": "tulpa_stuff/bookings.csv"},
+        sink_config={"file_path": "kobo_stuff/bookings.csv"},
     )
 
     result = await service.run_workflow(
@@ -1986,7 +1986,7 @@ async def test_telegram_business_workflow_uses_bound_files_and_replies_via_busin
         business_facts={"prices": {"express_wash": "1000 RUB"}},
         knowledge_file_ids=[str(knowledge["id"])],
         sink_type="local_csv",
-        sink_config={"file_path": "tulpa_stuff/bookings.csv"},
+        sink_config={"file_path": "kobo_stuff/bookings.csv"},
     )
 
     result = await service.run_workflow(
@@ -2127,7 +2127,7 @@ async def test_telegram_business_default_workflow_does_not_intent_gate_model_rep
         required_fields=["name", "time"],
         assistant_instructions="Reply in Russian and help customers choose a service.",
         sink_type="local_csv",
-        sink_config={"file_path": "tulpa_stuff/bookings.csv"},
+        sink_config={"file_path": "kobo_stuff/bookings.csv"},
     )
 
     result = await service.run_workflow(
@@ -2234,7 +2234,7 @@ async def test_telegram_business_no_file_workflow_does_not_silence_business_know
         assistant_instructions="If pricing is unavailable, say it needs confirmation and continue booking intake.",
         knowledge_file_ids=[],
         sink_type="local_csv",
-        sink_config={"file_path": "tulpa_stuff/bookings.csv"},
+        sink_config={"file_path": "kobo_stuff/bookings.csv"},
     )
 
     result = await service.run_workflow(
@@ -2262,7 +2262,7 @@ async def test_telegram_business_no_file_workflow_does_not_silence_business_know
     assert bookings[0]["status"] == "active"
     assert bookings[0]["sink_write_status"] == "pending"
     assert bookings[0]["extracted_fields"]["car_type"] == "SUV"
-    assert not (tmp_path / "tulpa_stuff" / "bookings.csv").exists()
+    assert not (tmp_path / "kobo_stuff" / "bookings.csv").exists()
 
 
 @pytest.mark.asyncio
@@ -2337,7 +2337,7 @@ async def test_telegram_business_out_of_scope_decision_can_reply_without_booking
         required_fields=["name", "time"],
         assistant_instructions="Reply politely when the request is outside scope.",
         sink_type="local_csv",
-        sink_config={"file_path": "tulpa_stuff/bookings.csv"},
+        sink_config={"file_path": "kobo_stuff/bookings.csv"},
     )
 
     result = await service.run_workflow(
@@ -2440,7 +2440,7 @@ async def test_telegram_business_out_of_scope_service_question_gets_fallback_rep
         required_fields=["name", "time"],
         assistant_instructions="Reply politely when the request is outside scope. Phone: +1 555 123 4567.",
         sink_type="local_csv",
-        sink_config={"file_path": "tulpa_stuff/bookings.csv"},
+        sink_config={"file_path": "kobo_stuff/bookings.csv"},
     )
 
     result = await service.run_workflow(
@@ -2544,7 +2544,7 @@ async def test_telegram_business_matched_ignore_reply_does_not_open_booking(
         required_fields=["name", "time"],
         assistant_instructions="Reply politely when the request cannot be booked from the price list.",
         sink_type="local_csv",
-        sink_config={"file_path": "tulpa_stuff/bookings.csv"},
+        sink_config={"file_path": "kobo_stuff/bookings.csv"},
     )
 
     result = await service.run_workflow(
@@ -2647,7 +2647,7 @@ async def test_telegram_business_reply_is_persisted_back_into_conversation_histo
         required_fields=["telegram_username", "time"],
         assistant_instructions="Ask for time before saving.",
         sink_type="local_csv",
-        sink_config={"file_path": "tulpa_stuff/bookings.csv"},
+        sink_config={"file_path": "kobo_stuff/bookings.csv"},
     )
 
     result = await service.run_workflow(
@@ -2741,7 +2741,7 @@ async def test_telegram_business_reply_with_create_booking_action_opens_pending_
         required_fields=["service", "client_name", "phone", "desired_time"],
         assistant_instructions="Ask for missing fields before saving.",
         sink_type="local_csv",
-        sink_config={"file_path": "tulpa_stuff/bookings.csv"},
+        sink_config={"file_path": "kobo_stuff/bookings.csv"},
     )
 
     result = await service.run_workflow(
@@ -2822,7 +2822,7 @@ async def test_telegram_business_pending_booking_without_model_reply_asks_missin
         required_fields=["service", "client_name", "phone"],
         assistant_instructions="Ask for missing fields before saving.",
         sink_type="local_csv",
-        sink_config={"file_path": "tulpa_stuff/bookings.csv"},
+        sink_config={"file_path": "kobo_stuff/bookings.csv"},
     )
 
     result = await service.run_workflow(
@@ -2923,7 +2923,7 @@ async def test_telegram_business_workflow_serializes_same_conversation_runs(
         required_fields=["telegram_username", "time"],
         assistant_instructions="Ask for time before saving.",
         sink_type="local_csv",
-        sink_config={"file_path": "tulpa_stuff/bookings.csv"},
+        sink_config={"file_path": "kobo_stuff/bookings.csv"},
     )
 
     first, second = await asyncio.gather(
@@ -3023,7 +3023,7 @@ async def test_telegram_business_workflow_coalesces_messages_arriving_during_deb
         required_fields=["telegram_username", "car_model"],
         assistant_instructions="Answer based on the latest coalesced lead context.",
         sink_type="local_csv",
-        sink_config={"file_path": "tulpa_stuff/bookings.csv"},
+        sink_config={"file_path": "kobo_stuff/bookings.csv"},
     )
 
     task = asyncio.create_task(
@@ -3156,7 +3156,7 @@ async def test_telegram_business_workflow_suppresses_stale_reply_and_requeues(
         required_fields=["telegram_username", "car_model", "time"],
         assistant_instructions="Answer from the newest lead context only.",
         sink_type="local_csv",
-        sink_config={"file_path": "tulpa_stuff/bookings.csv"},
+        sink_config={"file_path": "kobo_stuff/bookings.csv"},
     )
 
     first_run_task = asyncio.create_task(
@@ -3265,7 +3265,7 @@ async def test_telegram_business_pending_run_sends_only_final_reply(
         required_fields=["telegram_username", "car_model"],
         assistant_instructions="Ask for car model.",
         sink_type="local_csv",
-        sink_config={"file_path": "tulpa_stuff/bookings.csv"},
+        sink_config={"file_path": "kobo_stuff/bookings.csv"},
     )
     service._queue_pending_run(  # noqa: SLF001
         workflow=workflow,
@@ -3341,7 +3341,7 @@ async def test_telegram_business_pending_run_ignores_status_generation_failure(t
         required_fields=["telegram_username", "car_model"],
         assistant_instructions="Ask for car model.",
         sink_type="local_csv",
-        sink_config={"file_path": "tulpa_stuff/bookings.csv"},
+        sink_config={"file_path": "kobo_stuff/bookings.csv"},
     )
     service._queue_pending_run(  # noqa: SLF001
         workflow=workflow,
@@ -3438,7 +3438,7 @@ async def test_telegram_business_final_stale_guard_prevents_sink_and_reply(
         required_fields=["telegram_username", "car_model"],
         assistant_instructions="Save only when the latest lead context is stable.",
         sink_type="local_csv",
-        sink_config={"file_path": "tulpa_stuff/bookings.csv"},
+        sink_config={"file_path": "kobo_stuff/bookings.csv"},
     )
     stale_checks = 0
 
@@ -3477,7 +3477,7 @@ async def test_telegram_business_final_stale_guard_prevents_sink_and_reply(
         workflow_id=workflow["workflow_id"],
         conversation_id="555",
     ) == []
-    assert not (tmp_path / "tulpa_stuff" / "bookings.csv").exists()
+    assert not (tmp_path / "kobo_stuff" / "bookings.csv").exists()
 
 
 @pytest.mark.asyncio
@@ -3500,7 +3500,7 @@ async def test_intake_pending_runs_drain_concurrently(
         required_fields=["time"],
         assistant_instructions="Be concise.",
         sink_type="local_csv",
-        sink_config={"file_path": "tulpa_stuff/first.csv"},
+        sink_config={"file_path": "kobo_stuff/first.csv"},
     )
     second = service.upsert_workflow(
         customer_id="telegram_456",
@@ -3512,7 +3512,7 @@ async def test_intake_pending_runs_drain_concurrently(
         required_fields=["time"],
         assistant_instructions="Be concise.",
         sink_type="local_csv",
-        sink_config={"file_path": "tulpa_stuff/second.csv"},
+        sink_config={"file_path": "kobo_stuff/second.csv"},
     )
     service._queue_pending_run(  # noqa: SLF001
         workflow=first,
@@ -3566,7 +3566,7 @@ async def test_intake_pending_run_drain_logs_row_failures(
         required_fields=["time"],
         assistant_instructions="Be concise.",
         sink_type="local_csv",
-        sink_config={"file_path": "tulpa_stuff/bookings.csv"},
+        sink_config={"file_path": "kobo_stuff/bookings.csv"},
     )
     service._queue_pending_run(  # noqa: SLF001
         workflow=workflow,
@@ -3580,7 +3580,7 @@ async def test_intake_pending_run_drain_logs_row_failures(
         raise RuntimeError("boom")
 
     monkeypatch.setattr(service, "_run_pending_row", _fake_run_pending_row)
-    caplog.set_level(logging.ERROR, logger="opentulpa.intake.service")
+    caplog.set_level(logging.ERROR, logger="kobo.intake.service")
 
     drained = await service.drain_due_pending_runs(limit=10)
 
@@ -3617,7 +3617,7 @@ async def test_intake_workflow_run_skips_quiet_inbox_without_model_call(tmp_path
         intent_description="Handle Instagram DMs that ask to book a car wash service.",
         required_fields=["day", "time", "car_type", "wash_type"],
         sink_type="local_csv",
-        sink_config={"file_path": "tulpa_stuff/bookings.csv"},
+        sink_config={"file_path": "kobo_stuff/bookings.csv"},
     )
 
     result = await service.run_workflow(
@@ -3663,7 +3663,7 @@ async def test_intake_workflow_run_keeps_source_scan_warnings_nonfatal(tmp_path:
         intent_description="Handle Instagram DMs that ask to book a car wash service.",
         required_fields=["day", "time", "car_type", "wash_type"],
         sink_type="local_csv",
-        sink_config={"file_path": "tulpa_stuff/bookings.csv"},
+        sink_config={"file_path": "kobo_stuff/bookings.csv"},
     )
 
     result = await service.run_workflow(
@@ -3711,7 +3711,7 @@ async def test_intake_workflow_run_fails_configured_instagram_conversation_fetch
         intent_description="Handle Instagram DMs that ask to book a car wash service.",
         required_fields=["day", "time", "car_type", "wash_type"],
         sink_type="local_csv",
-        sink_config={"file_path": "tulpa_stuff/bookings.csv"},
+        sink_config={"file_path": "kobo_stuff/bookings.csv"},
     )
 
     result = await service.run_workflow(
@@ -3758,7 +3758,7 @@ async def test_intake_workflow_run_skips_outbound_only_update_without_model_call
         intent_description="Handle Instagram DMs that ask to book a car wash service.",
         required_fields=["day", "time", "car_type", "wash_type"],
         sink_type="local_csv",
-        sink_config={"file_path": "tulpa_stuff/bookings.csv"},
+        sink_config={"file_path": "kobo_stuff/bookings.csv"},
     )
     service._set_cursor(  # noqa: SLF001
         workflow_id=workflow["workflow_id"],
@@ -3834,7 +3834,7 @@ async def test_intake_workflow_run_recovers_when_model_requests_update_active_wi
         intent_description="Handle Instagram DMs that ask to book a car wash service.",
         required_fields=["day", "time", "car_type", "wash_type"],
         sink_type="local_csv",
-        sink_config={"file_path": "tulpa_stuff/bookings.csv"},
+        sink_config={"file_path": "kobo_stuff/bookings.csv"},
     )
 
     result = await service.run_workflow(
@@ -3895,7 +3895,7 @@ async def test_intake_workflow_reply_uses_instagram_text_argument(tmp_path: Path
         intent_description="Handle Instagram DMs that ask to book a car wash service.",
         required_fields=["day", "time", "car_type", "wash_type"],
         sink_type="local_csv",
-        sink_config={"file_path": "tulpa_stuff/bookings.csv"},
+        sink_config={"file_path": "kobo_stuff/bookings.csv"},
     )
 
     result = await service.run_workflow(
@@ -3964,7 +3964,7 @@ async def test_intake_workflow_emits_observability_for_successful_save_and_reply
         intent_description="Handle Instagram DMs that ask to book a car wash service.",
         required_fields=["day", "time", "car_type", "wash_type"],
         sink_type="local_csv",
-        sink_config={"file_path": "tulpa_stuff/bookings.csv"},
+        sink_config={"file_path": "kobo_stuff/bookings.csv"},
     )
 
     result = await service.run_workflow(
@@ -4054,7 +4054,7 @@ async def test_intake_workflow_retries_with_execution_feedback_after_reply_failu
         intent_description="Handle Instagram DMs that ask to book a car wash service.",
         required_fields=["day", "time", "car_type", "wash_type"],
         sink_type="local_csv",
-        sink_config={"file_path": "tulpa_stuff/bookings.csv"},
+        sink_config={"file_path": "kobo_stuff/bookings.csv"},
     )
 
     result = await service.run_workflow(
@@ -4138,7 +4138,7 @@ async def test_intake_workflow_emits_observability_for_reply_failure(
         intent_description="Handle Instagram DMs that ask to book a car wash service.",
         required_fields=["day", "time", "car_type", "wash_type"],
         sink_type="local_csv",
-        sink_config={"file_path": "tulpa_stuff/bookings.csv"},
+        sink_config={"file_path": "kobo_stuff/bookings.csv"},
     )
 
     result = await service.run_workflow(
@@ -4216,7 +4216,7 @@ async def test_intake_workflow_failed_apply_does_not_advance_cursor_and_retries_
         intent_description="Handle Instagram DMs that ask to book a car wash service.",
         required_fields=["day", "time", "car_type", "wash_type"],
         sink_type="local_csv",
-        sink_config={"file_path": "tulpa_stuff/bookings.csv"},
+        sink_config={"file_path": "kobo_stuff/bookings.csv"},
     )
 
     first = await service.run_workflow(

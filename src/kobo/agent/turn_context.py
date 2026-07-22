@@ -6,14 +6,14 @@ import logging
 from dataclasses import dataclass
 from typing import Any
 
-from opentulpa.agent.lc_messages import AnyMessage, SystemMessage
-from opentulpa.agent.models import AgentState
-from opentulpa.agent.tool_outcome_context import build_tool_outcome_context
-from opentulpa.agent.turn_plan import (
+from kobo.agent.lc_messages import AnyMessage, SystemMessage
+from kobo.agent.models import AgentState
+from kobo.agent.tool_outcome_context import build_tool_outcome_context
+from kobo.agent.turn_plan import (
     build_turn_plan_prompt_context,
     turn_plan_enabled_for_turn_mode,
 )
-from opentulpa.agent.workflow_setup_prompt_context import build_workflow_setup_control_context
+from kobo.agent.workflow_setup_prompt_context import build_workflow_setup_control_context
 
 logger = logging.getLogger(__name__)
 

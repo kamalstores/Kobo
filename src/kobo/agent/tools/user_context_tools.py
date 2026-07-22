@@ -6,8 +6,8 @@ from typing import Any
 
 from langchain.tools import tool
 
-from opentulpa.agent.tools.common import require_customer_id
-from opentulpa.agent.tools.core_tools import _tool_error_payload
+from kobo.agent.tools.common import require_customer_id
+from kobo.agent.tools.core_tools import _tool_error_payload
 
 
 def register_user_context_tools(runtime: Any) -> dict[str, Any]:

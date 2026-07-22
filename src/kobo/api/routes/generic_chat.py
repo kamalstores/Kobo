@@ -15,17 +15,17 @@ from fastapi import FastAPI, File, Form, Query, Request, UploadFile
 from fastapi.responses import JSONResponse, Response, StreamingResponse
 from pydantic import BaseModel, ConfigDict, Field, field_validator
 
-from opentulpa.agent.runtime import STREAM_PROGRESS_PREFIX, STREAM_WAIT_SIGNAL, AgentStreamEvent
-from opentulpa.api.customer_ids import resolve_customer_id as resolve_customer_id_value
-from opentulpa.api.file_helpers import sanitize_uploaded_file_record
-from opentulpa.api.web_auth import web_auth_error
-from opentulpa.context.uploaded_files import (
+from kobo.agent.runtime import STREAM_PROGRESS_PREFIX, STREAM_WAIT_SIGNAL, AgentStreamEvent
+from kobo.api.customer_ids import resolve_customer_id as resolve_customer_id_value
+from kobo.api.file_helpers import sanitize_uploaded_file_record
+from kobo.api.web_auth import web_auth_error
+from kobo.context.uploaded_files import (
     build_uploaded_files_context,
     should_skip_auto_summary_for_upload,
 )
-from opentulpa.core.shutdown_drain import ShutdownDrainingError
-from opentulpa.tasks.sandbox import TULPA_STUFF_DIR, is_within
-from opentulpa.web.events import append_web_event
+from kobo.core.shutdown_drain import ShutdownDrainingError
+from kobo.tasks.sandbox import KOBO_STUFF_DIR, is_within
+from kobo.web.events import append_web_event
 
 MAX_WEB_UPLOAD_BYTES = 45_000_000
 
@@ -219,10 +219,10 @@ def register_generic_chat_routes(
         if not safe_local_path:
             return JSONResponse(status_code=400, content={"detail": "path is required"})
         try:
-            target = (TULPA_STUFF_DIR.parent / safe_local_path).resolve()
+            target = (KOBO_STUFF_DIR.parent / safe_local_path).resolve()
         except Exception:
             return JSONResponse(status_code=400, content={"detail": "invalid path"})
-        if not is_within(target, TULPA_STUFF_DIR) or not target.exists() or target.is_dir():
+        if not is_within(target, KOBO_STUFF_DIR) or not target.exists() or target.is_dir():
             return JSONResponse(status_code=404, content={"detail": "file not found"})
         raw_bytes = target.read_bytes()
         guessed_mime, _ = mimetypes.guess_type(str(target.name))

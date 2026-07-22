@@ -8,13 +8,13 @@ from contextlib import suppress
 from datetime import UTC, datetime
 from pathlib import Path
 
-from opentulpa.context.customer_profile_models import (
+from kobo.context.customer_profile_models import (
     CustomerProfileRecord,
     IdentityBindingRecord,
     LegacyProfileImportSummary,
     ProfileIdentityRecord,
 )
-from opentulpa.persistence.sqlite import connect_sqlite
+from kobo.persistence.sqlite import connect_sqlite
 
 
 def _normalize_utc_offset(value: str) -> str:

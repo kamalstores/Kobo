@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from opentulpa.integrations.composio import ComposioService
+from kobo.integrations.composio import ComposioService
 
 
 class _FakeComposioService(ComposioService):

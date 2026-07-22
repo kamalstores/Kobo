@@ -6,7 +6,7 @@ from typing import Any
 
 from langchain.tools import tool
 
-from opentulpa.agent.tools.common import require_customer_id, require_thread_id
+from kobo.agent.tools.common import require_customer_id, require_thread_id
 
 
 def _proposal_final_response_hint(session: dict[str, Any]) -> str:

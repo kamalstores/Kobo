@@ -13,7 +13,7 @@ from typing import Any
 from xml.etree import ElementTree
 from zipfile import BadZipFile, ZipFile
 
-from opentulpa.business_knowledge.models import KnowledgeSourceSection
+from kobo.business_knowledge.models import KnowledgeSourceSection
 
 XLSX_MIME_TYPE = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
 DOCX_MIME_TYPE = "application/vnd.openxmlformats-officedocument.wordprocessingml.document"

@@ -1,5 +1,5 @@
 """
-In-process LangGraph runtime for OpenTulpa.
+In-process LangGraph runtime for Kobo.
 
 This runs the agent in-process with a local StateGraph that:
 - runs tool-calling in a bounded loop,
@@ -34,90 +34,90 @@ from langchain_openai import ChatOpenAI
 from langgraph.checkpoint.sqlite.aio import AsyncSqliteSaver
 from pydantic import BaseModel, ConfigDict, Field
 
-from opentulpa.agent import model_pool as _model_pool
-from opentulpa.agent.context_compaction import (
+from kobo.agent import model_pool as _model_pool
+from kobo.agent.context_compaction import (
     compact_thread_context_for_turn,
     thread_context_needs_compaction,
 )
-from opentulpa.agent.context_compaction import (
+from kobo.agent.context_compaction import (
     compress_rollup as _compress_rollup,
 )
-from opentulpa.agent.context_compaction import (
+from kobo.agent.context_compaction import (
     persist_rollup_memory as _persist_rollup_memory,
 )
-from opentulpa.agent.context_compaction import (
+from kobo.agent.context_compaction import (
     split_rollup_sections as _split_rollup_sections,
 )
-from opentulpa.agent.context_compaction import (
+from kobo.agent.context_compaction import (
     split_text_chunks as _split_text_chunks,
 )
-from opentulpa.agent.context_engine import ContextEngine
-from opentulpa.agent.context_engine import (
+from kobo.agent.context_engine import ContextEngine
+from kobo.agent.context_engine import (
     trim_text_to_token_budget as _trim_text_to_token_budget,
 )
-from opentulpa.agent.file_analysis import (
+from kobo.agent.file_analysis import (
     analyze_uploaded_file as _analyze_uploaded_file,
 )
-from opentulpa.agent.file_analysis import (
+from kobo.agent.file_analysis import (
     extract_docx_text as _extract_docx_text,
 )
-from opentulpa.agent.file_analysis import (
+from kobo.agent.file_analysis import (
     extract_pdf_text as _extract_pdf_text,
 )
-from opentulpa.agent.file_analysis import (
+from kobo.agent.file_analysis import (
     extract_uploaded_text as _extract_uploaded_text,
 )
-from opentulpa.agent.file_analysis import (
+from kobo.agent.file_analysis import (
     summarize_uploaded_blob as _summarize_uploaded_blob,
 )
-from opentulpa.agent.file_analysis import (
+from kobo.agent.file_analysis import (
     transcribe_audio_blob as _transcribe_audio_blob,
 )
-from opentulpa.agent.graph_builder import build_runtime_graph
-from opentulpa.agent.internal_api_client import InternalApiClient
-from opentulpa.agent.lc_messages import AIMessage, HumanMessage, SystemMessage, ToolMessage
-from opentulpa.agent.model_provider_profile import provider_prompt_cache_profile
-from opentulpa.agent.openrouter_chat_factory import openrouter_app_headers
-from opentulpa.agent.runtime_context_provider import RuntimeContextSourceProvider
-from opentulpa.agent.runtime_input import (
+from kobo.agent.graph_builder import build_runtime_graph
+from kobo.agent.internal_api_client import InternalApiClient
+from kobo.agent.lc_messages import AIMessage, HumanMessage, SystemMessage, ToolMessage
+from kobo.agent.model_provider_profile import provider_prompt_cache_profile
+from kobo.agent.openrouter_chat_factory import openrouter_app_headers
+from kobo.agent.runtime_context_provider import RuntimeContextSourceProvider
+from kobo.agent.runtime_input import (
     MergedInputSuppressedError,
     ThreadInputCoordinator,
 )
-from opentulpa.agent.tools_registry import register_runtime_tools
-from opentulpa.agent.turn_context_preparer import prepare_turn_context
-from opentulpa.agent.turn_plan import turn_plan_enabled_for_turn_mode
-from opentulpa.agent.turn_policy import (
+from kobo.agent.tools_registry import register_runtime_tools
+from kobo.agent.turn_context_preparer import prepare_turn_context
+from kobo.agent.turn_plan import turn_plan_enabled_for_turn_mode
+from kobo.agent.turn_policy import (
     normalize_turn_mode as _normalize_turn_mode,
 )
-from opentulpa.agent.utils import (
+from kobo.agent.utils import (
     approx_tokens as _approx_tokens,
 )
-from opentulpa.agent.utils import (
+from kobo.agent.utils import (
     content_to_text as _content_to_text,
 )
-from opentulpa.agent.utils import (
+from kobo.agent.utils import (
     minutes_to_utc_offset as _minutes_to_utc_offset,
 )
-from opentulpa.agent.utils import (
+from kobo.agent.utils import (
     normalize_model_name as _normalize_model_name,
 )
-from opentulpa.agent.utils import (
+from kobo.agent.utils import (
     safe_json as _safe_json,
 )
-from opentulpa.agent.utils import (
+from kobo.agent.utils import (
     utc_offset_to_minutes as _utc_offset_to_minutes,
 )
-from opentulpa.context.customer_profile_models import (
+from kobo.context.customer_profile_models import (
     CustomerScopedRequest,
     DirectiveGetResponse,
     TimeProfileGetResponse,
 )
-from opentulpa.context.customer_profiles import CustomerProfileService
-from opentulpa.context.link_aliases import LinkAliasService
-from opentulpa.context.service import EventContextService
-from opentulpa.context.thread_rollups import ThreadRollupService
-from opentulpa.core.ids import new_short_id
-from opentulpa.memory.service import MEMORY_KIND_PRIORITY
+from kobo.context.customer_profiles import CustomerProfileService
+from kobo.context.link_aliases import LinkAliasService
+from kobo.context.service import EventContextService
+from kobo.context.thread_rollups import ThreadRollupService
+from kobo.core.ids import new_short_id
+from kobo.memory.service import MEMORY_KIND_PRIORITY
 
 logger = logging.getLogger(__name__)
 
@@ -1126,7 +1126,7 @@ def _build_intake_workflow_agent_prompt(
     compact_feedback = _compact_execution_feedback(execution_feedback)
     return (
         "System update: an intake workflow wake fired for one external DM conversation.\n"
-        "Operate like a real OpenTulpa background execution turn and use tools when needed.\n\n"
+        "Operate like a real Kobo background execution turn and use tools when needed.\n\n"
         "Primary goal:\n"
         "- Decide whether this conversation is an active match for the workflow.\n"
         "- Extract reliable booking fields.\n"
@@ -1293,7 +1293,7 @@ def _normalize_knowledge_source_refs(values: Any) -> list[str]:
     return normalized
 
 
-class OpenTulpaLangGraphRuntime:
+class KoboLangGraphRuntime:
     def __init__(
         self,
         *,
@@ -1322,12 +1322,12 @@ class OpenTulpaLangGraphRuntime:
         input_debounce_seconds: float = 0.65,
         proactive_heartbeat_default_hours: int = 3,
         behavior_log_enabled: bool = True,
-        behavior_log_path: str = ".opentulpa/logs/agent_behavior.jsonl",
+        behavior_log_path: str = ".kobo/logs/agent_behavior.jsonl",
         browser_use_headless: bool = True,
         browser_use_model_override: str | None = None,
         browser_use_max_concurrent_tasks: int = 2,
         browser_use_task_retention_seconds: int = 1800,
-        browser_use_user_data_dir: str | None = ".opentulpa/browser_use_profiles",
+        browser_use_user_data_dir: str | None = ".kobo/browser_use_profiles",
         browser_use_api_key: str | None = None,
         browser_use_cloud_proxy_country_code: str | None = "us",
         browser_use_cloud_timeout_minutes: int = 15,
@@ -1403,7 +1403,7 @@ class OpenTulpaLangGraphRuntime:
         )
         self._behavior_log_enabled = bool(behavior_log_enabled)
         raw_behavior_path = (
-            str(behavior_log_path or "").strip() or ".opentulpa/logs/agent_behavior.jsonl"
+            str(behavior_log_path or "").strip() or ".kobo/logs/agent_behavior.jsonl"
         )
         self._behavior_log_path = Path(raw_behavior_path).resolve()
         self._behavior_log_lock = threading.Lock()
@@ -1444,17 +1444,17 @@ class OpenTulpaLangGraphRuntime:
         self._interactive_file_senders_lock = asyncio.Lock()
         self._interactive_file_senders: dict[str, Any] = {}
         self._active_customer_id_ctx: contextvars.ContextVar[str] = contextvars.ContextVar(
-            "opentulpa_active_customer_id",
+            "kobo_active_customer_id",
             default="",
         )
         self._active_turn_mode_ctx: contextvars.ContextVar[str] = contextvars.ContextVar(
-            "opentulpa_active_turn_mode",
+            "kobo_active_turn_mode",
             default="interactive",
         )
         self._active_customer_id = ""
         self._active_turn_mode = "interactive"
         self._active_thread_id_ctx: contextvars.ContextVar[str] = contextvars.ContextVar(
-            "opentulpa_active_thread_id",
+            "kobo_active_thread_id",
             default="",
         )
         self._active_thread_id = ""
@@ -1865,7 +1865,7 @@ class OpenTulpaLangGraphRuntime:
     @staticmethod
     def _describe_tool_calls_for_progress(tool_calls: list[Any]) -> str:
         labels = [
-            OpenTulpaLangGraphRuntime._tool_call_progress_label(call) for call in tool_calls[:2]
+            KoboLangGraphRuntime._tool_call_progress_label(call) for call in tool_calls[:2]
         ]
         labels = [label for label in labels if label]
         if not labels:
@@ -1876,7 +1876,7 @@ class OpenTulpaLangGraphRuntime:
 
     def get_browser_use_local_manager(self) -> Any:
         if self._browser_use_local_manager is None:
-            from opentulpa.integrations.browser_use_local import BrowserUseLocalManager
+            from kobo.integrations.browser_use_local import BrowserUseLocalManager
 
             self._browser_use_local_manager = BrowserUseLocalManager(
                 openrouter_api_key=self.openrouter_api_key,
@@ -1897,7 +1897,7 @@ class OpenTulpaLangGraphRuntime:
 
     def get_headroom_service(self) -> Any:
         if self._headroom_service is None:
-            from opentulpa.integrations import HeadroomService
+            from kobo.integrations import HeadroomService
 
             self._headroom_service = HeadroomService(model_name=self.model_name)
         return self._headroom_service
@@ -3041,7 +3041,7 @@ class OpenTulpaLangGraphRuntime:
             "prompt_mode": str(prompt_mode or "").strip(),
             "call_site": str(call_site or "").strip(),
             "model_name": str(model_name or "").strip(),
-            "opentulpa_trace_id": str(trace_id or "").strip(),
+            "kobo_trace_id": str(trace_id or "").strip(),
         }
         metadata.update(_tool_schema_trace_fields(self, str(turn_mode or "").strip()))
         return cast(
@@ -3100,7 +3100,7 @@ class OpenTulpaLangGraphRuntime:
                     )
                     if item
                 ],
-                "opentulpa_trace_id": str(context.get("trace_id") or "").strip(),
+                "kobo_trace_id": str(context.get("trace_id") or "").strip(),
                 "thread_id": str(context.get("thread_id") or "").strip(),
                 "turn_mode": str(context.get("turn_mode") or "").strip(),
                 "prompt_mode": str(context.get("prompt_mode") or "").strip(),
@@ -3199,7 +3199,7 @@ class OpenTulpaLangGraphRuntime:
         thread_scope_token = self.set_active_thread_id(thread_id)
         turn_mode_scope_token = self.set_active_turn_mode(normalized_turn_mode)
         trace_context = self._observability_trace_context(
-            name=f"opentulpa.turn.{normalized_turn_mode}",
+            name=f"kobo.turn.{normalized_turn_mode}",
             trace_id=turn_trace_id,
             customer_id=customer_id,
             thread_id=thread_id,
@@ -3414,7 +3414,7 @@ class OpenTulpaLangGraphRuntime:
         thread_scope_token = self.set_active_thread_id(thread_id)
         turn_mode_scope_token = self.set_active_turn_mode(normalized_turn_mode)
         trace_context = self._observability_trace_context(
-            name=f"opentulpa.turn.{normalized_turn_mode}",
+            name=f"kobo.turn.{normalized_turn_mode}",
             trace_id=turn_trace_id,
             customer_id=customer_id,
             thread_id=thread_id,
@@ -4419,7 +4419,7 @@ class OpenTulpaLangGraphRuntime:
                 )
         if decision is None:
             with self._observability_trace_context(
-                name="opentulpa.intake.turn",
+                name="kobo.intake.turn",
                 trace_id=structured_trace_id,
                 customer_id=customer_id,
                 thread_id=structured_thread_id,
@@ -4544,7 +4544,7 @@ class OpenTulpaLangGraphRuntime:
             messages=[
                 SystemMessage(
                     content=(
-                        "You are a scheduling intent judge for OpenTulpa.\n"
+                        "You are a scheduling intent judge for Kobo.\n"
                         "Return strict JSON only with keys: ok (bool), allow_create (bool), "
                         "confidence (0..1), reason (string <= 180 chars).\n"
                         "Task: decide whether the latest user message authorizes the proposed "
@@ -4633,7 +4633,7 @@ class OpenTulpaLangGraphRuntime:
         ctx = getattr(self, "_active_customer_id_ctx", None)
         if isinstance(ctx, contextvars.ContextVar):
             return ctx
-        ctx = contextvars.ContextVar("opentulpa_active_customer_id", default="")
+        ctx = contextvars.ContextVar("kobo_active_customer_id", default="")
         self._active_customer_id_ctx = ctx
         return ctx
 
@@ -4665,7 +4665,7 @@ class OpenTulpaLangGraphRuntime:
         ctx = getattr(self, "_active_thread_id_ctx", None)
         if isinstance(ctx, contextvars.ContextVar):
             return ctx
-        ctx = contextvars.ContextVar("opentulpa_active_thread_id", default="")
+        ctx = contextvars.ContextVar("kobo_active_thread_id", default="")
         self._active_thread_id_ctx = ctx
         return ctx
 
@@ -4697,7 +4697,7 @@ class OpenTulpaLangGraphRuntime:
         ctx = getattr(self, "_active_turn_mode_ctx", None)
         if isinstance(ctx, contextvars.ContextVar):
             return ctx
-        ctx = contextvars.ContextVar("opentulpa_active_turn_mode", default="interactive")
+        ctx = contextvars.ContextVar("kobo_active_turn_mode", default="interactive")
         self._active_turn_mode_ctx = ctx
         return ctx
 

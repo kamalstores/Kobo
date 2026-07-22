@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from opentulpa.agent.tools import (
+from kobo.agent.tools import (
     register_browser_tools,
     register_composio_tools,
     register_core_tools,
@@ -12,7 +12,7 @@ from opentulpa.agent.tools import (
     register_routine_tools,
     register_skill_tools,
 )
-from opentulpa.agent.tools.tool_gateway_tools import register_tool_gateway_tools
+from kobo.agent.tools.tool_gateway_tools import register_tool_gateway_tools
 
 
 def register_runtime_tools(runtime: Any) -> dict[str, Any]:

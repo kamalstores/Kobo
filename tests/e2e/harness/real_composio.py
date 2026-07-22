@@ -8,7 +8,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
-from opentulpa.integrations.composio import ComposioService
+from kobo.integrations.composio import ComposioService
 
 _CUSTOMER_ID_RE = re.compile(r"\b[a-z][a-z0-9_-]*_[a-zA-Z0-9][a-zA-Z0-9_-]*\b")
 _SPREADSHEET_URL_RE = re.compile(r"/spreadsheets/d/([a-zA-Z0-9_-]+)")
@@ -91,23 +91,23 @@ class RecordingComposioService:
 
 
 def discover_local_customer_ids(*, project_root: Path) -> list[str]:
-    """Find local customer ids already known to this OpenTulpa checkout."""
+    """Find local customer ids already known to this Kobo checkout."""
 
     root = project_root.resolve()
     candidates: set[str] = set()
-    _collect_ids_from_telegram_state(root / ".opentulpa" / "telegram_state.json", candidates)
+    _collect_ids_from_telegram_state(root / ".kobo" / "telegram_state.json", candidates)
 
     for db_path, table, columns in (
-        (root / ".opentulpa" / "customer_profiles.db", "customer_profiles", ("customer_id",)),
-        (root / ".opentulpa" / "context_events.db", "context_events", ("customer_id",)),
-        (root / ".opentulpa" / "file_vault.db", "uploaded_files", ("customer_id",)),
-        (root / ".opentulpa" / "skills.db", "skills", ("customer_id",)),
-        (root / ".opentulpa" / "telegram_business.db", "telegram_business_connections", ("customer_id",)),
-        (root / ".opentulpa" / "telegram_business.db", "telegram_business_messages", ("customer_id",)),
+        (root / ".kobo" / "customer_profiles.db", "customer_profiles", ("customer_id",)),
+        (root / ".kobo" / "context_events.db", "context_events", ("customer_id",)),
+        (root / ".kobo" / "file_vault.db", "uploaded_files", ("customer_id",)),
+        (root / ".kobo" / "skills.db", "skills", ("customer_id",)),
+        (root / ".kobo" / "telegram_business.db", "telegram_business_connections", ("customer_id",)),
+        (root / ".kobo" / "telegram_business.db", "telegram_business_messages", ("customer_id",)),
     ):
         _collect_ids_from_sqlite(db_path, table, columns, candidates)
 
-    vault_dir = root / ".opentulpa" / "file_vault"
+    vault_dir = root / ".kobo" / "file_vault"
     if vault_dir.exists():
         for child in vault_dir.iterdir():
             if child.is_dir():
@@ -128,7 +128,7 @@ def build_recording_live_googlesheets_service(
     if target_account is None:
         return None
 
-    title = "OpenTulpa E2E AutoSpa Bookings " + datetime.now(UTC).strftime("%Y%m%dT%H%M%SZ")
+    title = "Kobo E2E AutoSpa Bookings " + datetime.now(UTC).strftime("%Y%m%dT%H%M%SZ")
     created = composio.execute_tool(
         customer_id=target_account["customer_id"],
         connected_account_id=target_account["connected_account_id"],

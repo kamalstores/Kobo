@@ -8,20 +8,20 @@ from typing import Any, Literal
 
 from langgraph.types import Command
 
-from opentulpa.agent.lc_messages import AIMessage, SystemMessage, ToolMessage
-from opentulpa.agent.models import AgentState
-from opentulpa.agent.tool_budget import apply_tool_call_budget
-from opentulpa.agent.tool_loop_guardrails import find_duplicate_tool_calls
-from opentulpa.agent.tool_validation import (
+from kobo.agent.lc_messages import AIMessage, SystemMessage, ToolMessage
+from kobo.agent.models import AgentState
+from kobo.agent.tool_budget import apply_tool_call_budget
+from kobo.agent.tool_loop_guardrails import find_duplicate_tool_calls
+from kobo.agent.tool_validation import (
     _build_tool_validation_repair_message,
     _routine_create_intent_validation_error,
     _summarize_tool_validation_errors,
     _validate_model_tool_call,
 )
-from opentulpa.agent.turn_control import graph_recursion_limit_from_config
-from opentulpa.agent.turn_policy import normalize_turn_mode as _normalize_turn_mode
-from opentulpa.agent.utils import content_to_text as _content_to_text
-from opentulpa.agent.utils import latest_user_text as _latest_user_text
+from kobo.agent.turn_control import graph_recursion_limit_from_config
+from kobo.agent.turn_policy import normalize_turn_mode as _normalize_turn_mode
+from kobo.agent.utils import content_to_text as _content_to_text
+from kobo.agent.utils import latest_user_text as _latest_user_text
 
 logger = logging.getLogger(__name__)
 
@@ -87,7 +87,7 @@ def build_validate_tool_calls_node(
                         "results and current context to write the final user-facing reply now."
                     ),
                     tool_call_id=str(call.get("id", "")),
-                    additional_kwargs={"opentulpa_control": {"status": "error"}},
+                    additional_kwargs={"kobo_control": {"status": "error"}},
                 )
                 for call in last.tool_calls
             ]

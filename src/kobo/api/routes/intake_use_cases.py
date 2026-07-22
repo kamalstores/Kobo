@@ -5,7 +5,7 @@ from __future__ import annotations
 from typing import Any
 from urllib.parse import quote
 
-from opentulpa.api.file_helpers import sanitize_uploaded_file_record
+from kobo.api.file_helpers import sanitize_uploaded_file_record
 
 
 def workflow_upsert_kwargs(

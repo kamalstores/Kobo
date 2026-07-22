@@ -6,11 +6,11 @@ import json
 import logging
 from typing import Any
 
-from opentulpa.agent.lc_messages import HumanMessage, SystemMessage
-from opentulpa.agent.models import AgentState
-from opentulpa.agent.turn_policy import normalize_turn_mode as _normalize_turn_mode
-from opentulpa.agent.utils import content_to_text as _content_to_text
-from opentulpa.agent.utils import latest_user_text as _latest_user_text
+from kobo.agent.lc_messages import HumanMessage, SystemMessage
+from kobo.agent.models import AgentState
+from kobo.agent.turn_policy import normalize_turn_mode as _normalize_turn_mode
+from kobo.agent.utils import content_to_text as _content_to_text
+from kobo.agent.utils import latest_user_text as _latest_user_text
 
 logger = logging.getLogger(__name__)
 

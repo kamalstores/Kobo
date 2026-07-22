@@ -7,7 +7,7 @@ from typing import Any
 
 from fastapi import FastAPI, Request
 
-from opentulpa.api.customer_ids import resolve_body_customer_id
+from kobo.api.customer_ids import resolve_body_customer_id
 
 
 def register_telegram_business_routes(

@@ -7,8 +7,8 @@ from typing import Any
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
 
-from opentulpa.api.routes.profiles import register_profile_routes
-from opentulpa.context.customer_profiles import CustomerProfileService
+from kobo.api.routes.profiles import register_profile_routes
+from kobo.context.customer_profiles import CustomerProfileService
 
 
 class _MemoryRecorder:

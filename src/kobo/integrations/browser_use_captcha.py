@@ -6,7 +6,7 @@ import json
 from dataclasses import dataclass
 from typing import TYPE_CHECKING, Any
 
-from opentulpa.integrations.capsolver import CapSolverClient, CapSolverError
+from kobo.integrations.capsolver import CapSolverClient, CapSolverError
 
 if TYPE_CHECKING:
     from browser_use import ActionResult, Controller
@@ -244,7 +244,7 @@ def register_capsolver_action(controller: Controller, capsolver: CapSolverClient
             if not injected.get("ok"):
                 return ActionResult(
                     success=False,
-                    error="CapSolver returned a token but OpenTulpa could not inject it into the page.",
+                    error="CapSolver returned a token but Kobo could not inject it into the page.",
                 )
             return ActionResult(
                 extracted_content=f"CAPTCHA solved with CapSolver ({challenge.captcha_type}).",

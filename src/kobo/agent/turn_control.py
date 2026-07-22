@@ -5,9 +5,9 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Any
 
-from opentulpa.agent.models import AgentState
-from opentulpa.agent.tool_budget import web_search_call_count
-from opentulpa.agent.turn_budget import (
+from kobo.agent.models import AgentState
+from kobo.agent.tool_budget import web_search_call_count
+from kobo.agent.turn_budget import (
     TurnBudgetDecision,
     TurnBudgetState,
     consume_model_call,

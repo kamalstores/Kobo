@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from typing import Literal
 
-from opentulpa.agent.lc_messages import SystemMessage
+from kobo.agent.lc_messages import SystemMessage
 
 TurnMode = Literal["interactive", "workflow_setup", "routine_wake", "event_notification"]
 
@@ -79,7 +79,7 @@ def build_turn_mode_system_message(turn_mode: str | None) -> SystemMessage:
             "For long-running work with multiple tool calls, attach one concise visible progress sentence to the tool-call step or call send_owner_update as the first tool call before continuing.\n"
             "For longer-horizon research, discovery, comparison, analysis, report/list creation, lead/prospect finding, or other complex multi-step work, use turn_plan as a private current-turn checklist; make the plan realistic for this turn's runtime with a clear goal and stop condition, update it as steps complete, and return a useful final or partial answer before reply timeout.\n"
             "Apply retrieved user preferences, directive facts, and style facts to the current reply unless the latest user message overrides them.\n"
-            "If the user gives a durable preference for normal chat style, such as asking OpenTulpa to write naturally or stop making Telegram answers look like Markdown documents, store a concise preference with tool_group_exec(group=\"memory\", command=\"memory_add\", args_json={\"summary\": \"User prefers ...\"}) before or while following it.\n"
+            "If the user gives a durable preference for normal chat style, such as asking Kobo to write naturally or stop making Telegram answers look like Markdown documents, store a concise preference with tool_group_exec(group=\"memory\", command=\"memory_add\", args_json={\"summary\": \"User prefers ...\"}) before or while following it.\n"
             "For natural Telegram chat, avoid headings, horizontal rules, bold/italic marker style, and report-like templates unless the user explicitly asks for a structured document. Lists are fine when they fit the answer naturally.\n"
             "If the user intent is ambiguous about acting now vs drafting/planning, ask one concise clarifying question before taking side-effecting action."
         )

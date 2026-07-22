@@ -9,15 +9,15 @@ import pytest
 from fastapi.testclient import TestClient
 from mocks.telegram import FakeTelegramClient
 
-from opentulpa.api import app as app_module
-from opentulpa.api.app import create_app
-from opentulpa.core.config import get_settings
-from opentulpa.interfaces.telegram import attachments as attachments_module
-from opentulpa.interfaces.telegram import chat_service as chat_module
-from opentulpa.interfaces.telegram import relay as relay_module
-from opentulpa.interfaces.telegram.state_store import TelegramStateStore
-from opentulpa.scheduler.service import SchedulerService
-from opentulpa.tasks import sandbox as sandbox_module
+from kobo.api import app as app_module
+from kobo.api.app import create_app
+from kobo.core.config import get_settings
+from kobo.interfaces.telegram import attachments as attachments_module
+from kobo.interfaces.telegram import chat_service as chat_module
+from kobo.interfaces.telegram import relay as relay_module
+from kobo.interfaces.telegram.state_store import TelegramStateStore
+from kobo.scheduler.service import SchedulerService
+from kobo.tasks import sandbox as sandbox_module
 
 pytestmark = [pytest.mark.e2e, pytest.mark.telegram]
 
@@ -119,7 +119,7 @@ def test_telegram_workflow_setup_spam_does_not_duplicate_runs_and_applies_queued
     monkeypatch.setattr(
         chat_module,
         "STATE_STORE",
-        TelegramStateStore(project_root / ".opentulpa" / "telegram_state.json"),
+        TelegramStateStore(project_root / ".kobo" / "telegram_state.json"),
     )
     monkeypatch.setattr(app_module, "TelegramClient", lambda _token: fake_tg)
     monkeypatch.setattr(attachments_module, "TelegramClient", lambda _token: fake_tg)

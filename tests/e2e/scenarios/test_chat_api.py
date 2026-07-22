@@ -8,8 +8,8 @@ import httpx
 import pytest
 from fastapi.testclient import TestClient
 
-from opentulpa.api.app import create_app
-from opentulpa.api.routes import wake_search as wake_search_routes
+from kobo.api.app import create_app
+from kobo.api.routes import wake_search as wake_search_routes
 
 TEST_USER_ID = "test_user_e2e"
 pytestmark = [pytest.mark.e2e]

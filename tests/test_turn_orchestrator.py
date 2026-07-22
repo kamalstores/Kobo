@@ -4,8 +4,8 @@ from typing import Any
 
 import pytest
 
-from opentulpa.application.turn_orchestrator import TurnOrchestrator
-from opentulpa.domain.conversation import ConversationTurnRequest
+from kobo.application.turn_orchestrator import TurnOrchestrator
+from kobo.domain.conversation import ConversationTurnRequest
 
 
 class _FakeRuntime:

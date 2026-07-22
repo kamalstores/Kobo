@@ -9,7 +9,7 @@ from typing import Any
 
 from fastapi.responses import JSONResponse
 
-from opentulpa.api.customer_ids import resolve_body_customer_id
+from kobo.api.customer_ids import resolve_body_customer_id
 
 
 @dataclass(frozen=True)

@@ -8,8 +8,8 @@ from typing import Any
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 
-from opentulpa.api.customer_ids import resolve_customer_id as resolve_customer_id_value
-from opentulpa.integrations.web_search import web_search as run_web_search
+from kobo.api.customer_ids import resolve_customer_id as resolve_customer_id_value
+from kobo.integrations.web_search import web_search as run_web_search
 
 
 def register_wake_and_search_routes(

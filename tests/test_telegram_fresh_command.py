@@ -5,7 +5,7 @@ from typing import Any
 
 import pytest
 
-from opentulpa.interfaces.telegram import chat_service as chat_module
+from kobo.interfaces.telegram import chat_service as chat_module
 
 
 class _FakeStateStore:

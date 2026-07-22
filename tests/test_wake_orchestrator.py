@@ -5,7 +5,7 @@ from typing import Any
 
 import pytest
 
-from opentulpa.application.wake_orchestrator import WakeOrchestrator
+from kobo.application.wake_orchestrator import WakeOrchestrator
 
 
 class _FakeContextEvents:
@@ -137,8 +137,8 @@ async def test_routine_event_notifies_and_records_execution() -> None:
                 "customer_id": "telegram_166",
                 "notify_user": True,
                 "instruction": (
-                    "You must run scripts/test_routine.py. First read file tulpa_stuff/input.txt. "
-                    "Then write output to tulpa_stuff/output.txt. "
+                    "You must run scripts/test_routine.py. First read file kobo_stuff/input.txt. "
+                    "Then write output to kobo_stuff/output.txt. "
                     "If file read fails, log error and return failure summary."
                 ),
             },
@@ -225,7 +225,7 @@ async def test_routine_event_silent_mode_still_executes_and_backlogs() -> None:
             "payload": {
                 "customer_id": "telegram_166",
                 "notify_user": False,
-                "instruction": "Append current timestamp to tulpa_stuff/timelog.md",
+                "instruction": "Append current timestamp to kobo_stuff/timelog.md",
             },
         }
     )

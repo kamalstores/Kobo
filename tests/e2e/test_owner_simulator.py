@@ -24,7 +24,7 @@ def _profile() -> OwnerProfile:
         known_facts={
             "workflow_name": "E2E Car Wash",
             "required_fields": "car_model, date, time",
-            "sink": "local CSV tulpa_stuff/e2e.csv",
+            "sink": "local CSV kobo_stuff/e2e.csv",
         },
         max_turns=5,
     )

@@ -12,11 +12,11 @@ from fastapi.testclient import TestClient
 from harness.runner import E2EHarness
 from mocks.telegram import FakeTelegramClient
 
-from opentulpa.api.app import create_app
-from opentulpa.context.customer_profiles import CustomerProfileService
-from opentulpa.core.config import get_settings
-from opentulpa.intake import service as intake_service_module
-from opentulpa.scheduler.service import SchedulerService
+from kobo.api.app import create_app
+from kobo.context.customer_profiles import CustomerProfileService
+from kobo.core.config import get_settings
+from kobo.intake import service as intake_service_module
+from kobo.scheduler.service import SchedulerService
 
 pytestmark = [pytest.mark.e2e, pytest.mark.telegram]
 
@@ -263,8 +263,8 @@ def _create_fake_telegram_app(
     runtime: Any,
     customer_profiles: CustomerProfileService | None = None,
 ) -> tuple[Any, FakeTelegramClient]:
-    from opentulpa.api import app as app_module
-    from opentulpa.tasks import sandbox as sandbox_module
+    from kobo.api import app as app_module
+    from kobo.tasks import sandbox as sandbox_module
 
     monkeypatch.setenv("TELEGRAM_BOT_TOKEN", "test-bot-token")
     monkeypatch.setenv("TELEGRAM_WEBHOOK_SECRET", "test-secret")
@@ -294,8 +294,8 @@ def test_telegram_business_intake_suppresses_stale_reply_from_webhook_worker(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    from opentulpa.api import app as app_module
-    from opentulpa.tasks import sandbox as sandbox_module
+    from kobo.api import app as app_module
+    from kobo.tasks import sandbox as sandbox_module
 
     monkeypatch.setenv("TELEGRAM_BOT_TOKEN", "test-bot-token")
     monkeypatch.setenv("TELEGRAM_WEBHOOK_SECRET", "test-secret")
@@ -342,7 +342,7 @@ def test_telegram_business_intake_suppresses_stale_reply_from_webhook_worker(
             required_fields=["car_model", "time"],
             assistant_instructions="Reply only to the newest coalesced lead context.",
             sink_type="local_csv",
-            sink_config={"file_path": "tulpa_stuff/debounce.csv"},
+            sink_config={"file_path": "kobo_stuff/debounce.csv"},
         )
 
         first_status = client.post(
@@ -438,7 +438,7 @@ def test_telegram_business_intake_restarts_with_three_unanswered_messages(
             required_fields=["car_model", "time"],
             assistant_instructions="Reply once using every unanswered customer message.",
             sink_type="local_csv",
-            sink_config={"file_path": "tulpa_stuff/three_messages.csv"},
+            sink_config={"file_path": "kobo_stuff/three_messages.csv"},
         )
 
         first_status = client.post(
@@ -553,7 +553,7 @@ def test_telegram_business_intake_worker_does_not_block_unrelated_leads(
                 required_fields=["time"],
                 assistant_instructions="Reply to this lead without waiting for other leads.",
                 sink_type="local_csv",
-                sink_config={"file_path": f"tulpa_stuff/parallel_{index}.csv"},
+                sink_config={"file_path": f"kobo_stuff/parallel_{index}.csv"},
             )
 
         first_status = client.post(
@@ -659,7 +659,7 @@ def test_telegram_business_intake_uses_generic_user_id_after_late_binding(
                 "required_fields": ["time"],
                 "assistant_instructions": "Reply to the lead from generic owner storage.",
                 "sink_type": "local_csv",
-                "sink_config": {"file_path": "tulpa_stuff/generic_late_bind.csv"},
+                "sink_config": {"file_path": "kobo_stuff/generic_late_bind.csv"},
             },
         )
         assert create.status_code == 200, create.text
@@ -772,7 +772,7 @@ def test_live_llm_telegram_business_intake_suppresses_stale_split_reply(
                 "If the customer splits details across adjacent messages, use all of them."
             ),
             "sink_type": "local_csv",
-            "sink_config": {"file_path": "tulpa_stuff/e2e_live_debounce.csv"},
+            "sink_config": {"file_path": "kobo_stuff/e2e_live_debounce.csv"},
             "enabled": True,
         },
     )

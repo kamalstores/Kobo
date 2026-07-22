@@ -5,12 +5,12 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Any
 
-from opentulpa.agent.lc_messages import AIMessage, AnyMessage, HumanMessage, ToolMessage
-from opentulpa.agent.tool_parser import compact_tool_call_record as _compact_tool_call_record
-from opentulpa.agent.tool_parser import compact_tool_payload as _compact_tool_payload
-from opentulpa.agent.utils import approx_tokens as _approx_tokens
-from opentulpa.agent.utils import content_to_text as _content_to_text
-from opentulpa.agent.utils import message_to_text as _message_to_text
+from kobo.agent.lc_messages import AIMessage, AnyMessage, HumanMessage, ToolMessage
+from kobo.agent.tool_parser import compact_tool_call_record as _compact_tool_call_record
+from kobo.agent.tool_parser import compact_tool_payload as _compact_tool_payload
+from kobo.agent.utils import approx_tokens as _approx_tokens
+from kobo.agent.utils import content_to_text as _content_to_text
+from kobo.agent.utils import message_to_text as _message_to_text
 
 
 def trim_text_to_token_budget(text: str, *, token_budget: int) -> str:

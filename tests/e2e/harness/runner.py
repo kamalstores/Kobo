@@ -18,11 +18,11 @@ from mocks.composio_instagram import FakeComposioInstagramService
 from mocks.telegram import FakeTelegramClient
 from reports.status_report import write_status_report
 
-from opentulpa.agent.runtime import OpenTulpaLangGraphRuntime
-from opentulpa.api.app import create_app
-from opentulpa.core.config import get_settings
-from opentulpa.interfaces.telegram.state_store import TelegramStateStore
-from opentulpa.scheduler.service import SchedulerService
+from kobo.agent.runtime import KoboLangGraphRuntime
+from kobo.api.app import create_app
+from kobo.core.config import get_settings
+from kobo.interfaces.telegram.state_store import TelegramStateStore
+from kobo.scheduler.service import SchedulerService
 
 
 def effective_live_llm_timeout_seconds(
@@ -38,8 +38,8 @@ def effective_live_llm_timeout_seconds(
             return max(requested, float(override))
         except ValueError:
             return requested
-    if str(os.getenv("OPENTULPA_E2E_MODEL", "") or "").strip() or str(
-        os.getenv("OPENTULPA_E2E_WAKE_MODEL", "") or ""
+    if str(os.getenv("KOBO_E2E_MODEL", "") or "").strip() or str(
+        os.getenv("KOBO_E2E_WAKE_MODEL", "") or ""
     ).strip():
         return max(requested, float(live_minimum_seconds))
     return requested
@@ -48,7 +48,7 @@ def effective_live_llm_timeout_seconds(
 def _effective_lead_idle_timeout_seconds(requested: float) -> float:
     return effective_live_llm_timeout_seconds(
         requested,
-        override_env="OPENTULPA_E2E_LEAD_IDLE_TIMEOUT_SECONDS",
+        override_env="KOBO_E2E_LEAD_IDLE_TIMEOUT_SECONDS",
     )
 
 
@@ -66,7 +66,7 @@ def _is_owner_setup_interim_message(
 @dataclass
 class E2EHarness:
     client: TestClient
-    runtime: OpenTulpaLangGraphRuntime
+    runtime: KoboLangGraphRuntime
     recorder: JsonlRecorder
     project_root: Path
     system_log_path: Path
@@ -408,7 +408,7 @@ class E2EHarness:
         ]
 
     def _owner_status_event_texts(self, *, customer_id: str) -> set[str]:
-        token = str(getattr(get_settings(), "opentulpa_web_token", "") or "").strip()
+        token = str(getattr(get_settings(), "kobo_web_token", "") or "").strip()
         if not token:
             return set()
         response = self.client.get(
@@ -470,7 +470,7 @@ class E2EHarness:
     ) -> tuple[dict[str, Any], list[dict[str, Any]]]:
         timeout_seconds = effective_live_llm_timeout_seconds(
             idle_timeout_seconds,
-            override_env="OPENTULPA_E2E_OWNER_SETUP_WAIT_TIMEOUT_SECONDS",
+            override_env="KOBO_E2E_OWNER_SETUP_WAIT_TIMEOUT_SECONDS",
         )
         deadline = time.monotonic() + timeout_seconds
         while time.monotonic() < deadline:
@@ -657,7 +657,7 @@ class E2EHarness:
             "composio_calls": len(self.composio_service.calls),
             "details": details,
         }
-        judge_model = str(os.getenv("OPENTULPA_E2E_JUDGE_MODEL", "") or "").strip()
+        judge_model = str(os.getenv("KOBO_E2E_JUDGE_MODEL", "") or "").strip()
         payload["evaluation"] = evaluate_e2e_scenario_with_llm_judge(
             scenario=scenario,
             details=details,
@@ -677,7 +677,7 @@ def _require_openai_compatible_env() -> tuple[str, str]:
 
 def patch_runtime_internal_api(
     *,
-    runtime: OpenTulpaLangGraphRuntime,
+    runtime: KoboLangGraphRuntime,
     app: Any,
     recorder: JsonlRecorder,
 ) -> None:
@@ -731,11 +731,11 @@ def build_harness(
     composio_service: Any | None = None,
     memory_service: Any | None = None,
 ) -> E2EHarness:
-    from opentulpa.api import app as app_module
-    from opentulpa.interfaces.telegram import attachments as attachments_module
-    from opentulpa.interfaces.telegram import chat_service as chat_module
-    from opentulpa.interfaces.telegram import relay as relay_module
-    from opentulpa.tasks import sandbox as sandbox_module
+    from kobo.api import app as app_module
+    from kobo.interfaces.telegram import attachments as attachments_module
+    from kobo.interfaces.telegram import chat_service as chat_module
+    from kobo.interfaces.telegram import relay as relay_module
+    from kobo.tasks import sandbox as sandbox_module
 
     api_key, base_url = _require_openai_compatible_env()
     if not api_key:
@@ -761,7 +761,7 @@ def build_harness(
     monkeypatch.setattr(
         chat_module,
         "STATE_STORE",
-        TelegramStateStore(isolated_project_root / ".opentulpa" / "telegram_state.json"),
+        TelegramStateStore(isolated_project_root / ".kobo" / "telegram_state.json"),
     )
     monkeypatch.setattr(app_module, "TelegramClient", lambda _token: fake_tg)
     monkeypatch.setattr(attachments_module, "TelegramClient", lambda _token: fake_tg)
@@ -770,40 +770,40 @@ def build_harness(
     get_settings.cache_clear()
     settings = get_settings()
 
-    runtime = OpenTulpaLangGraphRuntime(
+    runtime = KoboLangGraphRuntime(
         app_url="http://testserver",
         openrouter_api_key=api_key,
         openrouter_base_url=base_url,
-        model_name=str(os.getenv("OPENTULPA_E2E_MODEL", settings.llm_model)),
+        model_name=str(os.getenv("KOBO_E2E_MODEL", settings.llm_model)),
         reasoning_effort=str(
-            os.getenv("OPENTULPA_E2E_REASONING_EFFORT", settings.llm_reasoning_effort or "")
+            os.getenv("KOBO_E2E_REASONING_EFFORT", settings.llm_reasoning_effort or "")
         ),
         wake_classifier_model_name=str(
             os.getenv(
-                "OPENTULPA_E2E_WAKE_MODEL",
+                "KOBO_E2E_WAKE_MODEL",
                 settings.wake_classifier_model or settings.llm_model,
             )
         ),
         wake_execution_model_name=str(
             os.getenv(
-                "OPENTULPA_E2E_WAKE_EXECUTION_MODEL",
+                "KOBO_E2E_WAKE_EXECUTION_MODEL",
                 settings.wake_execution_model or settings.llm_model,
             )
         ),
         telegram_media_model_name=str(
-            os.getenv("OPENTULPA_E2E_TELEGRAM_MEDIA_MODEL", settings.multimodal_llm)
+            os.getenv("KOBO_E2E_TELEGRAM_MEDIA_MODEL", settings.multimodal_llm)
         ),
         workflow_setup_input_classifier_model_name=str(
             os.getenv(
-                "OPENTULPA_E2E_WORKFLOW_SETUP_INPUT_CLASSIFIER_MODEL",
+                "KOBO_E2E_WORKFLOW_SETUP_INPUT_CLASSIFIER_MODEL",
                 settings.workflow_setup_input_classifier_model,
             )
         ),
         context_compaction_model_name=str(
-            os.getenv("OPENTULPA_E2E_CONTEXT_COMPACTION_MODEL", settings.llm_model)
+            os.getenv("KOBO_E2E_CONTEXT_COMPACTION_MODEL", settings.llm_model)
         ),
         browser_use_model_override=str(
-            os.getenv("OPENTULPA_E2E_BROWSER_USE_MODEL", settings.browser_use_model)
+            os.getenv("KOBO_E2E_BROWSER_USE_MODEL", settings.browser_use_model)
         ),
         checkpoint_db_path=str(tmp_path / f"{scenario_name}_checkpoints.sqlite"),
         behavior_log_enabled=True,
@@ -846,7 +846,7 @@ def build_harness(
 
 
 def close_harness(harness: E2EHarness) -> None:
-    from opentulpa.core.config import get_settings
+    from kobo.core.config import get_settings
 
     try:
         harness.client.__exit__(None, None, None)

@@ -8,8 +8,8 @@ from langgraph.graph.message import add_messages
 from langgraph.managed.is_last_step import RemainingSteps
 from typing_extensions import TypedDict
 
-from opentulpa.agent.lc_messages import AnyMessage
-from opentulpa.agent.tool_outcome_context import add_tool_outcomes
+from kobo.agent.lc_messages import AnyMessage
+from kobo.agent.tool_outcome_context import add_tool_outcomes
 
 
 class ToolOutcome(TypedDict, total=False):

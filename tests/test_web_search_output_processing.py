@@ -5,8 +5,8 @@ from typing import Any
 import httpx
 import pytest
 
-from opentulpa.integrations import web_search as web_search_module
-from opentulpa.integrations.web_search import _extract_sources, _sanitize_answer_text
+from kobo.integrations import web_search as web_search_module
+from kobo.integrations.web_search import _extract_sources, _sanitize_answer_text
 
 
 def test_sanitize_answer_text_removes_favicon_noise() -> None:
@@ -137,7 +137,7 @@ async def test_web_search_auto_selects_exa_when_available(
     assert captured["url"] == "https://api.exa.ai/search"
     assert captured["json"] == {"query": "current news", "numResults": 20}
     assert captured["headers"]["x-api-key"] == "exa-key"
-    assert captured["headers"]["x-exa-integration"] == "opentulpa"
+    assert captured["headers"]["x-exa-integration"] == "kobo"
     assert result["provider"] == "exa"
     assert result["answer"] == "1. Exa result (https://example.com/source)"
     assert result["source_count"] == 1
@@ -179,14 +179,14 @@ async def test_exa_web_search_uses_search_endpoint_for_optional_filters(
     monkeypatch.setattr(httpx.AsyncClient, "post", _fake_post)
 
     result = await web_search_module.web_search(
-        "latest OpenTulpa news",
+        "latest Kobo news",
         search_type="auto",
         category="news",
     )
 
     assert isinstance(result, dict)
     assert captured["url"] == "https://api.exa.ai/search"
-    assert captured["json"]["query"] == "latest OpenTulpa news"
+    assert captured["json"]["query"] == "latest Kobo news"
     assert captured["json"]["type"] == "auto"
     assert captured["json"]["category"] == "news"
     assert captured["json"]["numResults"] == 20

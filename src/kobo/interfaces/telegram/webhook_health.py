@@ -6,8 +6,8 @@ from collections.abc import Mapping
 from dataclasses import dataclass
 from typing import Any
 
-from opentulpa.core.public_urls import resolve_public_base_url
-from opentulpa.interfaces.telegram.constants import TELEGRAM_WEBHOOK_ALLOWED_UPDATES
+from kobo.core.public_urls import resolve_public_base_url
+from kobo.interfaces.telegram.constants import TELEGRAM_WEBHOOK_ALLOWED_UPDATES
 
 TELEGRAM_WEBHOOK_PATH = "/webhook/telegram"
 

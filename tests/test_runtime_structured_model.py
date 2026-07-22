@@ -10,16 +10,16 @@ from langchain_core.tools import tool as lc_tool
 from langchain_core.utils.function_calling import convert_to_openai_tool
 from pydantic import BaseModel, ConfigDict
 
-from opentulpa.agent.runtime import (
+from kobo.agent.runtime import (
     INTERACTIVE_NATIVE_TOOL_NAMES,
     ROUTINE_WAKE_NATIVE_TOOL_NAMES,
-    OpenTulpaLangGraphRuntime,
+    KoboLangGraphRuntime,
 )
-from opentulpa.agent.tools.tool_gateway_tools import (
+from kobo.agent.tools.tool_gateway_tools import (
     TOOL_GATEWAY_TOOL_NAMES,
     TOOL_GROUP_DEFINITIONS,
 )
-from opentulpa.agent.turn_plan import build_turn_plan_prompt_context
+from kobo.agent.turn_plan import build_turn_plan_prompt_context
 
 
 class _Schema(BaseModel):
@@ -92,7 +92,7 @@ class _BrokenStructuredThenFallbackModel(_FallbackModel):
 
 
 def test_tools_for_routine_wake_excludes_interactive_owner_update_tool() -> None:
-    runtime = object.__new__(OpenTulpaLangGraphRuntime)
+    runtime = object.__new__(KoboLangGraphRuntime)
     send_owner_update = object()
     turn_plan = object()
     server_time = object()
@@ -161,7 +161,7 @@ def _tool_schema_chars(tools: list[Any]) -> int:
 
 
 def test_tools_for_workflow_setup_uses_task_specific_profile() -> None:
-    runtime = object.__new__(OpenTulpaLangGraphRuntime)
+    runtime = object.__new__(KoboLangGraphRuntime)
     runtime._tools = {
         "send_owner_update": _runtime_structured_test_tool,
         "server_time": _runtime_structured_test_tool,
@@ -191,7 +191,7 @@ def test_tools_for_workflow_setup_uses_task_specific_profile() -> None:
 
 
 def test_real_workflow_setup_profile_removes_large_irrelevant_schemas(tmp_path: Path) -> None:
-    runtime = OpenTulpaLangGraphRuntime(
+    runtime = KoboLangGraphRuntime(
         app_url="http://127.0.0.1:8000",
         openrouter_api_key="k",
         model_name="z-ai/glm-5.1",
@@ -224,7 +224,7 @@ def test_real_workflow_setup_profile_removes_large_irrelevant_schemas(tmp_path: 
 
 @pytest.mark.asyncio
 async def test_tool_group_gateway_describes_and_executes_commands(tmp_path: Path) -> None:
-    runtime = OpenTulpaLangGraphRuntime(
+    runtime = KoboLangGraphRuntime(
         app_url="http://127.0.0.1:8000",
         openrouter_api_key="k",
         model_name="z-ai/glm-5.1",
@@ -256,7 +256,7 @@ def test_web_search_tool_schema_is_query_only_without_exa(
 ) -> None:
     monkeypatch.delenv("EXA_API_KEY", raising=False)
     monkeypatch.setenv("OPENAI_COMPATIBLE_API_KEY", "k")
-    runtime = OpenTulpaLangGraphRuntime(
+    runtime = KoboLangGraphRuntime(
         app_url="http://127.0.0.1:8000",
         openrouter_api_key="k",
         model_name="z-ai/glm-5.1",
@@ -276,7 +276,7 @@ def test_web_search_tool_schema_exposes_exa_filters_with_exa(
 ) -> None:
     monkeypatch.setenv("EXA_API_KEY", "k")
     monkeypatch.setenv("OPENAI_COMPATIBLE_API_KEY", "k")
-    runtime = OpenTulpaLangGraphRuntime(
+    runtime = KoboLangGraphRuntime(
         app_url="http://127.0.0.1:8000",
         openrouter_api_key="k",
         model_name="z-ai/glm-5.1",
@@ -291,7 +291,7 @@ def test_web_search_tool_schema_exposes_exa_filters_with_exa(
 
 
 def test_tool_group_gateway_covers_registered_tools_exactly_once(tmp_path: Path) -> None:
-    runtime = OpenTulpaLangGraphRuntime(
+    runtime = KoboLangGraphRuntime(
         app_url="http://127.0.0.1:8000",
         openrouter_api_key="k",
         model_name="z-ai/glm-5.1",
@@ -324,7 +324,7 @@ def test_tool_group_gateway_covers_registered_tools_exactly_once(tmp_path: Path)
 
 @pytest.mark.asyncio
 async def test_tool_group_exec_runs_hidden_customer_scoped_tools(tmp_path: Path) -> None:
-    runtime = OpenTulpaLangGraphRuntime(
+    runtime = KoboLangGraphRuntime(
         app_url="http://127.0.0.1:8000",
         openrouter_api_key="k",
         model_name="z-ai/glm-5.1",
@@ -371,7 +371,7 @@ async def test_tool_group_exec_runs_hidden_customer_scoped_tools(tmp_path: Path)
 
 @pytest.mark.asyncio
 async def test_tool_group_gateway_repairs_common_intake_update_shape(tmp_path: Path) -> None:
-    runtime = OpenTulpaLangGraphRuntime(
+    runtime = KoboLangGraphRuntime(
         app_url="http://127.0.0.1:8000",
         openrouter_api_key="k",
         model_name="z-ai/glm-5.1",
@@ -477,7 +477,7 @@ async def test_tool_group_gateway_repairs_common_intake_update_shape(tmp_path: P
 
 @pytest.mark.asyncio
 async def test_tool_group_exec_returns_compact_repair_hint_for_missing_args(tmp_path: Path) -> None:
-    runtime = OpenTulpaLangGraphRuntime(
+    runtime = KoboLangGraphRuntime(
         app_url="http://127.0.0.1:8000",
         openrouter_api_key="k",
         model_name="z-ai/glm-5.1",
@@ -505,7 +505,7 @@ async def test_tool_group_exec_returns_compact_repair_hint_for_missing_args(tmp_
 
 @pytest.mark.asyncio
 async def test_tool_group_exec_returns_compact_repair_hint_for_bad_args_json(tmp_path: Path) -> None:
-    runtime = OpenTulpaLangGraphRuntime(
+    runtime = KoboLangGraphRuntime(
         app_url="http://127.0.0.1:8000",
         openrouter_api_key="k",
         model_name="z-ai/glm-5.1",
@@ -527,7 +527,7 @@ async def test_tool_group_exec_returns_compact_repair_hint_for_bad_args_json(tmp
 
 
 def test_registered_tools_have_searchable_descriptions(tmp_path: Path) -> None:
-    runtime = OpenTulpaLangGraphRuntime(
+    runtime = KoboLangGraphRuntime(
         app_url="http://127.0.0.1:8000",
         openrouter_api_key="k",
         model_name="z-ai/glm-5.1",
@@ -583,7 +583,7 @@ class _ProviderAwareStructuredModel:
 
 @pytest.mark.asyncio
 async def test_invoke_structured_model_prefers_native_structured_output() -> None:
-    runtime = object.__new__(OpenTulpaLangGraphRuntime)
+    runtime = object.__new__(KoboLangGraphRuntime)
     model = _StructuredModel(_Schema(ok=True, reason="native"))
 
     parsed, error = await runtime._invoke_structured_model(
@@ -600,7 +600,7 @@ async def test_invoke_structured_model_prefers_native_structured_output() -> Non
 
 @pytest.mark.asyncio
 async def test_invoke_structured_model_uses_strict_json_fallback() -> None:
-    runtime = object.__new__(OpenTulpaLangGraphRuntime)
+    runtime = object.__new__(KoboLangGraphRuntime)
     model = _BrokenStructuredThenFallbackModel('{"ok": true, "reason": "fallback"}')
 
     parsed, error = await runtime._invoke_structured_model(
@@ -617,7 +617,7 @@ async def test_invoke_structured_model_uses_strict_json_fallback() -> None:
 
 @pytest.mark.asyncio
 async def test_invoke_structured_model_accepts_fenced_json_in_fallback() -> None:
-    runtime = object.__new__(OpenTulpaLangGraphRuntime)
+    runtime = object.__new__(KoboLangGraphRuntime)
     model = _BrokenStructuredThenFallbackModel('```json\n{"ok": true, "reason": "fenced"}\n```')
 
     parsed, error = await runtime._invoke_structured_model(
@@ -634,7 +634,7 @@ async def test_invoke_structured_model_accepts_fenced_json_in_fallback() -> None
 
 @pytest.mark.asyncio
 async def test_invoke_structured_model_rejects_wrapped_non_json_text() -> None:
-    runtime = object.__new__(OpenTulpaLangGraphRuntime)
+    runtime = object.__new__(KoboLangGraphRuntime)
     model = _BrokenStructuredThenFallbackModel('prefix {"ok": true, "reason": "x"} suffix')
 
     parsed, error = await runtime._invoke_structured_model(
@@ -650,7 +650,7 @@ async def test_invoke_structured_model_rejects_wrapped_non_json_text() -> None:
 
 @pytest.mark.asyncio
 async def test_invoke_structured_model_repairs_invalid_json_fallback_once() -> None:
-    runtime = object.__new__(OpenTulpaLangGraphRuntime)
+    runtime = object.__new__(KoboLangGraphRuntime)
     model = _SequenceFallbackModel(
         [
             '{"ok": true, "reason": ',
@@ -673,7 +673,7 @@ async def test_invoke_structured_model_repairs_invalid_json_fallback_once() -> N
 
 @pytest.mark.asyncio
 async def test_invoke_structured_model_skips_deepseek_v4_pro_native_structured_output() -> None:
-    runtime = object.__new__(OpenTulpaLangGraphRuntime)
+    runtime = object.__new__(KoboLangGraphRuntime)
     runtime.openrouter_base_url = "https://openrouter.ai/api/v1"
     runtime.model_name = "deepseek/deepseek-v4-pro"
     runtime._reasoning_effort = "medium"
@@ -699,7 +699,7 @@ async def test_invoke_structured_model_skips_deepseek_v4_pro_native_structured_o
 
 @pytest.mark.asyncio
 async def test_invoke_structured_model_omits_legacy_deepseek_disable_payload_for_openrouter_adapter() -> None:
-    runtime = object.__new__(OpenTulpaLangGraphRuntime)
+    runtime = object.__new__(KoboLangGraphRuntime)
     runtime.openrouter_base_url = "https://openrouter.ai/api/v1"
     runtime.model_name = "deepseek/deepseek-v4-pro"
     runtime._reasoning_effort = None
@@ -725,7 +725,7 @@ async def test_invoke_structured_model_omits_legacy_deepseek_disable_payload_for
 
 @pytest.mark.asyncio
 async def test_invoke_structured_model_records_single_llm_call_trace_on_success(tmp_path: Path) -> None:
-    runtime = OpenTulpaLangGraphRuntime(
+    runtime = KoboLangGraphRuntime(
         app_url="http://127.0.0.1:8000",
         openrouter_api_key="k",
         model_name="google/gemini-3-flash-preview",
@@ -765,7 +765,7 @@ async def test_invoke_structured_model_records_single_llm_call_trace_on_success(
 @pytest.mark.asyncio
 async def test_invoke_structured_model_logs_preprovider_behavior_events(tmp_path: Path) -> None:
     behavior_log = tmp_path / "agent_behavior.jsonl"
-    runtime = OpenTulpaLangGraphRuntime(
+    runtime = KoboLangGraphRuntime(
         app_url="http://127.0.0.1:8000",
         openrouter_api_key="k",
         model_name="google/gemini-3-flash-preview",
@@ -807,7 +807,7 @@ async def test_invoke_structured_model_logs_preprovider_behavior_events(tmp_path
 
 @pytest.mark.asyncio
 async def test_decide_intake_workflow_uses_stronger_policy_prompt() -> None:
-    runtime = object.__new__(OpenTulpaLangGraphRuntime)
+    runtime = object.__new__(KoboLangGraphRuntime)
     runtime.model_name = "google/gemini-3-flash-preview"
     runtime._prompt_caching_enabled = True
     runtime._prompt_cache_ttl_1h = False
@@ -878,7 +878,7 @@ async def test_decide_intake_workflow_uses_stronger_policy_prompt() -> None:
     assert "needs_business_knowledge=true" in system_text
     assert "If workflow.knowledge_file_ids is empty, never set needs_business_knowledge=true" in system_text
     assert "business_knowledge_query to one concise natural language query" in system_text
-    assert tracer.calls[0]["name"] == "opentulpa.intake.turn"
+    assert tracer.calls[0]["name"] == "kobo.intake.turn"
     assert tracer.calls[0]["input"] == {
         "workflow_id": "iwf_123",
         "conversation_id": "conv_1",
@@ -889,7 +889,7 @@ async def test_decide_intake_workflow_uses_stronger_policy_prompt() -> None:
 
 @pytest.mark.asyncio
 async def test_decide_intake_workflow_prefers_tool_runtime_first_for_composio_sinks() -> None:
-    runtime = object.__new__(OpenTulpaLangGraphRuntime)
+    runtime = object.__new__(KoboLangGraphRuntime)
     runtime.model_name = "google/gemini-3-flash-preview"
     runtime._prompt_caching_enabled = True
     runtime._prompt_cache_ttl_1h = False
@@ -968,7 +968,7 @@ async def test_decide_intake_workflow_prefers_tool_runtime_first_for_composio_si
 
 @pytest.mark.asyncio
 async def test_decide_intake_workflow_does_not_use_tool_runtime_for_bound_knowledge_files() -> None:
-    runtime = object.__new__(OpenTulpaLangGraphRuntime)
+    runtime = object.__new__(KoboLangGraphRuntime)
     runtime.model_name = "google/gemini-3-flash-preview"
     runtime._prompt_caching_enabled = True
     runtime._prompt_cache_ttl_1h = False
@@ -1030,7 +1030,7 @@ async def test_decide_intake_workflow_does_not_use_tool_runtime_for_bound_knowle
 
 @pytest.mark.asyncio
 async def test_decide_intake_workflow_escalates_to_tool_runtime_after_structured_failure_with_feedback() -> None:
-    runtime = object.__new__(OpenTulpaLangGraphRuntime)
+    runtime = object.__new__(KoboLangGraphRuntime)
     runtime.model_name = "google/gemini-3-flash-preview"
     runtime._prompt_caching_enabled = True
     runtime._prompt_cache_ttl_1h = False
@@ -1089,7 +1089,7 @@ async def test_decide_intake_workflow_escalates_to_tool_runtime_after_structured
     assert captured["include_pending_context"] is False
     assert captured["prompt_mode_override"] == "literal_chat"
     prompt = str(captured["text"])
-    assert "Operate like a real OpenTulpa background execution turn and use tools when needed." in prompt
+    assert "Operate like a real Kobo background execution turn and use tools when needed." in prompt
     assert "composio_tool_search" in prompt
     assert "execution_feedback=" in prompt
     assert "Invalid request data provided" in prompt
@@ -1100,7 +1100,7 @@ async def test_decide_intake_workflow_escalates_to_tool_runtime_after_structured
 
 @pytest.mark.asyncio
 async def test_decide_intake_workflow_compacts_prompt_payload() -> None:
-    runtime = object.__new__(OpenTulpaLangGraphRuntime)
+    runtime = object.__new__(KoboLangGraphRuntime)
     runtime.model_name = "google/gemini-3-flash-preview"
     runtime._prompt_caching_enabled = True
     runtime._prompt_cache_ttl_1h = False
@@ -1181,7 +1181,7 @@ async def test_decide_intake_workflow_compacts_prompt_payload() -> None:
 
 @pytest.mark.asyncio
 async def test_decide_intake_workflow_returns_sink_arguments_from_tool_runtime() -> None:
-    runtime = object.__new__(OpenTulpaLangGraphRuntime)
+    runtime = object.__new__(KoboLangGraphRuntime)
     runtime.model_name = "google/gemini-3-flash-preview"
     runtime._prompt_caching_enabled = True
     runtime._prompt_cache_ttl_1h = False
@@ -1240,7 +1240,7 @@ async def test_decide_intake_workflow_returns_sink_arguments_from_tool_runtime()
 
 
 def test_prompt_cache_profile_uses_openrouter_standard_modes() -> None:
-    runtime = object.__new__(OpenTulpaLangGraphRuntime)
+    runtime = object.__new__(KoboLangGraphRuntime)
     runtime._prompt_caching_enabled = True
     runtime._prompt_cache_ttl_1h = False
 

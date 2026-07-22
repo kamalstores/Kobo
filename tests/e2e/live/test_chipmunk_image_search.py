@@ -8,7 +8,7 @@ from typing import Any
 import pytest
 from harness.runner import E2EHarness
 
-LIVE_FLAG = "OPENTULPA_ENABLE_LIVE_CHIPMUNK_IMAGE_E2E"
+LIVE_FLAG = "KOBO_ENABLE_LIVE_CHIPMUNK_IMAGE_E2E"
 
 pytestmark = [pytest.mark.e2e, pytest.mark.live_llm, pytest.mark.telegram]
 
@@ -80,8 +80,8 @@ def test_live_telegram_chipmunk_image_search_sends_web_image(
 
     web_search_calls = _internal_calls(e2e_harness, "/internal/web_search")
     image_send_calls = _internal_calls(e2e_harness, "/internal/files/send_web_image")
-    assert web_search_calls, "Expected OpenTulpa to call web_search before image send"
-    assert image_send_calls, "Expected OpenTulpa to call web_image_send"
+    assert web_search_calls, "Expected Kobo to call web_search before image send"
+    assert image_send_calls, "Expected Kobo to call web_image_send"
 
     send_call = image_send_calls[-1]
     assert int(send_call.get("status_code") or 0) == 200, send_call

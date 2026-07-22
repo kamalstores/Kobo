@@ -5,15 +5,15 @@ from __future__ import annotations
 import logging
 from typing import Any
 
-from opentulpa.agent.lc_messages import AIMessage, HumanMessage, ToolMessage
-from opentulpa.agent.models import AgentState
-from opentulpa.agent.tool_outcome_finalizers import (
+from kobo.agent.lc_messages import AIMessage, HumanMessage, ToolMessage
+from kobo.agent.models import AgentState
+from kobo.agent.tool_outcome_finalizers import (
     final_response_hint_from_tool_outcomes,
     generate_final_response_from_tool_hint,
 )
-from opentulpa.agent.turn_budget import mark_finalizer_used
-from opentulpa.agent.turn_policy import normalize_turn_mode
-from opentulpa.agent.utils import content_to_text, latest_user_text
+from kobo.agent.turn_budget import mark_finalizer_used
+from kobo.agent.turn_policy import normalize_turn_mode
+from kobo.agent.utils import content_to_text, latest_user_text
 
 logger = logging.getLogger(__name__)
 
@@ -75,7 +75,7 @@ async def generate_final_response_from_turn_state(
     messages = [
         HumanMessage(
             content=(
-                "You are finishing the current OpenTulpa turn. Do not call tools.\n"
+                "You are finishing the current Kobo turn. Do not call tools.\n"
                 "Use only the current request, assistant notes, verified tool results, and current plan below.\n"
                 "Fulfill the requested deliverable directly with the best evidence available now.\n"
                 "If the task is incomplete, give the best useful partial result and the exact blocker, "

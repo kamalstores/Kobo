@@ -7,9 +7,9 @@ from collections.abc import Callable
 from contextlib import suppress
 from typing import Any
 
-from opentulpa.core.ids import new_short_id
-from opentulpa.interfaces.telegram.relay import NO_NOTIFY_TOKEN
-from opentulpa.web.events import append_web_event
+from kobo.core.ids import new_short_id
+from kobo.interfaces.telegram.relay import NO_NOTIFY_TOKEN
+from kobo.web.events import append_web_event
 
 
 class WakeOrchestrator:

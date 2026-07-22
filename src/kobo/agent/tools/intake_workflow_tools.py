@@ -6,8 +6,8 @@ from typing import Any
 
 from langchain.tools import tool
 
-from opentulpa.agent.tools.common import require_customer_id
-from opentulpa.agent.tools.internal_http import InternalToolHTTPClient
+from kobo.agent.tools.common import require_customer_id
+from kobo.agent.tools.internal_http import InternalToolHTTPClient
 
 
 def _unique_string_list(values: list[str] | None) -> list[str]:
@@ -110,7 +110,7 @@ def register_intake_workflow_tools(runtime: Any) -> dict[str, Any]:
     ) -> Any:
         """Create or update an intake workflow.
 
-        Use this when the user wants OpenTulpa to monitor inbound messages, decide whether
+        Use this when the user wants Kobo to monitor inbound messages, decide whether
         they match a business workflow, ask follow-up questions, and save the result.
 
         Important shaping rules:
@@ -171,12 +171,12 @@ def register_intake_workflow_tools(runtime: Any) -> dict[str, Any]:
         - sink_config must contain the concrete configuration needed by the chosen sink_type.
         - Valid sink_type values here are local_csv, google_sheets_composio, or generic_composio_write.
         - Never invent sink_type=google_sheets.
-        - For local_csv, use sink_config={"file_path": "tulpa_stuff/bookings.csv"}.
+        - For local_csv, use sink_config={"file_path": "kobo_stuff/bookings.csv"}.
         - Do not use sink_config.filename for local_csv workflows.
         - For Google Sheets, pass toolkit-level configuration, not a concrete tool slug:
           sink_type=google_sheets_composio
           sink_config={"toolkit": "googlesheets", "field_mapping": {...}, "static_arguments": {...}}
-        - OpenTulpa resolves the concrete Composio tool at execution time from the toolkit.
+        - Kobo resolves the concrete Composio tool at execution time from the toolkit.
         - If the user only gives a Google Sheet URL, extract the spreadsheet ID and pass it inside
           sink_config.static_arguments.
         - For Google Sheets, include sink_config.static_arguments.sheetName when the target tab is known.

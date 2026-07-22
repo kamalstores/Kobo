@@ -9,13 +9,13 @@ from urllib.parse import urlparse
 import httpx
 from langchain.tools import tool
 
-from opentulpa.agent.file_analysis import summarize_uploaded_blob
-from opentulpa.agent.lc_messages import HumanMessage, SystemMessage
-from opentulpa.agent.tools.core_tools import _crawl4ai_extract
-from opentulpa.agent.utils import content_to_text as _content_to_text
-from opentulpa.agent.utils import extract_html_title as _extract_html_title
-from opentulpa.agent.utils import html_to_text as _html_to_text
-from opentulpa.integrations.web_search import get_web_search_backend_name
+from kobo.agent.file_analysis import summarize_uploaded_blob
+from kobo.agent.lc_messages import HumanMessage, SystemMessage
+from kobo.agent.tools.core_tools import _crawl4ai_extract
+from kobo.agent.utils import content_to_text as _content_to_text
+from kobo.agent.utils import extract_html_title as _extract_html_title
+from kobo.agent.utils import html_to_text as _html_to_text
+from kobo.integrations.web_search import get_web_search_backend_name
 
 ExaSearchType = Literal["auto", "fast", "neural", "deep"]
 ExaCategory = Literal[
@@ -92,7 +92,7 @@ def register_web_tools(runtime: Any) -> dict[str, Any]:
             async with httpx.AsyncClient(
                 timeout=45.0,
                 follow_redirects=True,
-                headers={"User-Agent": "OpenTulpa/0.1 (+content-fetch)"},
+                headers={"User-Agent": "Kobo/0.1 (+content-fetch)"},
             ) as client:
                 resp = await client.get(raw_url)
         except Exception as exc:

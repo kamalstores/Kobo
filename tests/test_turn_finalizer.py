@@ -2,8 +2,8 @@ from __future__ import annotations
 
 import pytest
 
-from opentulpa.agent.lc_messages import AIMessage, HumanMessage
-from opentulpa.agent.turn_finalizer import (
+from kobo.agent.lc_messages import AIMessage, HumanMessage
+from kobo.agent.turn_finalizer import (
     finalize_turn_response,
     generate_final_response_from_turn_state,
 )

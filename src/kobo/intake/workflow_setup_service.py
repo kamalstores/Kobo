@@ -10,8 +10,8 @@ from datetime import UTC, datetime
 from hashlib import sha256
 from typing import Any, cast
 
-from opentulpa.intake.service import IntakeWorkflowService
-from opentulpa.intake.workflow_setup_store import (
+from kobo.intake.service import IntakeWorkflowService
+from kobo.intake.workflow_setup_store import (
     SetupSessionMode,
     SetupSessionStatus,
     WorkflowSetupSessionStore,

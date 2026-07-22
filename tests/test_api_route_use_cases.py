@@ -4,9 +4,9 @@ from typing import Any
 
 import pytest
 
-from opentulpa.api.routes.file_use_cases import FileRouteUseCases
-from opentulpa.api.routes.intake_use_cases import workflow_upsert_kwargs
-from opentulpa.api.routes.user_context_use_cases import needs_model_processing
+from kobo.api.routes.file_use_cases import FileRouteUseCases
+from kobo.api.routes.intake_use_cases import workflow_upsert_kwargs
+from kobo.api.routes.user_context_use_cases import needs_model_processing
 
 
 class _Vault:
@@ -102,7 +102,7 @@ def test_workflow_upsert_kwargs_preserves_internal_schedule_none_quirk() -> None
             "intent_description": "Book visits",
             "required_fields": ["date"],
             "sink_type": "local_csv",
-            "sink_config": {"file_path": "tulpa_stuff/leads.csv"},
+            "sink_config": {"file_path": "kobo_stuff/leads.csv"},
             "schedule": None,
         },
         customer_id="cust_1",

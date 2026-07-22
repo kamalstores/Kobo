@@ -9,7 +9,7 @@ from datetime import date, datetime
 from io import BytesIO, StringIO
 from typing import Any
 
-from opentulpa.agent.file_analysis import extract_uploaded_text
+from kobo.agent.file_analysis import extract_uploaded_text
 
 _XLSX_MIME = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
 _MAX_CELL_CHARS = 300

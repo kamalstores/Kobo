@@ -7,13 +7,13 @@ from typing import Any
 import httpx
 import pytest
 
-from opentulpa.integrations.browser_use_captcha import (
+from kobo.integrations.browser_use_captcha import (
     _DETECT_CAPTCHA_SCRIPT,
     build_capsolver_controller,
     detect_browser_captcha,
     inject_browser_captcha_token,
 )
-from opentulpa.integrations.capsolver import CapSolverClient, CapSolverError, CapSolverSolveResult
+from kobo.integrations.capsolver import CapSolverClient, CapSolverError, CapSolverSolveResult
 
 
 class _FakePage:

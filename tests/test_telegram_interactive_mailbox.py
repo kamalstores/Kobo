@@ -7,10 +7,10 @@ from typing import Any
 import pytest
 from langgraph.checkpoint.memory import InMemorySaver
 
-from opentulpa.agent.graph_builder import build_runtime_graph
-from opentulpa.agent.lc_messages import AIMessage, HumanMessage, SystemMessage, ToolMessage
-from opentulpa.agent.runtime import OpenTulpaLangGraphRuntime
-from opentulpa.interfaces.telegram import chat_service as chat_module
+from kobo.agent.graph_builder import build_runtime_graph
+from kobo.agent.lc_messages import AIMessage, HumanMessage, SystemMessage, ToolMessage
+from kobo.agent.runtime import KoboLangGraphRuntime
+from kobo.interfaces.telegram import chat_service as chat_module
 
 
 class _FakeStateStore:
@@ -121,7 +121,7 @@ async def test_telegram_interactive_owner_reply_to_bot_photo_adds_reply_context(
                 "text": "Use this image for the landing screen.",
                 "reply_to_message": {
                     "message_id": 44,
-                    "from": {"id": 200, "is_bot": True, "username": "OpenTulpaBot"},
+                    "from": {"id": 200, "is_bot": True, "username": "KoboBot"},
                     "caption": "Generated hero image for the car wash workflow.",
                     "photo": [
                         {
@@ -148,7 +148,7 @@ async def test_telegram_interactive_owner_reply_to_bot_photo_adds_reply_context(
     assert result is None
     assert captured_turn_texts and len(captured_turn_texts) == 1
     turn_text = captured_turn_texts[0]
-    assert "the user replied to one of OpenTulpa's earlier messages" in turn_text
+    assert "the user replied to one of Kobo's earlier messages" in turn_text
     assert "- replied_message_id: 44" in turn_text
     assert "Generated hero image for the car wash workflow." in turn_text
     assert "type=photo file_unique_id=large_unique size=1024x768" in turn_text
@@ -174,7 +174,7 @@ async def test_telegram_group_mention_reply_adds_quoted_context(
 
     async def _fake_resolve_bot_username(bot_token: str | None) -> str:
         assert bot_token == "123:abc"
-        return "OpenTulpaBot"
+        return "KoboBot"
 
     async def _fake_stream_langgraph_reply_to_telegram(**kwargs: Any) -> tuple[str | None, bool]:
         captured_turn_texts.append(str(kwargs.get("text", "")))
@@ -190,7 +190,7 @@ async def test_telegram_group_mention_reply_adds_quoted_context(
             "message": {
                 "chat": {"id": -1001, "type": "supergroup"},
                 "from": {"id": 100, "username": "owner"},
-                "text": "@OpenTulpaBot summarize this",
+                "text": "@KoboBot summarize this",
                 "entities": [{"type": "mention", "offset": 0, "length": 14}],
                 "reply_to_message": {
                     "message_id": 88,
@@ -209,7 +209,7 @@ async def test_telegram_group_mention_reply_adds_quoted_context(
     assert "replied_message_id: 88" in turn_text
     assert "move the meeting to 14:30" in turn_text
     assert "Current user message:\nsummarize this" in turn_text
-    assert "@OpenTulpaBot" not in turn_text
+    assert "@KoboBot" not in turn_text
     assert runtime.registered_thread_ids == ["chat--1001"]
     assert runtime.cleared_thread_ids == ["chat--1001"]
     assert fake_store.assistant_touches == [-1001]
@@ -234,7 +234,7 @@ async def test_telegram_group_message_without_bot_mention_is_ignored(
 
     async def _fake_resolve_bot_username(bot_token: str | None) -> str:
         del bot_token
-        return "OpenTulpaBot"
+        return "KoboBot"
 
     async def _fake_stream_langgraph_reply_to_telegram(**kwargs: Any) -> tuple[str | None, bool]:
         captured_turn_texts.append(str(kwargs.get("text", "")))
@@ -293,7 +293,7 @@ async def test_telegram_allowed_username_auto_binds_generic_owner_from_group_mes
 
     async def _fake_resolve_bot_username(bot_token: str | None) -> str:
         del bot_token
-        return "OpenTulpaBot"
+        return "KoboBot"
 
     async def _fake_stream_langgraph_reply_to_telegram(**kwargs: Any) -> tuple[str | None, bool]:
         stream_customers.append(str(kwargs.get("customer_id", "")))
@@ -309,7 +309,7 @@ async def test_telegram_allowed_username_auto_binds_generic_owner_from_group_mes
             "message": {
                 "chat": {"id": -1001, "type": "supergroup"},
                 "from": {"id": 100, "username": "owner"},
-                "text": "@OpenTulpaBot list my sheets",
+                "text": "@KoboBot list my sheets",
                 "entities": [{"type": "mention", "offset": 0, "length": 14}],
             }
         },
@@ -382,7 +382,7 @@ async def test_telegram_interactive_failed_voice_reply_does_not_stream_reply_con
         submission=submission,
         text="",
         reply_context=(
-            "Context: the user replied to one of OpenTulpa's earlier messages.\n"
+            "Context: the user replied to one of Kobo's earlier messages.\n"
             "- replied_message_id: 44"
         ),
         caption=None,
@@ -431,7 +431,7 @@ async def test_telegram_interactive_inbox_merges_slow_media_then_followup_text(
                 "original_filename": "cat.jpg",
                 "kind": "photo",
                 "stored_path": "vault/cat.jpg",
-                "local_path": "tulpa_stuff/uploads/telegram_100/file_1_cat.jpg",
+                "local_path": "kobo_stuff/uploads/telegram_100/file_1_cat.jpg",
                 "created_at": "2026-04-12T00:00:00Z",
                 "summary": "orange cat sleeping on a chair",
             }
@@ -562,7 +562,7 @@ async def test_telegram_interactive_session_allows_explicit_owner_update(
 
 @pytest.mark.asyncio
 async def test_graph_agent_injects_interactive_fragments_before_second_model_call() -> None:
-    runtime = object.__new__(OpenTulpaLangGraphRuntime)
+    runtime = object.__new__(KoboLangGraphRuntime)
     captured_model_messages: list[list[Any]] = []
     drain_calls = 0
 

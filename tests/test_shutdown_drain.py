@@ -4,7 +4,7 @@ import asyncio
 
 import pytest
 
-from opentulpa.core.shutdown_drain import ShutdownDrain, ShutdownDrainingError
+from kobo.core.shutdown_drain import ShutdownDrain, ShutdownDrainingError
 
 
 @pytest.mark.asyncio

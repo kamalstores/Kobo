@@ -8,10 +8,10 @@ from typing import Any
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 
-from opentulpa.api.customer_ids import resolve_customer_id as resolve_customer_id_value
-from opentulpa.api.file_helpers import collect_routine_cleanup_paths, normalize_cleanup_paths
-from opentulpa.core.ids import new_short_id
-from opentulpa.scheduler.models import Routine
+from kobo.api.customer_ids import resolve_customer_id as resolve_customer_id_value
+from kobo.api.file_helpers import collect_routine_cleanup_paths, normalize_cleanup_paths
+from kobo.core.ids import new_short_id
+from kobo.scheduler.models import Routine
 
 
 def register_scheduler_routes(

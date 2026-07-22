@@ -3,7 +3,7 @@ from __future__ import annotations
 import asyncio
 import sqlite3
 
-from opentulpa.tasks.service import TaskService
+from kobo.tasks.service import TaskService
 
 
 def test_task_service_connection_pragmas(tmp_path):

@@ -8,26 +8,26 @@ from dataclasses import dataclass
 from datetime import timedelta
 from typing import Any, Protocol
 
-from opentulpa.intake.workflow_boundaries import (
+from kobo.intake.workflow_boundaries import (
     ConversationCursorSignals,
     WorkflowRunAccumulator,
 )
-from opentulpa.intake.workflow_runtime import (
+from kobo.intake.workflow_runtime import (
     INSTAGRAM_STALE_DECISION_REFRESH_ATTEMPTS as _INSTAGRAM_STALE_DECISION_REFRESH_ATTEMPTS,
 )
-from opentulpa.intake.workflow_runtime import (
+from kobo.intake.workflow_runtime import (
     MAX_DECISION_RECOVERY_ATTEMPTS as _MAX_DECISION_RECOVERY_ATTEMPTS,
 )
-from opentulpa.intake.workflow_runtime import (
+from kobo.intake.workflow_runtime import (
     STALE_TERMINAL_STATUSES as _STALE_TERMINAL_STATUSES,
 )
-from opentulpa.intake.workflow_runtime import (
+from kobo.intake.workflow_runtime import (
     safe_dict as _safe_dict,
 )
-from opentulpa.intake.workflow_runtime import (
+from kobo.intake.workflow_runtime import (
     workflow_requires_intent_match as _workflow_requires_intent_match,
 )
-from opentulpa.interfaces.telegram.relay import NO_NOTIFY_TOKEN
+from kobo.interfaces.telegram.relay import NO_NOTIFY_TOKEN
 
 
 @dataclass

@@ -9,8 +9,8 @@ from pathlib import Path
 from typing import Any
 from urllib.parse import urlparse, urlunparse
 
-from opentulpa.core.ids import new_short_id
-from opentulpa.persistence.sqlite import connect_sqlite
+from kobo.core.ids import new_short_id
+from kobo.persistence.sqlite import connect_sqlite
 
 _HTTP_URL_RE = re.compile(r"https?://[^\s<>'\"`]+", re.IGNORECASE)
 _LINK_ID_RE = re.compile(r"\blink_[A-Za-z0-9]{4,12}\b")

@@ -5,10 +5,10 @@ from pathlib import Path
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
 
-from opentulpa.api.routes.generic_chat import register_generic_chat_routes
-from opentulpa.api.routes.intake import register_intake_workflow_routes
-from opentulpa.context.file_vault import FileVaultService
-from opentulpa.intake.service import IntakeWorkflowService
+from kobo.api.routes.generic_chat import register_generic_chat_routes
+from kobo.api.routes.intake import register_intake_workflow_routes
+from kobo.context.file_vault import FileVaultService
+from kobo.intake.service import IntakeWorkflowService
 
 
 def _service(tmp_path: Path) -> IntakeWorkflowService:
@@ -63,7 +63,7 @@ def _workflow_payload(**overrides: object) -> dict[str, object]:
         "business_facts": {"deposit_required": False},
         "knowledge_file_ids": [],
         "sink_type": "local_csv",
-        "sink_config": {"file_path": "tulpa_stuff/bookings.csv"},
+        "sink_config": {"file_path": "kobo_stuff/bookings.csv"},
         "schedule": "*/5 * * * *",
         "notify_user": True,
         "enabled": True,

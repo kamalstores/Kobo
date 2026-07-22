@@ -9,7 +9,7 @@ from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 from starlette.concurrency import run_in_threadpool
 
-from opentulpa.tasks.sandbox import (
+from kobo.tasks.sandbox import (
     ALLOWED_TERMINAL_DIRS,
     PROJECT_ROOT,
     TERMINAL_COMMAND_ALLOWLIST_ENV,
@@ -17,10 +17,10 @@ from opentulpa.tasks.sandbox import (
     get_terminal_command_allowlist,
     get_tulpa_catalog,
 )
-from opentulpa.tasks.sandbox import read_file as sandbox_read_file
-from opentulpa.tasks.sandbox import run_terminal as sandbox_run_terminal
-from opentulpa.tasks.sandbox import validate_generated_file as sandbox_validate_generated_file
-from opentulpa.tasks.sandbox import write_file as sandbox_write_file
+from kobo.tasks.sandbox import read_file as sandbox_read_file
+from kobo.tasks.sandbox import run_terminal as sandbox_run_terminal
+from kobo.tasks.sandbox import validate_generated_file as sandbox_validate_generated_file
+from kobo.tasks.sandbox import write_file as sandbox_write_file
 
 
 def register_tulpa_routes(
@@ -33,7 +33,7 @@ def register_tulpa_routes(
 
     @app.post("/internal/tulpa/reload")
     async def internal_tulpa_reload() -> Any:
-        """Reload APIRouter modules from tulpa_stuff."""
+        """Reload APIRouter modules from kobo_stuff."""
         result = get_tulpa_loader().reload()
         if callable(refresh_tulpa_mounts):
             refresh_tulpa_mounts()
@@ -109,7 +109,7 @@ def register_tulpa_routes(
         """Run a restricted command in approved integration/self-modification paths."""
         body = await request.json()
         command = str(body.get("command", "")).strip()
-        working_dir_key = str(body.get("working_dir", "tulpa_stuff")).strip()
+        working_dir_key = str(body.get("working_dir", "kobo_stuff")).strip()
         timeout_seconds = int(body.get("timeout_seconds", 90))
 
         if not command:
@@ -164,5 +164,5 @@ def register_tulpa_routes(
 
     @app.get("/internal/tulpa/catalog")
     async def internal_tulpa_catalog() -> Any:
-        """Return tulpa_stuff catalog/index and recent tracked entries."""
+        """Return kobo_stuff catalog/index and recent tracked entries."""
         return {"ok": True, "catalog": get_tulpa_catalog()}

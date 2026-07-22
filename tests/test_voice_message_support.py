@@ -1,7 +1,7 @@
 from __future__ import annotations
 
-from opentulpa.agent.file_analysis import _infer_audio_format
-from opentulpa.interfaces.telegram.chat_service import (
+from kobo.agent.file_analysis import _infer_audio_format
+from kobo.interfaces.telegram.chat_service import (
     _inject_voice_message_context,
     _telegram_command_name,
 )

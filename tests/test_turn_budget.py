@@ -1,13 +1,13 @@
 from __future__ import annotations
 
-from opentulpa.agent.turn_budget import (
+from kobo.agent.turn_budget import (
     budget_status_context,
     consume_model_call,
     initial_turn_budget,
     record_search_calls,
     record_tool_round,
 )
-from opentulpa.agent.turn_control import record_tool_round_for_turn
+from kobo.agent.turn_control import record_tool_round_for_turn
 
 
 def test_turn_budget_derives_model_calls_from_graph_recursion_limit() -> None:

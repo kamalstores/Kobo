@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import pytest
 
-from opentulpa.intake.messaging_adapters import (
+from kobo.intake.messaging_adapters import (
     AdapterRegistry,
     ComposioInstagramMessagingAdapter,
     ConversationLoadResult,

@@ -77,8 +77,8 @@ sys.modules.setdefault("apscheduler.triggers.cron", cron_module)
 sys.modules.setdefault("apscheduler.triggers.date", date_module)
 sys.modules.setdefault("mem0", mem0_module)
 
-from opentulpa.api.app import create_app  # noqa: E402
-from opentulpa.skills.service import SkillStoreService  # noqa: E402
+from kobo.api.app import create_app  # noqa: E402
+from kobo.skills.service import SkillStoreService  # noqa: E402
 
 
 def _mk_client(tmp_path: Path) -> TestClient:

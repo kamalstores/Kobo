@@ -7,9 +7,9 @@ from contextlib import suppress
 from pathlib import Path
 from typing import Any
 
-from opentulpa.context.file_vault import FileVaultService
-from opentulpa.interfaces.telegram.client import TelegramClient
-from opentulpa.interfaces.telegram.models import TelegramAttachment
+from kobo.context.file_vault import FileVaultService
+from kobo.interfaces.telegram.client import TelegramClient
+from kobo.interfaces.telegram.models import TelegramAttachment
 
 PROJECT_ROOT = Path(__file__).resolve().parents[4]
 XLSX_MIME_TYPE = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
@@ -42,7 +42,7 @@ def _mirror_uploaded_file(
 ) -> str | None:
     customer_seg = _safe_segment(customer_id, fallback="customer")
     safe_name = _safe_segment(filename, fallback="file.bin")
-    rel_path = Path("tulpa_stuff") / "uploads" / customer_seg / f"{file_id}_{safe_name}"
+    rel_path = Path("kobo_stuff") / "uploads" / customer_seg / f"{file_id}_{safe_name}"
     abs_path = (PROJECT_ROOT / rel_path).resolve()
     try:
         abs_path.parent.mkdir(parents=True, exist_ok=True)

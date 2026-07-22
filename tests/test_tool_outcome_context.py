@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from opentulpa.agent.tool_outcome_context import (
+from kobo.agent.tool_outcome_context import (
     add_tool_outcomes,
     build_tool_outcome_context,
     compact_tool_result_for_model,

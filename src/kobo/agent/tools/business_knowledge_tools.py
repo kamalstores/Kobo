@@ -6,8 +6,8 @@ from typing import Any
 
 from langchain.tools import tool
 
-from opentulpa.agent.tools.common import require_customer_id
-from opentulpa.agent.tools.core_tools import (
+from kobo.agent.tools.common import require_customer_id
+from kobo.agent.tools.core_tools import (
     _compact_business_knowledge_index,
     _compact_business_knowledge_query,
     _resolve_business_knowledge_scope,

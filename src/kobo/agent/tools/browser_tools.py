@@ -10,7 +10,7 @@ from urllib.parse import urlparse
 
 from langchain.tools import tool
 
-from opentulpa.agent.tools.common import require_customer_id
+from kobo.agent.tools.common import require_customer_id
 
 _BROWSER_USE_DEFAULT_WAIT_TIMEOUT_SECONDS = 1800
 _BROWSER_USE_MAX_WAIT_TIMEOUT_SECONDS = 1800
@@ -213,7 +213,7 @@ def register_browser_tools(runtime: Any) -> dict[str, Any]:
     ) -> Any:
         """
         Open a Browser Use-backed browser session, navigate when start_url or a URL
-        in task is present, and return OpenTulpa-captured page evidence. Use for
+        in task is present, and return Kobo-captured page evidence. Use for
         dynamic pages where a real browser snapshot is needed. Browser sessions are
         kept alive and may use persisted profile state when configured; reuse a prior
         session_id when continuing the same account/site workflow. Do not ask the
@@ -365,7 +365,7 @@ def register_browser_tools(runtime: Any) -> dict[str, Any]:
     ) -> Any:
         """
         Capture a screenshot from an existing Browser Use task/session, save it under
-        tulpa_stuff/, and return the local path. Use tulpa_file_send(path) to send it.
+        kobo_stuff/, and return the local path. Use tulpa_file_send(path) to send it.
         """
         safe_task_id = str(task_id or "").strip()
         if not safe_task_id:

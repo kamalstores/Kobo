@@ -9,7 +9,7 @@ from typing import Any
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 
-from opentulpa.api.customer_ids import resolve_body_customer_id
+from kobo.api.customer_ids import resolve_body_customer_id
 
 
 def register_skill_routes(
@@ -80,7 +80,7 @@ def register_skill_routes(
             return JSONResponse(status_code=400, content={"detail": "name is required"})
         try:
             if not skill_markdown:
-                from opentulpa.skills.service import build_skill_markdown
+                from kobo.skills.service import build_skill_markdown
 
                 skill_markdown = build_skill_markdown(
                     name=name,

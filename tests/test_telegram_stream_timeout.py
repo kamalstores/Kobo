@@ -5,7 +5,7 @@ import logging
 
 import pytest
 
-from opentulpa.interfaces.telegram import relay as relay_module
+from kobo.interfaces.telegram import relay as relay_module
 
 
 class _NeverYieldsRuntime:

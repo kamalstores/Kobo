@@ -5,10 +5,10 @@ from typing import Any, cast
 
 from fastapi.testclient import TestClient
 
-from opentulpa.api.app import create_app
-from opentulpa.core.config import get_settings
-from opentulpa.interfaces.telegram.client import TelegramClient
-from opentulpa.skills.service import SkillStoreService
+from kobo.api.app import create_app
+from kobo.core.config import get_settings
+from kobo.interfaces.telegram.client import TelegramClient
+from kobo.skills.service import SkillStoreService
 
 
 def _mk_client(tmp_path: Path, *, client_host: str = "127.0.0.1") -> TestClient:
@@ -88,7 +88,7 @@ def test_web_events_route_public_with_bearer_auth(
     tmp_path: Path,
     monkeypatch: Any,
 ) -> None:
-    monkeypatch.setenv("OPENTULPA_WEB_TOKEN", "web-secret")
+    monkeypatch.setenv("KOBO_WEB_TOKEN", "web-secret")
     get_settings.cache_clear()
     with _mk_client(tmp_path, client_host="8.8.8.8") as client:
         rejected = client.get("/web/events")
@@ -107,7 +107,7 @@ def test_generic_web_chat_route_is_public_but_bearer_protected(
     tmp_path: Path,
     monkeypatch: Any,
 ) -> None:
-    monkeypatch.setenv("OPENTULPA_WEB_TOKEN", "web-secret")
+    monkeypatch.setenv("KOBO_WEB_TOKEN", "web-secret")
     get_settings.cache_clear()
     with _mk_client(tmp_path, client_host="8.8.8.8") as client:
         no_header = client.post(
@@ -149,7 +149,7 @@ def test_telegram_webhook_status_route_is_public_but_bearer_protected(
     monkeypatch.setenv("TELEGRAM_BOT_TOKEN", "123:abc")
     monkeypatch.setenv("TELEGRAM_WEBHOOK_SECRET", "tg-secret")
     monkeypatch.setenv("PUBLIC_BASE_URL", "https://app.example.com")
-    monkeypatch.setenv("OPENTULPA_WEB_TOKEN", "web-secret")
+    monkeypatch.setenv("KOBO_WEB_TOKEN", "web-secret")
     monkeypatch.setattr(TelegramClient, "get_webhook_info", fake_get_webhook_info)
     get_settings.cache_clear()
     with _mk_client(tmp_path, client_host="8.8.8.8") as client:

@@ -4,16 +4,16 @@ from __future__ import annotations
 
 from typing import Any
 
-from opentulpa.intake.workflow_runtime import (
+from kobo.intake.workflow_runtime import (
     safe_dict as _safe_dict,
 )
-from opentulpa.intake.workflow_runtime import (
+from kobo.intake.workflow_runtime import (
     safe_list as _safe_list,
 )
-from opentulpa.intake.workflow_runtime import (
+from kobo.intake.workflow_runtime import (
     unique_string_list as _unique_string_list,
 )
-from opentulpa.intake.workflow_runtime import (
+from kobo.intake.workflow_runtime import (
     workflow_requires_intent_match as _workflow_requires_intent_match,
 )
 

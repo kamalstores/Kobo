@@ -2,9 +2,9 @@ from __future__ import annotations
 
 import pytest
 
-from opentulpa.agent.graph_nodes.tool_validation import build_validate_tool_calls_node
-from opentulpa.agent.lc_messages import AIMessage, HumanMessage, SystemMessage, ToolMessage
-from opentulpa.agent.tool_loop_guardrails import (
+from kobo.agent.graph_nodes.tool_validation import build_validate_tool_calls_node
+from kobo.agent.lc_messages import AIMessage, HumanMessage, SystemMessage, ToolMessage
+from kobo.agent.tool_loop_guardrails import (
     duplicate_tool_error,
     find_duplicate_tool_calls,
     tool_action_signature,

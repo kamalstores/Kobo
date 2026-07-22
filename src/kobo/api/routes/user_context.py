@@ -19,7 +19,7 @@ from typing import Any
 
 from fastapi import FastAPI, Request
 
-from opentulpa.api.routes.user_context_use_cases import UserContextRouteUseCases
+from kobo.api.routes.user_context_use_cases import UserContextRouteUseCases
 
 
 def register_user_context_routes(

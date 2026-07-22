@@ -15,23 +15,23 @@ from harness.runner import E2EHarness, build_harness, close_harness, load_jsonl
 from langgraph.checkpoint.memory import InMemorySaver
 from mocks.telegram import FakeTelegramClient
 
-from opentulpa.agent.graph_builder import build_runtime_graph
-from opentulpa.agent.lc_messages import AIMessage, SystemMessage
-from opentulpa.agent.runtime import OpenTulpaLangGraphRuntime
-from opentulpa.agent.runtime_context_provider import RuntimeContextSourceProvider
-from opentulpa.agent.runtime_input import ThreadInputCoordinator
-from opentulpa.agent.tools_registry import register_runtime_tools
-from opentulpa.api import app as app_module
-from opentulpa.api.app import create_app
-from opentulpa.api.routes import wake_search as wake_search_routes
-from opentulpa.core.config import get_settings
-from opentulpa.interfaces.telegram import attachments as attachments_module
-from opentulpa.interfaces.telegram import chat_service as chat_module
-from opentulpa.interfaces.telegram import relay as relay_module
-from opentulpa.interfaces.telegram.interactive_inbox import TelegramInteractiveInbox
-from opentulpa.interfaces.telegram.state_store import TelegramStateStore
-from opentulpa.scheduler.service import SchedulerService
-from opentulpa.tasks import sandbox as sandbox_module
+from kobo.agent.graph_builder import build_runtime_graph
+from kobo.agent.lc_messages import AIMessage, SystemMessage
+from kobo.agent.runtime import KoboLangGraphRuntime
+from kobo.agent.runtime_context_provider import RuntimeContextSourceProvider
+from kobo.agent.runtime_input import ThreadInputCoordinator
+from kobo.agent.tools_registry import register_runtime_tools
+from kobo.api import app as app_module
+from kobo.api.app import create_app
+from kobo.api.routes import wake_search as wake_search_routes
+from kobo.core.config import get_settings
+from kobo.interfaces.telegram import attachments as attachments_module
+from kobo.interfaces.telegram import chat_service as chat_module
+from kobo.interfaces.telegram import relay as relay_module
+from kobo.interfaces.telegram.interactive_inbox import TelegramInteractiveInbox
+from kobo.interfaces.telegram.state_store import TelegramStateStore
+from kobo.scheduler.service import SchedulerService
+from kobo.tasks import sandbox as sandbox_module
 
 pytestmark = [pytest.mark.e2e, pytest.mark.telegram]
 
@@ -155,8 +155,8 @@ async def _live_time(customer_id: str) -> dict[str, str]:
     }
 
 
-def _build_deterministic_runtime() -> tuple[OpenTulpaLangGraphRuntime, list[list[Any]]]:
-    runtime = object.__new__(OpenTulpaLangGraphRuntime)
+def _build_deterministic_runtime() -> tuple[KoboLangGraphRuntime, list[list[Any]]]:
+    runtime = object.__new__(KoboLangGraphRuntime)
     model_calls: list[list[Any]] = []
     behavior_events: list[dict[str, Any]] = []
 
@@ -212,7 +212,7 @@ def _build_deterministic_runtime() -> tuple[OpenTulpaLangGraphRuntime, list[list
                             "group": "web",
                             "command": "web_search",
                             "args_json": {
-                                "query": "OpenTulpa interactive owner update search test"
+                                "query": "Kobo interactive owner update search test"
                             },
                         },
                     },
@@ -297,7 +297,7 @@ def test_telegram_interactive_chat_can_send_owner_update_before_search_final(
         return {
             "answer": f"Fake search answer for: {query}",
             "source_count": 2,
-            "sources": [{"url": "https://example.com/opentulpa", "domain": "example.com"}],
+            "sources": [{"url": "https://example.com/kobo", "domain": "example.com"}],
             "model": "test-double",
         }
 
@@ -312,7 +312,7 @@ def test_telegram_interactive_chat_can_send_owner_update_before_search_final(
     monkeypatch.setattr(
         chat_module,
         "STATE_STORE",
-        TelegramStateStore(project_root / ".opentulpa" / "telegram_state.json"),
+        TelegramStateStore(project_root / ".kobo" / "telegram_state.json"),
     )
     monkeypatch.setattr(app_module, "TelegramClient", lambda _token: fake_tg)
     monkeypatch.setattr(attachments_module, "TelegramClient", lambda _token: fake_tg)
@@ -383,7 +383,7 @@ def test_telegram_interactive_chat_can_send_owner_update_before_search_final(
             "Новый промежуточный ответ был отправлен до финального сообщения."
         ),
     ]
-    assert search_queries == ["OpenTulpa interactive owner update search test"]
+    assert search_queries == ["Kobo interactive owner update search test"]
     assert any(item["path"] == "/internal/web_search" for item in internal_calls)
     assert len(model_calls) == 2
 
@@ -439,7 +439,7 @@ async def test_telegram_interactive_message_steers_active_graph_after_tool_check
     monkeypatch.setattr(
         chat_module,
         "STATE_STORE",
-        TelegramStateStore(tmp_path / ".opentulpa" / "telegram_state.json"),
+        TelegramStateStore(tmp_path / ".kobo" / "telegram_state.json"),
     )
     monkeypatch.setattr(chat_module, "TelegramClient", lambda _token: fake_tg)
     monkeypatch.setattr(relay_module, "TelegramClient", lambda _token: fake_tg)
@@ -532,12 +532,12 @@ def test_live_telegram_interactive_chat_can_use_owner_update_while_searching(
         search_queries.append(query)
         return {
             "answer": (
-                "Test search result: OpenTulpa Telegram interactive owner updates let the agent "
+                "Test search result: Kobo Telegram interactive owner updates let the agent "
                 "send a short interim owner message, continue tool work, and then send a final answer."
             ),
             "source_count": 2,
             "sources": [
-                {"url": "https://example.com/opentulpa-owner-update", "domain": "example.com"},
+                {"url": "https://example.com/kobo-owner-update", "domain": "example.com"},
                 {"url": "https://example.com/telegram-agent-loop", "domain": "example.com"},
             ],
             "model": "test-double",
@@ -569,7 +569,7 @@ def test_live_telegram_interactive_chat_can_use_owner_update_while_searching(
             username="owner654",
             text=(
                 "Найди в вебе свежую информацию про тестовый запрос "
-                "«OpenTulpa Telegram interactive owner update». Перед тем как начнешь поиск, "
+                "«Kobo Telegram interactive owner update». Перед тем как начнешь поиск, "
                 "отправь мне отдельное короткое сообщение, что проверяешь источники. "
                 "Потом сделай финальный краткий вывод по найденному."
             ),

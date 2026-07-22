@@ -11,7 +11,7 @@ from typing import Any
 
 import httpx
 
-from opentulpa.interfaces.telegram.formatter import (
+from kobo.interfaces.telegram.formatter import (
     prepare_text_and_mode,
     prepare_text_chunks_and_mode,
 )
@@ -67,7 +67,7 @@ def _resolve_media_send_target(
 
 
 class TelegramClient:
-    """Thin async client around Telegram Bot API endpoints used by OpenTulpa."""
+    """Thin async client around Telegram Bot API endpoints used by Kobo."""
 
     def __init__(self, bot_token: str) -> None:
         self.bot_token = str(bot_token or "").strip()

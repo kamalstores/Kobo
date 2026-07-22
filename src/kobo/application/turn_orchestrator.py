@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from opentulpa.domain.conversation import ConversationTurnRequest, ConversationTurnResult
+from kobo.domain.conversation import ConversationTurnRequest, ConversationTurnResult
 
 
 class TurnOrchestrator:

@@ -2,8 +2,8 @@ from __future__ import annotations
 
 import pytest
 
-from opentulpa.agent.tools.intake_setup_tools import register_intake_setup_tools
-from opentulpa.agent.tools_registry import register_runtime_tools
+from kobo.agent.tools.intake_setup_tools import register_intake_setup_tools
+from kobo.agent.tools_registry import register_runtime_tools
 from tests.tool_test_helpers import DummyRuntime, Response
 
 
@@ -42,7 +42,7 @@ async def test_intake_workflow_upsert_posts_expected_payload() -> None:
             "intent_description": "Handle booking requests from Instagram DMs.",
             "required_fields": ["day", "time", "car_type", "wash_type"],
             "sink_type": "local_csv",
-            "sink_config": {"file_path": "tulpa_stuff/bookings.csv"},
+            "sink_config": {"file_path": "kobo_stuff/bookings.csv"},
         }
     )
     assert result["workflow_id"] == "iwf_abc"
@@ -74,7 +74,7 @@ async def test_intake_workflow_upsert_defaults_web_origin_to_auto() -> None:
             "intent_description": "Handle booking requests from Instagram DMs.",
             "required_fields": ["day", "time"],
             "sink_type": "local_csv",
-            "sink_config": {"file_path": "tulpa_stuff/bookings.csv"},
+            "sink_config": {"file_path": "kobo_stuff/bookings.csv"},
         }
     )
 
@@ -98,7 +98,7 @@ async def test_intake_workflow_upsert_accepts_telegram_business_fields() -> None
             "assistant_instructions": "Be concise and friendly.",
             "knowledge_file_ids": ["file_1", "file_2"],
             "sink_type": "local_csv",
-            "sink_config": {"file_path": "tulpa_stuff/bookings.csv"},
+            "sink_config": {"file_path": "kobo_stuff/bookings.csv"},
         }
     )
 
@@ -281,7 +281,7 @@ async def test_tulpa_file_send_marks_delivered_file_for_agent() -> None:
                 200,
                 {
                     "ok": True,
-                    "path": "tulpa_stuff/sample_delivery_report.txt",
+                    "path": "kobo_stuff/sample_delivery_report.txt",
                     "chat_id": 12345,
                     "delivered_to_chat": True,
                 },
@@ -292,7 +292,7 @@ async def test_tulpa_file_send_marks_delivered_file_for_agent() -> None:
 
     result = await tools["tulpa_file_send"].ainvoke(
         {
-            "path": "tulpa_stuff/sample_delivery_report.txt",
+            "path": "kobo_stuff/sample_delivery_report.txt",
             "caption": "Sample delivery report",
         }
     )
@@ -303,7 +303,7 @@ async def test_tulpa_file_send_marks_delivered_file_for_agent() -> None:
     assert "Do not call the file-send tool again" in result["model_instruction"]
     assert runtime.calls[0][1] == "/internal/files/send_local"
     assert runtime.calls[0][2]["json_body"] == {
-        "path": "tulpa_stuff/sample_delivery_report.txt",
+        "path": "kobo_stuff/sample_delivery_report.txt",
         "customer_id": "telegram_123",
         "caption": "Sample delivery report",
     }
@@ -508,7 +508,7 @@ async def test_intake_workflow_upsert_accepts_string_guidance_and_null_workflow_
             "intent_description": "Handle booking requests from Instagram DMs.",
             "required_fields": ["day", "time", "car_type", "wash_type"],
             "sink_type": "local_csv",
-            "sink_config": {"file_path": "tulpa_stuff/bookings.csv"},
+            "sink_config": {"file_path": "kobo_stuff/bookings.csv"},
             "field_guidance": "Collect the date, time, car type, and wash type.",
             "workflow_id": None,
         }
@@ -530,7 +530,7 @@ async def test_intake_workflow_upsert_normalizes_string_none_workflow_id_to_null
             "intent_description": "Handle booking requests from Instagram DMs.",
             "required_fields": ["day", "time", "car_type", "wash_type"],
             "sink_type": "local_csv",
-            "sink_config": {"file_path": "tulpa_stuff/bookings.csv"},
+            "sink_config": {"file_path": "kobo_stuff/bookings.csv"},
             "workflow_id": "None",
         }
     )

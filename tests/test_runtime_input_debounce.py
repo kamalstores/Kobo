@@ -4,7 +4,7 @@ import asyncio
 
 import pytest
 
-from opentulpa.agent.runtime_input import ThreadInputCoordinator
+from kobo.agent.runtime_input import ThreadInputCoordinator
 
 
 def _mk_coordinator(*, debounce: float) -> ThreadInputCoordinator:

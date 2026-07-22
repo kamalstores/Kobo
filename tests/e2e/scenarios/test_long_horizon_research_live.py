@@ -8,9 +8,9 @@ import pytest
 from evaluation.judge import evaluate_e2e_scenario_with_llm_judge
 from harness.runner import E2EHarness, load_jsonl
 
-from opentulpa.agent.lc_messages import AIMessage
-from opentulpa.agent.tool_budget import web_search_call_count
-from opentulpa.integrations.web_search import get_web_search_backend_name
+from kobo.agent.lc_messages import AIMessage
+from kobo.agent.tool_budget import web_search_call_count
+from kobo.integrations.web_search import get_web_search_backend_name
 
 pytestmark = [pytest.mark.e2e, pytest.mark.live_llm, pytest.mark.telegram]
 
@@ -87,7 +87,7 @@ def test_live_long_horizon_research_uses_plan_and_returns_artifact(
     traces = load_jsonl(e2e_harness.llm_trace_path)
     behavior = load_jsonl(e2e_harness.behavior_log_path)
     judge_model = (
-        os.getenv("OPENTULPA_E2E_JUDGE_MODEL", "").strip()
+        os.getenv("KOBO_E2E_JUDGE_MODEL", "").strip()
         or "deepseek/deepseek-v4-pro"
     )
     evaluation = evaluate_e2e_scenario_with_llm_judge(

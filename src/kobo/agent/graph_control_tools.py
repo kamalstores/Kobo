@@ -8,7 +8,7 @@ from typing import Any
 
 from langchain.tools import tool
 
-from opentulpa.agent.turn_plan import build_turn_plan_result, update_turn_plan
+from kobo.agent.turn_plan import build_turn_plan_result, update_turn_plan
 
 
 @dataclass(frozen=True)

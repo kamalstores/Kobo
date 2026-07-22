@@ -5,7 +5,7 @@ from __future__ import annotations
 from pathlib import Path
 
 PROJECT_ROOT = Path(__file__).resolve().parents[4]
-STATE_PATH = PROJECT_ROOT / ".opentulpa" / "telegram_state.json"
+STATE_PATH = PROJECT_ROOT / ".kobo" / "telegram_state.json"
 DEBUG_LOG_PATH = PROJECT_ROOT / ".cursor" / "debug.log"
 
 TELEGRAM_WEBHOOK_ALLOWED_UPDATES = (

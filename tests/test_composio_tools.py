@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import pytest
 
-from opentulpa.agent.tools_registry import register_runtime_tools
+from kobo.agent.tools_registry import register_runtime_tools
 from tests.tool_test_helpers import DummyRuntime, Response
 
 

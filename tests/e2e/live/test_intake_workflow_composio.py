@@ -8,26 +8,26 @@ from typing import Any
 import pytest
 from fastapi.testclient import TestClient
 
-from opentulpa.agent.runtime import OpenTulpaLangGraphRuntime
-from opentulpa.api.app import create_app
-from opentulpa.core.config import get_settings
-from opentulpa.integrations.composio import ComposioService
-from opentulpa.scheduler.service import SchedulerService
+from kobo.agent.runtime import KoboLangGraphRuntime
+from kobo.api.app import create_app
+from kobo.core.config import get_settings
+from kobo.integrations.composio import ComposioService
+from kobo.scheduler.service import SchedulerService
 
-LIVE_FLAG = "OPENTULPA_ENABLE_LIVE_COMPOSIO_INTAKE_E2E"
-LIVE_WRITE_FLAG = "OPENTULPA_ENABLE_LIVE_COMPOSIO_INTAKE_WRITE_E2E"
-LIVE_CUSTOMER_ID_ENV = "OPENTULPA_LIVE_INTAKE_CUSTOMER_ID"
-LIVE_CONVERSATION_ID_ENV = "OPENTULPA_LIVE_INTAKE_TEST_CONVERSATION_ID"
-LIVE_CONNECTED_ACCOUNT_ENV = "OPENTULPA_LIVE_INTAKE_INSTAGRAM_CONNECTED_ACCOUNT_ID"
-LIVE_EXPECTED_FIELDS_ENV = "OPENTULPA_LIVE_INTAKE_EXPECTED_FIELDS_JSON"
-LIVE_INTENT_ENV = "OPENTULPA_LIVE_INTAKE_INTENT_DESCRIPTION"
-LIVE_WRITE_TOOL_ENV = "OPENTULPA_LIVE_INTAKE_WRITE_TOOL_SLUG"
-LIVE_WRITE_CONNECTED_ACCOUNT_ENV = "OPENTULPA_LIVE_INTAKE_WRITE_CONNECTED_ACCOUNT_ID"
-LIVE_WRITE_FIELD_MAPPING_ENV = "OPENTULPA_LIVE_INTAKE_WRITE_FIELD_MAPPING_JSON"
-LIVE_WRITE_STATIC_ARGUMENTS_ENV = "OPENTULPA_LIVE_INTAKE_WRITE_STATIC_ARGUMENTS_JSON"
-LIVE_WRITE_VERIFY_TOOL_ENV = "OPENTULPA_LIVE_INTAKE_WRITE_VERIFY_TOOL_SLUG"
-LIVE_WRITE_VERIFY_ARGUMENTS_ENV = "OPENTULPA_LIVE_INTAKE_WRITE_VERIFY_ARGUMENTS_JSON"
-LIVE_WRITE_VERIFY_EXPECT_ENV = "OPENTULPA_LIVE_INTAKE_WRITE_VERIFY_EXPECT_JSON"
+LIVE_FLAG = "KOBO_ENABLE_LIVE_COMPOSIO_INTAKE_E2E"
+LIVE_WRITE_FLAG = "KOBO_ENABLE_LIVE_COMPOSIO_INTAKE_WRITE_E2E"
+LIVE_CUSTOMER_ID_ENV = "KOBO_LIVE_INTAKE_CUSTOMER_ID"
+LIVE_CONVERSATION_ID_ENV = "KOBO_LIVE_INTAKE_TEST_CONVERSATION_ID"
+LIVE_CONNECTED_ACCOUNT_ENV = "KOBO_LIVE_INTAKE_INSTAGRAM_CONNECTED_ACCOUNT_ID"
+LIVE_EXPECTED_FIELDS_ENV = "KOBO_LIVE_INTAKE_EXPECTED_FIELDS_JSON"
+LIVE_INTENT_ENV = "KOBO_LIVE_INTAKE_INTENT_DESCRIPTION"
+LIVE_WRITE_TOOL_ENV = "KOBO_LIVE_INTAKE_WRITE_TOOL_SLUG"
+LIVE_WRITE_CONNECTED_ACCOUNT_ENV = "KOBO_LIVE_INTAKE_WRITE_CONNECTED_ACCOUNT_ID"
+LIVE_WRITE_FIELD_MAPPING_ENV = "KOBO_LIVE_INTAKE_WRITE_FIELD_MAPPING_JSON"
+LIVE_WRITE_STATIC_ARGUMENTS_ENV = "KOBO_LIVE_INTAKE_WRITE_STATIC_ARGUMENTS_JSON"
+LIVE_WRITE_VERIFY_TOOL_ENV = "KOBO_LIVE_INTAKE_WRITE_VERIFY_TOOL_SLUG"
+LIVE_WRITE_VERIFY_ARGUMENTS_ENV = "KOBO_LIVE_INTAKE_WRITE_VERIFY_ARGUMENTS_JSON"
+LIVE_WRITE_VERIFY_EXPECT_ENV = "KOBO_LIVE_INTAKE_WRITE_VERIFY_EXPECT_JSON"
 LIVE_WORKFLOW_NAME = "Live Instagram Intake E2E"
 pytestmark = [pytest.mark.e2e]
 
@@ -119,11 +119,11 @@ def live_composio_service() -> ComposioService:
 
 
 @pytest.fixture()
-def live_runtime(tmp_path: Path) -> OpenTulpaLangGraphRuntime:
+def live_runtime(tmp_path: Path) -> KoboLangGraphRuntime:
     settings = get_settings()
     if not str(settings.openrouter_api_key or "").strip():
         pytest.skip("OPENAI_COMPATIBLE_API_KEY or OPENROUTER_API_KEY is required for live model intake e2e")
-    return OpenTulpaLangGraphRuntime(
+    return KoboLangGraphRuntime(
         app_url="http://testserver",
         openrouter_api_key=str(settings.openrouter_api_key or "").strip(),
         model_name=settings.llm_model,
@@ -155,7 +155,7 @@ def test_live_composio_instagram_read_smoke(live_composio_service: ComposioServi
 
 def test_live_intake_workflow_local_sink_end_to_end(
     tmp_path: Path,
-    live_runtime: OpenTulpaLangGraphRuntime,
+    live_runtime: KoboLangGraphRuntime,
     live_composio_service: ComposioService,
 ) -> None:
     customer_id = _required_env(LIVE_CUSTOMER_ID_ENV)
@@ -174,7 +174,7 @@ def test_live_intake_workflow_local_sink_end_to_end(
         scheduler=scheduler,
         composio_service=live_composio_service,
     )
-    csv_relative_path = "tulpa_stuff/live_intake_e2e.csv"
+    csv_relative_path = "kobo_stuff/live_intake_e2e.csv"
 
     with TestClient(app) as client:
         upsert = client.post(

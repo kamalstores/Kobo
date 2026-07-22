@@ -5,23 +5,23 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Any
 
-from opentulpa.agent.context_engine import (
+from kobo.agent.context_engine import (
     ContextEngine,
     ContextSourceProvider,
     PromptContextSources,
 )
-from opentulpa.agent.context_engine import trim_text_to_token_budget as _trim_text_to_token_budget
-from opentulpa.agent.models import AgentState
-from opentulpa.agent.prompt_sections import PROMPT_DYNAMIC_BOUNDARY
-from opentulpa.agent.prompt_sections import build_prompt_mode_message as _build_prompt_mode_message
-from opentulpa.agent.turn_policy import (
+from kobo.agent.context_engine import trim_text_to_token_budget as _trim_text_to_token_budget
+from kobo.agent.models import AgentState
+from kobo.agent.prompt_sections import PROMPT_DYNAMIC_BOUNDARY
+from kobo.agent.prompt_sections import build_prompt_mode_message as _build_prompt_mode_message
+from kobo.agent.turn_policy import (
     build_turn_mode_system_message as _build_turn_mode_system_message,
 )
-from opentulpa.agent.turn_prompt_builder.entries import (
+from kobo.agent.turn_prompt_builder.entries import (
     append_retrieved_entry,
     make_prompt_context_entry,
 )
-from opentulpa.agent.utils import content_to_text as _content_to_text
+from kobo.agent.utils import content_to_text as _content_to_text
 
 
 @dataclass(frozen=True, slots=True)
@@ -260,7 +260,7 @@ def _build_current_turn_context_text(
     connected_composio_toolkits_context: str = "",
 ) -> str:
     parts: list[str] = [
-        "OPENTULPA_CURRENT_TURN_CONTEXT",
+        "KOBO_CURRENT_TURN_CONTEXT",
         _content_to_text(_build_prompt_mode_message(prompt_mode).content),  # type: ignore[arg-type]
         _content_to_text(_build_turn_mode_system_message(turn_mode).content),
         connected_composio_toolkits_context,

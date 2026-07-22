@@ -46,7 +46,7 @@ def _exception_status_codes(exc: Exception) -> tuple[int, ...]:
 
 
 def model_transient_retry_limit() -> int:
-    raw = str(os.getenv("OPENTULPA_MODEL_TRANSIENT_RETRIES", "2") or "2").strip()
+    raw = str(os.getenv("KOBO_MODEL_TRANSIENT_RETRIES", "2") or "2").strip()
     try:
         return max(0, min(5, int(raw)))
     except ValueError:
@@ -71,7 +71,7 @@ def model_transient_retry_delay_seconds(retry_index: int) -> float:
 
 
 def model_invoke_timeout_seconds() -> float:
-    raw = str(os.getenv("OPENTULPA_MODEL_INVOKE_TIMEOUT_SECONDS", "60") or "60").strip()
+    raw = str(os.getenv("KOBO_MODEL_INVOKE_TIMEOUT_SECONDS", "60") or "60").strip()
     try:
         return max(0.05, min(300.0, float(raw)))
     except ValueError:
@@ -79,7 +79,7 @@ def model_invoke_timeout_seconds() -> float:
 
 
 def openrouter_max_retries() -> int:
-    raw = str(os.getenv("OPENTULPA_OPENROUTER_MAX_RETRIES", "4") or "4").strip()
+    raw = str(os.getenv("KOBO_OPENROUTER_MAX_RETRIES", "4") or "4").strip()
     try:
         return max(0, min(10, int(raw)))
     except ValueError:
@@ -87,7 +87,7 @@ def openrouter_max_retries() -> int:
 
 
 def openrouter_timeout_seconds() -> int:
-    raw = str(os.getenv("OPENTULPA_OPENROUTER_TIMEOUT_SECONDS", "180") or "180").strip()
+    raw = str(os.getenv("KOBO_OPENROUTER_TIMEOUT_SECONDS", "180") or "180").strip()
     try:
         return max(10, min(600, int(float(raw))))
     except ValueError:

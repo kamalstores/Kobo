@@ -1,4 +1,4 @@
-"""Optional Langfuse observability wiring for OpenTulpa."""
+"""Optional Langfuse observability wiring for Kobo."""
 
 from __future__ import annotations
 
@@ -23,15 +23,15 @@ _LANGFUSE_ENV_RE = re.compile(r"[^a-z0-9-_]+")
 _MAX_STRING_CHARS = 12_000
 _MAX_SEQUENCE_ITEMS = 50
 _ACTIVE_TOOL_SPAN: contextvars.ContextVar[_LangfuseToolSpan | None] = contextvars.ContextVar(
-    "opentulpa_langfuse_active_tool_span",
+    "kobo_langfuse_active_tool_span",
     default=None,
 )
 _ACTIVE_OBSERVATION_ID: contextvars.ContextVar[str | None] = contextvars.ContextVar(
-    "opentulpa_langfuse_active_observation_id",
+    "kobo_langfuse_active_observation_id",
     default=None,
 )
 _ACTIVE_TRACE_USAGE: contextvars.ContextVar[tuple[_TraceUsageAccumulator, ...]] = (
-    contextvars.ContextVar("opentulpa_langfuse_active_trace_usage", default=())
+    contextvars.ContextVar("kobo_langfuse_active_trace_usage", default=())
 )
 
 
@@ -350,7 +350,7 @@ class _LangfuseToolSpan:
                     **self.metadata,
                     "tool_name": self.tool_name,
                     "tool_call_id": self.tool_call_id,
-                    "opentulpa_trace_id": self.trace_id,
+                    "kobo_trace_id": self.trace_id,
                 }
             ),
         }
@@ -522,7 +522,7 @@ class LangfuseTracer:
         return cast("dict[str, Any]", _json_safe(base))
 
     def tags(self, tags: list[str] | tuple[str, ...] | None = None) -> list[str]:
-        resolved = ["opentulpa"]
+        resolved = ["kobo"]
         if self.deployment_tag:
             resolved.append(self.deployment_tag)
         if self.environment:
@@ -591,10 +591,10 @@ class LangfuseTracer:
             return
         kwargs: dict[str, Any] = {
             "as_type": "span",
-            "name": _clean_text(name) or "opentulpa.trace",
+            "name": _clean_text(name) or "kobo.trace",
             "input": _json_safe(input),
             "metadata": self.base_metadata(
-                {**dict(metadata or {}), "opentulpa_trace_id": _clean_text(trace_id) or None}
+                {**dict(metadata or {}), "kobo_trace_id": _clean_text(trace_id) or None}
             ),
         }
         try:
@@ -734,7 +734,7 @@ class LangfuseTracer:
             return
         kwargs: dict[str, Any] = {
             "as_type": "span",
-            "name": _clean_text(name) or "opentulpa.span",
+            "name": _clean_text(name) or "kobo.span",
             "input": _json_safe(input),
             "output": _json_safe(output),
             "metadata": self.base_metadata({**dict(metadata or {}), "status": status}),

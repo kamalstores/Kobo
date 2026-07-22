@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from fastapi import FastAPI
 
-from opentulpa.core.public_urls import resolve_public_base_url
+from kobo.core.public_urls import resolve_public_base_url
 
 
 def register_system_routes(app: FastAPI) -> None:

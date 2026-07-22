@@ -7,18 +7,18 @@ from dataclasses import dataclass
 from datetime import datetime
 from typing import Any, Protocol
 
-from opentulpa.intake.reply_policy import build_missing_field_follow_up_reply
-from opentulpa.intake.workflow_boundaries import BookingTargetResolution, DecisionActions
-from opentulpa.intake.workflow_runtime import (
+from kobo.intake.reply_policy import build_missing_field_follow_up_reply
+from kobo.intake.workflow_boundaries import BookingTargetResolution, DecisionActions
+from kobo.intake.workflow_runtime import (
     DEFAULT_EDIT_WINDOW as _DEFAULT_EDIT_WINDOW,
 )
-from opentulpa.intake.workflow_runtime import (
+from kobo.intake.workflow_runtime import (
     required_field_is_present as _required_field_is_present,
 )
-from opentulpa.intake.workflow_runtime import (
+from kobo.intake.workflow_runtime import (
     safe_dict as _safe_dict,
 )
-from opentulpa.intake.workflow_runtime import (
+from kobo.intake.workflow_runtime import (
     unique_string_list as _unique_string_list,
 )
 

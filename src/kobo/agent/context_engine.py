@@ -4,12 +4,12 @@ from __future__ import annotations
 
 from typing import Any
 
-from opentulpa.agent.context_history import (
+from kobo.agent.context_history import (
     ContextHistoryEngine,
     HistoryWorkingSet,
     trim_text_to_token_budget,
 )
-from opentulpa.agent.prompt_sources import (
+from kobo.agent.prompt_sources import (
     ContextSourceProvider,
     PromptContextSources,
     PromptSourceLoader,

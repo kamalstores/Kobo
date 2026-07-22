@@ -4,12 +4,12 @@ from __future__ import annotations
 
 from typing import Any
 
-from opentulpa.agent.lc_messages import AnyMessage, SystemMessage
-from opentulpa.agent.prompt_sections import (
+from kobo.agent.lc_messages import AnyMessage, SystemMessage
+from kobo.agent.prompt_sections import (
     build_retrieved_context_message as _build_retrieved_context_message,
 )
-from opentulpa.agent.utils import approx_tokens as _approx_tokens
-from opentulpa.agent.utils import content_to_text as _content_to_text
+from kobo.agent.utils import approx_tokens as _approx_tokens
+from kobo.agent.utils import content_to_text as _content_to_text
 
 
 def append_retrieved_entry(

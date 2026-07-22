@@ -8,9 +8,9 @@ from typing import Any
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 
-from opentulpa.api.customer_ids import resolve_body_customer_id
-from opentulpa.domain.conversation import ConversationTurnRequest
-from opentulpa.web.events import append_web_event
+from kobo.api.customer_ids import resolve_body_customer_id
+from kobo.domain.conversation import ConversationTurnRequest
+from kobo.web.events import append_web_event
 
 
 def register_chat_routes(

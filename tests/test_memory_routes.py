@@ -5,7 +5,7 @@ from typing import Any
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
 
-from opentulpa.api.routes.memory import register_memory_routes
+from kobo.api.routes.memory import register_memory_routes
 
 
 class _FakeMemory:

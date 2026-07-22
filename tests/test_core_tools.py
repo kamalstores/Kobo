@@ -2,9 +2,9 @@ from __future__ import annotations
 
 import pytest
 
-from opentulpa.agent.graph_control_tools import execute_graph_control_tool
-from opentulpa.agent.tools_registry import register_runtime_tools
-from opentulpa.agent.turn_plan import TurnPlanValidationError, update_turn_plan
+from kobo.agent.graph_control_tools import execute_graph_control_tool
+from kobo.agent.tools_registry import register_runtime_tools
+from kobo.agent.turn_plan import TurnPlanValidationError, update_turn_plan
 from tests.tool_test_helpers import DummyRuntime, Response
 
 CORE_TOOL_NAMES = {

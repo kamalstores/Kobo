@@ -6,7 +6,7 @@ from typing import Any
 
 from langchain_deepseek import ChatDeepSeek
 
-from opentulpa.agent.lc_messages import AIMessage
+from kobo.agent.lc_messages import AIMessage
 
 
 class OpenRouterDeepSeekChatModel(ChatDeepSeek):

@@ -15,8 +15,8 @@ class ModelProviderProfile:
     supports_cache_breakpoints: bool = False
     openrouter_session_sticky: bool = False
     stream_chunk_timeout_env_names: tuple[str, ...] = (
-        "OPENTULPA_MODEL_STREAM_CHUNK_TIMEOUT_SECONDS",
-        "OPENTULPA_MODEL_STREAM_FIRST_CHUNK_TIMEOUT_SECONDS",
+        "KOBO_MODEL_STREAM_CHUNK_TIMEOUT_SECONDS",
+        "KOBO_MODEL_STREAM_FIRST_CHUNK_TIMEOUT_SECONDS",
     )
     stream_chunk_timeout_default_seconds: float = 25.0
 
@@ -89,9 +89,9 @@ def model_provider_profile(model_name: str | None) -> ModelProviderProfile:
             cache_strategy="implicit_stable_prefix",
             openrouter_session_sticky=True,
             stream_chunk_timeout_env_names=(
-                "OPENTULPA_MINIMAX_MODEL_STREAM_CHUNK_TIMEOUT_SECONDS",
-                "OPENTULPA_MODEL_STREAM_CHUNK_TIMEOUT_SECONDS",
-                "OPENTULPA_MODEL_STREAM_FIRST_CHUNK_TIMEOUT_SECONDS",
+                "KOBO_MINIMAX_MODEL_STREAM_CHUNK_TIMEOUT_SECONDS",
+                "KOBO_MODEL_STREAM_CHUNK_TIMEOUT_SECONDS",
+                "KOBO_MODEL_STREAM_FIRST_CHUNK_TIMEOUT_SECONDS",
             ),
             stream_chunk_timeout_default_seconds=75.0,
         )
@@ -100,9 +100,9 @@ def model_provider_profile(model_name: str | None) -> ModelProviderProfile:
             model_name=safe_model_name,
             cache_strategy="automatic",
             stream_chunk_timeout_env_names=(
-                "OPENTULPA_ZAI_MODEL_STREAM_CHUNK_TIMEOUT_SECONDS",
-                "OPENTULPA_MODEL_STREAM_CHUNK_TIMEOUT_SECONDS",
-                "OPENTULPA_MODEL_STREAM_FIRST_CHUNK_TIMEOUT_SECONDS",
+                "KOBO_ZAI_MODEL_STREAM_CHUNK_TIMEOUT_SECONDS",
+                "KOBO_MODEL_STREAM_CHUNK_TIMEOUT_SECONDS",
+                "KOBO_MODEL_STREAM_FIRST_CHUNK_TIMEOUT_SECONDS",
             ),
             stream_chunk_timeout_default_seconds=75.0,
         )

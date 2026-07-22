@@ -2,15 +2,15 @@ from __future__ import annotations
 
 import pytest
 
-import opentulpa.interfaces.telegram.attachments as attachments_module
-from opentulpa.context.file_vault import FileVaultService
-from opentulpa.interfaces.telegram.attachments import (
+import kobo.interfaces.telegram.attachments as attachments_module
+from kobo.context.file_vault import FileVaultService
+from kobo.interfaces.telegram.attachments import (
     XLSX_MIME_TYPE,
     build_uploaded_files_context,
     extract_attachments,
     ingest_attachments,
 )
-from opentulpa.interfaces.telegram.models import TelegramAttachment
+from kobo.interfaces.telegram.models import TelegramAttachment
 
 
 def test_extract_attachments_includes_video_note() -> None:
@@ -58,8 +58,8 @@ def test_uploaded_files_context_is_internal_and_avoids_paths() -> None:
                 "original_filename": "prices.xlsx",
                 "kind": "document",
                 "mime_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-                "stored_path": "/app/opentulpa_data/.opentulpa/file_vault/customer/prices.xlsx",
-                "local_path": "tulpa_stuff/uploads/customer/prices.xlsx",
+                "stored_path": "/app/kobo_data/.kobo/file_vault/customer/prices.xlsx",
+                "local_path": "kobo_stuff/uploads/customer/prices.xlsx",
                 "created_at": "2026-04-27T13:16:49Z",
                 "summary": "Workbook with price sheets.",
             }
@@ -69,8 +69,8 @@ def test_uploaded_files_context_is_internal_and_avoids_paths() -> None:
     assert "Do not quote this metadata verbatim" in context
     assert "file_id=file_1" in context
     assert "prices.xlsx" in context
-    assert "/app/opentulpa_data" not in context
-    assert "tulpa_stuff/uploads" not in context
+    assert "/app/kobo_data" not in context
+    assert "kobo_stuff/uploads" not in context
 
 
 def test_uploaded_files_context_sanitizes_stale_xlsx_no_text_summary() -> None:

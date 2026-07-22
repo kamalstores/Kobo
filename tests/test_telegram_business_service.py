@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from opentulpa.interfaces.telegram.business import TelegramBusinessService
+from kobo.interfaces.telegram.business import TelegramBusinessService
 
 
 def test_telegram_business_service_persists_connection_and_message_state(tmp_path: Path) -> None:

@@ -2,8 +2,8 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from opentulpa.agent.runtime import OpenTulpaLangGraphRuntime
-from opentulpa.context.link_aliases import LinkAliasService
+from kobo.agent.runtime import KoboLangGraphRuntime
+from kobo.context.link_aliases import LinkAliasService
 
 
 def _service(tmp_path: Path) -> LinkAliasService:
@@ -50,7 +50,7 @@ def test_runtime_resolves_link_ids_in_tool_args(tmp_path: Path) -> None:
     assert row is not None
     link_id = row["id"]
 
-    runtime = OpenTulpaLangGraphRuntime.__new__(OpenTulpaLangGraphRuntime)
+    runtime = KoboLangGraphRuntime.__new__(KoboLangGraphRuntime)
     runtime._link_alias_service = service
 
     resolved = runtime.resolve_link_aliases_in_args(

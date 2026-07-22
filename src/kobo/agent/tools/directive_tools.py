@@ -6,9 +6,9 @@ from typing import Any
 
 from langchain.tools import tool
 
-from opentulpa.agent.tools.common import require_customer_id
-from opentulpa.agent.tools.core_tools import _sync_proactive_heartbeat
-from opentulpa.context.customer_profile_models import (
+from kobo.agent.tools.common import require_customer_id
+from kobo.agent.tools.core_tools import _sync_proactive_heartbeat
+from kobo.context.customer_profile_models import (
     CustomerScopedClearResponse,
     CustomerScopedOkResponse,
     CustomerScopedRequest,

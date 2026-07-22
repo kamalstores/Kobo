@@ -3,7 +3,7 @@ from __future__ import annotations
 import hashlib
 import json
 
-from opentulpa.agent.workflow_setup_prompt_context import build_workflow_setup_control_context
+from kobo.agent.workflow_setup_prompt_context import build_workflow_setup_control_context
 
 
 def _session_with_google_sheets_sink(*, sheet_name: str = "") -> dict[str, object]:

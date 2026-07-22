@@ -7,16 +7,16 @@ from typing import Any
 
 import pytest
 
-from opentulpa.agent.context_compaction import (
+from kobo.agent.context_compaction import (
     _select_split_index,
     _trim_text_to_token_budget,
     compact_thread_context_for_turn,
     persist_rollup_memory,
 )
-from opentulpa.agent.lc_messages import HumanMessage
-from opentulpa.agent.runtime import OpenTulpaLangGraphRuntime
-from opentulpa.agent.utils import approx_tokens
-from opentulpa.core.config import Settings
+from kobo.agent.lc_messages import HumanMessage
+from kobo.agent.runtime import KoboLangGraphRuntime
+from kobo.agent.utils import approx_tokens
+from kobo.core.config import Settings
 
 
 def test_trim_text_to_token_budget_respects_limit() -> None:
@@ -43,7 +43,7 @@ def test_context_compaction_default_threshold_is_20000() -> None:
 
 
 def test_runtime_context_token_limit_clamps_at_30000(tmp_path) -> None:
-    runtime = OpenTulpaLangGraphRuntime(
+    runtime = KoboLangGraphRuntime(
         app_url="http://127.0.0.1:8000",
         openrouter_api_key="k",
         model_name="z-ai/glm-5.1",
@@ -210,7 +210,7 @@ async def test_runtime_shutdown_drains_compaction_memory_tasks_before_teardown()
         await asyncio.sleep(0)
         events.append("persist_done")
 
-    runtime = object.__new__(OpenTulpaLangGraphRuntime)
+    runtime = object.__new__(KoboLangGraphRuntime)
     task = asyncio.create_task(_background_persist())
     runtime._context_compaction_background_tasks = {task}
     runtime._browser_use_local_manager = _Manager()

@@ -8,11 +8,11 @@ from typing import Any
 
 import pytest
 
-from opentulpa.integrations.browser_use_local import (
+from kobo.integrations.browser_use_local import (
     BrowserUseLocalManager,
     _BrowserUseTaskState,
 )
-from opentulpa.integrations.browser_use_session_registry import (
+from kobo.integrations.browser_use_session_registry import (
     BrowserUseSessionRegistry,
     BrowserUseSessionState,
 )
@@ -170,7 +170,7 @@ async def test_local_manager_start_task_finishes_and_uses_default_model(
     assert payload["steps"]
     state = manager._tasks[task_id]
     assert not hasattr(state, "agent")
-    assert "Browser snapshot captured by OpenTulpa" in str(payload.get("output") or "")
+    assert "Browser snapshot captured by Kobo" in str(payload.get("output") or "")
     assert "Fake visible page state" in str(payload.get("output") or "")
 
 
@@ -436,7 +436,7 @@ async def test_local_manager_cloud_browser_uses_cdp_and_redacts_cdp_url(
     assert payload["browserUseProfileId"] == "prof_123"
     assert payload["browserUseBrowserSessionId"] == "bs_123"
     assert "cdp" not in str(payload).lower()
-    assert cloud_client.created_profiles == ["opentulpa-owner_1-owner_reddit"]
+    assert cloud_client.created_profiles == ["kobo-owner_1-owner_reddit"]
     assert cloud_client.created_sessions == ["prof_123"]
     session = manager._sessions[manager._session_key("owner_1", "owner_reddit")].session
     assert session.kwargs["cdp_url"] == "wss://secret-cdp.example/session"
@@ -646,7 +646,7 @@ async def test_local_manager_capture_screenshot_writes_file(
     monkeypatch: pytest.MonkeyPatch,
     tmp_path: Path,
 ) -> None:
-    import opentulpa.integrations.browser_use_local as browser_use_local
+    import kobo.integrations.browser_use_local as browser_use_local
 
     manager = BrowserUseLocalManager(
         openrouter_api_key="sk-test",
@@ -659,7 +659,7 @@ async def test_local_manager_capture_screenshot_writes_file(
         "_import_browser_use_components",
         _fake_browser_use_components,
     )
-    monkeypatch.setattr(browser_use_local, "TULPA_STUFF_DIR", tmp_path / "tulpa_stuff")
+    monkeypatch.setattr(browser_use_local, "KOBO_STUFF_DIR", tmp_path / "kobo_stuff")
 
     created = await manager.start_task(task="first", max_steps=2, llm="", session_id="sess_shot")
     task_id = str(created["id"])
@@ -674,7 +674,7 @@ async def test_local_manager_capture_screenshot_writes_file(
 
     shot = await manager.capture_screenshot(task_id=task_id, full_page=False)
     assert shot["ok"] is True
-    assert shot["path"].startswith("tulpa_stuff/screenshots/browser_use/")
+    assert shot["path"].startswith("kobo_stuff/screenshots/browser_use/")
     assert (tmp_path / shot["path"]).exists()
 
     payload = await manager.get_task(task_id)
@@ -743,8 +743,8 @@ async def test_local_manager_rejects_task_access_for_wrong_customer(
         _fake_browser_use_components,
     )
     monkeypatch.setattr(
-        "opentulpa.integrations.browser_use_local.TULPA_STUFF_DIR",
-        tmp_path / "tulpa_stuff",
+        "kobo.integrations.browser_use_local.KOBO_STUFF_DIR",
+        tmp_path / "kobo_stuff",
     )
 
     created = await manager.start_task(
@@ -839,7 +839,7 @@ async def test_local_manager_lists_sessions_and_expires_idle_ones(
 async def test_local_manager_background_cleanup_expires_idle_session(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    import opentulpa.integrations.browser_use_local as browser_use_local
+    import kobo.integrations.browser_use_local as browser_use_local
 
     manager = BrowserUseLocalManager(
         openrouter_api_key="sk-test",

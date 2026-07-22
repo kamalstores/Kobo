@@ -10,7 +10,7 @@ from typing import Any
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 
-from opentulpa.api.customer_ids import resolve_customer_id as resolve_customer_id_value
+from kobo.api.customer_ids import resolve_customer_id as resolve_customer_id_value
 
 
 def register_web_event_routes(
@@ -24,17 +24,17 @@ def register_web_event_routes(
 
     @app.get("/web/events")
     async def list_web_events(request: Request) -> JSONResponse:
-        expected_token = str(getattr(settings, "opentulpa_web_token", "") or "").strip()
+        expected_token = str(getattr(settings, "kobo_web_token", "") or "").strip()
         if not expected_token:
             return JSONResponse(
                 status_code=503,
-                content={"detail": "opentulpa web token is not configured"},
+                content={"detail": "kobo web token is not configured"},
             )
         incoming = str(request.headers.get("authorization", "") or "").strip()
         prefix = "Bearer "
         token = incoming[len(prefix) :].strip() if incoming.startswith(prefix) else ""
         if not hmac.compare_digest(token, expected_token):
-            return JSONResponse(status_code=403, content={"detail": "invalid opentulpa web token"})
+            return JSONResponse(status_code=403, content={"detail": "invalid kobo web token"})
 
         after_id = _int_query(request, "after_id", default=0)
         limit = _int_query(request, "limit", default=100)

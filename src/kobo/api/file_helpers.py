@@ -9,7 +9,7 @@ from urllib.parse import unquote, urlparse
 
 import httpx
 
-_WEB_IMAGE_USER_AGENT = "OpenTulpa/0.1 (+https://github.com/kvyb/opentulpa; send-web-image)"
+_WEB_IMAGE_USER_AGENT = "Kobo/0.1 (+https://github.com/kamalstores/kobo; send-web-image)"
 
 
 def sanitize_uploaded_file_record(

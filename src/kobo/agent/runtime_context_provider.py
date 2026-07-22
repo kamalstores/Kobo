@@ -4,8 +4,8 @@ from __future__ import annotations
 
 from typing import Any
 
-from opentulpa.agent.composio_context import load_connected_composio_toolkits_context
-from opentulpa.agent.turn_runtime_policy import recursion_limit_for_turn
+from kobo.agent.composio_context import load_connected_composio_toolkits_context
+from kobo.agent.turn_runtime_policy import recursion_limit_for_turn
 
 
 class RuntimeContextSourceProvider:

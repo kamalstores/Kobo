@@ -1,4 +1,4 @@
-from opentulpa.interfaces.telegram.chat_service import _format_agent_error_for_user
+from kobo.interfaces.telegram.chat_service import _format_agent_error_for_user
 
 
 def test_format_agent_error_authentication() -> None:

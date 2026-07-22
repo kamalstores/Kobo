@@ -12,7 +12,7 @@ from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any, cast
 
-from opentulpa.persistence.sqlite import connect_sqlite
+from kobo.persistence.sqlite import connect_sqlite
 
 logger = logging.getLogger(__name__)
 

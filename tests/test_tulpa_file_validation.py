@@ -6,12 +6,12 @@ from pathlib import Path
 import pytest
 from fastapi.testclient import TestClient
 
-from opentulpa.api.app import create_app
-from opentulpa.tasks import sandbox
+from kobo.api.app import create_app
+from kobo.tasks import sandbox
 
 
 def _tmp_rel(name: str) -> str:
-    return f"tulpa_stuff/{name}_{uuid.uuid4().hex}.py"
+    return f"kobo_stuff/{name}_{uuid.uuid4().hex}.py"
 
 
 def _cleanup(rel_path: str) -> None:

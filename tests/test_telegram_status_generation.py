@@ -6,7 +6,7 @@ from typing import Any
 
 import pytest
 
-from opentulpa.interfaces.telegram.status_generation import generate_llm_status_message
+from kobo.interfaces.telegram.status_generation import generate_llm_status_message
 
 
 class _StructuredTimeoutRuntime:
@@ -23,7 +23,7 @@ class _StructuredTimeoutRuntime:
 async def test_generate_llm_status_message_logs_timeout_without_exception(
     caplog: pytest.LogCaptureFixture,
 ) -> None:
-    caplog.set_level(logging.WARNING, logger="opentulpa.interfaces.telegram.status_generation")
+    caplog.set_level(logging.WARNING, logger="kobo.interfaces.telegram.status_generation")
 
     result = await generate_llm_status_message(
         runtime=_StructuredTimeoutRuntime(),

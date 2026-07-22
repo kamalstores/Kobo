@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from opentulpa.agent.turn_policy import normalize_turn_mode
+from kobo.agent.turn_policy import normalize_turn_mode
 
 WORKFLOW_SETUP_RECURSION_LIMIT = 128
 _WORKFLOW_SETUP_BUDGET_TERMS = (

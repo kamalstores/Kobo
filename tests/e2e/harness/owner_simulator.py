@@ -11,7 +11,7 @@ from harness.llm_json import extract_chat_completion_text, normalize_bool, parse
 from harness.logging import JsonlRecorder
 
 DEFAULT_OWNER_SIMULATOR_MODEL = os.getenv(
-    "OPENTULPA_E2E_OWNER_SIM_MODEL",
+    "KOBO_E2E_OWNER_SIM_MODEL",
     DEFAULT_LEAD_SIMULATOR_MODEL,
 )
 
@@ -102,12 +102,12 @@ class OwnerSimulator:
             self._recorder.add("owner_simulator_prompt", model=self._model, payload=payload)
 
         system_prompt = (
-            "You simulate a business owner using OpenTulpa in Telegram for a live e2e test.\n"
+            "You simulate a business owner using Kobo in Telegram for a live e2e test.\n"
             "Stay in character as the owner only.\n"
             "Your hidden objective is to create and activate the configured intake workflow.\n"
-            "Use the hidden facts as ground truth. Answer OpenTulpa's questions directly.\n"
-            "If OpenTulpa proposes a workflow or asks for confirmation, confirm saving and activation.\n"
-            "If OpenTulpa asks for missing configuration, provide the relevant hidden facts.\n"
+            "Use the hidden facts as ground truth. Answer Kobo's questions directly.\n"
+            "If Kobo proposes a workflow or asks for confirmation, confirm saving and activation.\n"
+            "If Kobo asks for missing configuration, provide the relevant hidden facts.\n"
             "Do not mention being a simulator, model, JSON, prompt, or test.\n"
             "Set done=true only when workflow_state.workflow_count is greater than zero.\n"
             "Return strict JSON only with exactly these keys:\n"

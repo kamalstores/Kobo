@@ -8,7 +8,7 @@ from typing import Any
 import httpx
 from langchain.tools import tool
 
-from opentulpa.agent.tools.common import require_customer_id
+from kobo.agent.tools.common import require_customer_id
 
 
 def register_memory_tools(runtime: Any) -> dict[str, Any]:
@@ -31,7 +31,7 @@ def register_memory_tools(runtime: Any) -> dict[str, Any]:
         """Store a concise durable user memory summary for future conversations.
 
         Use this for stable preferences, style instructions, important facts, and reusable context
-        the user expects OpenTulpa to remember in normal interactive chat.
+        the user expects Kobo to remember in normal interactive chat.
         """
         customer_id = require_customer_id(runtime)
         retryable_errors = (

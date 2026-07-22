@@ -4,7 +4,7 @@ from typing import Any
 
 import pytest
 
-from opentulpa.interfaces.telegram import chat_service as chat_module
+from kobo.interfaces.telegram import chat_service as chat_module
 
 
 class _FakeStateStore:
@@ -61,7 +61,7 @@ async def test_debug_logs_command_sends_last_7_days_archive_without_agent_runtim
     assert sent_payloads[0]["filename"] == "debug-logs.zip"
     assert sent_payloads[0]["raw_bytes"] == b"zip-bytes"
     assert sent_payloads[0]["mime_type"] == "application/zip"
-    assert sent_payloads[0]["caption"] == "OpenTulpa debug logs dump (last 7 days)"
+    assert sent_payloads[0]["caption"] == "Kobo debug logs dump (last 7 days)"
     assert sent_payloads[0]["parse_mode"] == "HTML"
     assert sent_groups == []
 

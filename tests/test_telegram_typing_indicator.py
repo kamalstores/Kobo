@@ -4,8 +4,8 @@ import asyncio
 
 import pytest
 
-from opentulpa.interfaces.telegram import relay as relay_module
-from opentulpa.interfaces.telegram.relay import _emit_typing_until_done
+from kobo.interfaces.telegram import relay as relay_module
+from kobo.interfaces.telegram.relay import _emit_typing_until_done
 
 
 class _FakeClient:

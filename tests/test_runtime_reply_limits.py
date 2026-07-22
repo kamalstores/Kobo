@@ -7,10 +7,10 @@ from typing import Any
 
 import pytest
 
-from opentulpa.agent.lc_messages import AIMessage
-from opentulpa.agent.runtime import OpenTulpaLangGraphRuntime
-from opentulpa.agent.runtime_context_provider import RuntimeContextSourceProvider
-from opentulpa.agent.runtime_input import ThreadInputCoordinator
+from kobo.agent.lc_messages import AIMessage
+from kobo.agent.runtime import KoboLangGraphRuntime
+from kobo.agent.runtime_context_provider import RuntimeContextSourceProvider
+from kobo.agent.runtime_input import ThreadInputCoordinator
 
 
 class _OversizedInvokeGraph:
@@ -53,8 +53,8 @@ class _MultiChunkStreamGraph:
         return {"messages": [AIMessage(content="unused")]}
 
 
-def _build_runtime(tmp_path, graph: Any) -> OpenTulpaLangGraphRuntime:
-    runtime = object.__new__(OpenTulpaLangGraphRuntime)
+def _build_runtime(tmp_path, graph: Any) -> KoboLangGraphRuntime:
+    runtime = object.__new__(KoboLangGraphRuntime)
     runtime._graph = graph
     runtime._thread_inputs = ThreadInputCoordinator(debounce_seconds=0.0)
     runtime._context_events = None

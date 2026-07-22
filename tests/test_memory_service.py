@@ -3,7 +3,7 @@ from __future__ import annotations
 import logging
 from typing import Any
 
-from opentulpa.memory.service import MemoryService
+from kobo.memory.service import MemoryService
 
 
 def test_memory_service_filters_only_mem0_noop_logs(caplog) -> None:

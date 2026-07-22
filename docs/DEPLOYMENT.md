@@ -7,7 +7,7 @@ This guide covers the practical ways to run Kobo today.
 If you just want the fastest local path, do this:
 
 ```bash
-git clone https://github.com/kvyb/Kobo.git
+git clone https://github.com/kamalstores/Kobo.git
 cd Kobo
 cp .env.example .env
 ```
@@ -52,7 +52,7 @@ Requirements:
 Base setup:
 
 ```bash
-git clone https://github.com/kvyb/Kobo.git
+git clone https://github.com/kamalstores/Kobo.git
 cd Kobo
 cp .env.example .env
 ```

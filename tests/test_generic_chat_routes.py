@@ -5,11 +5,11 @@ from typing import Any
 
 from fastapi.testclient import TestClient
 
-from opentulpa.agent.runtime import AgentStreamEvent
-from opentulpa.api.app import create_app
-from opentulpa.context.customer_profiles import CustomerProfileService
-from opentulpa.context.file_vault import FileVaultService
-from opentulpa.core.config import get_settings
+from kobo.agent.runtime import AgentStreamEvent
+from kobo.api.app import create_app
+from kobo.context.customer_profiles import CustomerProfileService
+from kobo.context.file_vault import FileVaultService
+from kobo.core.config import get_settings
 
 
 class _StreamingRuntime:
@@ -91,7 +91,7 @@ def _sse_payloads(text: str, event_name: str) -> list[dict[str, Any]]:
 
 
 def _client(monkeypatch: Any, tmp_path: Any) -> tuple[TestClient, _StreamingRuntime]:
-    monkeypatch.setenv("OPENTULPA_WEB_TOKEN", "web-secret")
+    monkeypatch.setenv("KOBO_WEB_TOKEN", "web-secret")
     get_settings.cache_clear()
     runtime = _StreamingRuntime()
     vault = FileVaultService(root_dir=tmp_path / "vault", db_path=tmp_path / "vault.db")
@@ -104,7 +104,7 @@ def _client_with_runtime(
     tmp_path: Any,
     runtime: _StreamingRuntime,
 ) -> TestClient:
-    monkeypatch.setenv("OPENTULPA_WEB_TOKEN", "web-secret")
+    monkeypatch.setenv("KOBO_WEB_TOKEN", "web-secret")
     get_settings.cache_clear()
     vault = FileVaultService(root_dir=tmp_path / "vault", db_path=tmp_path / "vault.db")
     return TestClient(create_app(agent_runtime=runtime, file_vault_service=vault))
@@ -115,7 +115,7 @@ def _client_with_runtime_and_app(
     tmp_path: Any,
     runtime: _StreamingRuntime,
 ) -> tuple[TestClient, Any]:
-    monkeypatch.setenv("OPENTULPA_WEB_TOKEN", "web-secret")
+    monkeypatch.setenv("KOBO_WEB_TOKEN", "web-secret")
     get_settings.cache_clear()
     vault = FileVaultService(root_dir=tmp_path / "vault", db_path=tmp_path / "vault.db")
     app = create_app(agent_runtime=runtime, file_vault_service=vault)
@@ -256,7 +256,7 @@ def test_web_chat_streams_workflow_setup_status_events(
 
 
 def test_web_chat_resolves_bound_telegram_alias(monkeypatch: Any, tmp_path: Any) -> None:
-    monkeypatch.setenv("OPENTULPA_WEB_TOKEN", "web-secret")
+    monkeypatch.setenv("KOBO_WEB_TOKEN", "web-secret")
     get_settings.cache_clear()
     runtime = _StreamingRuntime()
     vault = FileVaultService(root_dir=tmp_path / "vault", db_path=tmp_path / "vault.db")

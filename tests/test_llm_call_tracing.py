@@ -9,9 +9,9 @@ import httpx
 import pytest
 from langchain_core.tools import tool as lc_tool
 
-from opentulpa.agent.lc_messages import AIMessage, HumanMessage, SystemMessage
-from opentulpa.agent.model_error_trace import exception_trace_fields, exception_trace_text
-from opentulpa.agent.runtime import OpenTulpaLangGraphRuntime
+from kobo.agent.lc_messages import AIMessage, HumanMessage, SystemMessage
+from kobo.agent.model_error_trace import exception_trace_fields, exception_trace_text
+from kobo.agent.runtime import KoboLangGraphRuntime
 
 
 class _TraceResponse:
@@ -221,7 +221,7 @@ def _trace_lookup_tool(query: str) -> str:
 
 @pytest.mark.asyncio
 async def test_ainvoke_model_writes_full_llm_call_trace(tmp_path: Path) -> None:
-    runtime = OpenTulpaLangGraphRuntime(
+    runtime = KoboLangGraphRuntime(
         app_url="http://127.0.0.1:8000",
         openrouter_api_key="k",
         model_name="google/gemini-3-flash-preview",
@@ -300,7 +300,7 @@ async def test_ainvoke_model_writes_full_llm_call_trace(tmp_path: Path) -> None:
 
 @pytest.mark.asyncio
 async def test_ainvoke_model_traces_first_changed_prompt_message(tmp_path: Path) -> None:
-    runtime = OpenTulpaLangGraphRuntime(
+    runtime = KoboLangGraphRuntime(
         app_url="http://127.0.0.1:8000",
         openrouter_api_key="k",
         model_name="google/gemini-3-flash-preview",
@@ -351,7 +351,7 @@ async def test_ainvoke_model_traces_first_changed_prompt_message(tmp_path: Path)
 
 @pytest.mark.asyncio
 async def test_ainvoke_model_extracts_openrouter_upstream_cost_details(tmp_path: Path) -> None:
-    runtime = OpenTulpaLangGraphRuntime(
+    runtime = KoboLangGraphRuntime(
         app_url="http://127.0.0.1:8000",
         openrouter_api_key="k",
         model_name="google/gemini-3-flash-preview",
@@ -374,7 +374,7 @@ async def test_ainvoke_model_extracts_openrouter_upstream_cost_details(tmp_path:
 
 @pytest.mark.asyncio
 async def test_ainvoke_model_traces_provider_error_body(tmp_path: Path) -> None:
-    runtime = OpenTulpaLangGraphRuntime(
+    runtime = KoboLangGraphRuntime(
         app_url="http://127.0.0.1:8000",
         openrouter_api_key="k",
         model_name="deepseek/deepseek-v4-pro",
@@ -409,7 +409,7 @@ async def test_ainvoke_model_traces_provider_error_body(tmp_path: Path) -> None:
 
 @pytest.mark.asyncio
 async def test_astream_model_traces_provider_error_body(tmp_path: Path) -> None:
-    runtime = OpenTulpaLangGraphRuntime(
+    runtime = KoboLangGraphRuntime(
         app_url="http://127.0.0.1:8000",
         openrouter_api_key="k",
         model_name="z-ai/glm-5.1",
@@ -444,8 +444,8 @@ def test_model_error_trace_handles_unread_streaming_response_text() -> None:
 
 @pytest.mark.asyncio
 async def test_ainvoke_model_retries_transient_provider_error(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    monkeypatch.setenv("OPENTULPA_MODEL_TRANSIENT_RETRIES", "1")
-    runtime = OpenTulpaLangGraphRuntime(
+    monkeypatch.setenv("KOBO_MODEL_TRANSIENT_RETRIES", "1")
+    runtime = KoboLangGraphRuntime(
         app_url="http://127.0.0.1:8000",
         openrouter_api_key="k",
         model_name="z-ai/glm-5.1",
@@ -475,8 +475,8 @@ async def test_ainvoke_model_retries_transient_provider_error(tmp_path: Path, mo
 
 @pytest.mark.asyncio
 async def test_astream_model_retries_transient_provider_error(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    monkeypatch.setenv("OPENTULPA_MODEL_TRANSIENT_RETRIES", "1")
-    runtime = OpenTulpaLangGraphRuntime(
+    monkeypatch.setenv("KOBO_MODEL_TRANSIENT_RETRIES", "1")
+    runtime = KoboLangGraphRuntime(
         app_url="http://127.0.0.1:8000",
         openrouter_api_key="k",
         model_name="deepseek/deepseek-v4-pro",
@@ -509,8 +509,8 @@ async def test_ainvoke_model_retries_empty_provider_response(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    monkeypatch.setenv("OPENTULPA_MODEL_TRANSIENT_RETRIES", "1")
-    runtime = OpenTulpaLangGraphRuntime(
+    monkeypatch.setenv("KOBO_MODEL_TRANSIENT_RETRIES", "1")
+    runtime = KoboLangGraphRuntime(
         app_url="http://127.0.0.1:8000",
         openrouter_api_key="k",
         model_name="deepseek/deepseek-v4-pro",
@@ -543,9 +543,9 @@ async def test_ainvoke_model_retries_provider_timeout(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    monkeypatch.setenv("OPENTULPA_MODEL_TRANSIENT_RETRIES", "1")
-    monkeypatch.setenv("OPENTULPA_MODEL_INVOKE_TIMEOUT_SECONDS", "0.05")
-    runtime = OpenTulpaLangGraphRuntime(
+    monkeypatch.setenv("KOBO_MODEL_TRANSIENT_RETRIES", "1")
+    monkeypatch.setenv("KOBO_MODEL_INVOKE_TIMEOUT_SECONDS", "0.05")
+    runtime = KoboLangGraphRuntime(
         app_url="http://127.0.0.1:8000",
         openrouter_api_key="k",
         model_name="deepseek/deepseek-v4-pro",
@@ -578,8 +578,8 @@ async def test_astream_model_retries_empty_provider_response(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    monkeypatch.setenv("OPENTULPA_MODEL_TRANSIENT_RETRIES", "1")
-    runtime = OpenTulpaLangGraphRuntime(
+    monkeypatch.setenv("KOBO_MODEL_TRANSIENT_RETRIES", "1")
+    runtime = KoboLangGraphRuntime(
         app_url="http://127.0.0.1:8000",
         openrouter_api_key="k",
         model_name="deepseek/deepseek-v4-pro",
@@ -612,9 +612,9 @@ async def test_astream_model_retries_stream_first_chunk_timeout(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    monkeypatch.setenv("OPENTULPA_MODEL_TRANSIENT_RETRIES", "1")
-    monkeypatch.setenv("OPENTULPA_MODEL_STREAM_CHUNK_TIMEOUT_SECONDS", "0.05")
-    runtime = OpenTulpaLangGraphRuntime(
+    monkeypatch.setenv("KOBO_MODEL_TRANSIENT_RETRIES", "1")
+    monkeypatch.setenv("KOBO_MODEL_STREAM_CHUNK_TIMEOUT_SECONDS", "0.05")
+    runtime = KoboLangGraphRuntime(
         app_url="http://127.0.0.1:8000",
         openrouter_api_key="k",
         model_name="deepseek/deepseek-v4-pro",
@@ -646,7 +646,7 @@ async def test_astream_model_retries_stream_first_chunk_timeout(
 async def test_astream_model_streams_openrouter_deepseek(
     tmp_path: Path,
 ) -> None:
-    runtime = OpenTulpaLangGraphRuntime(
+    runtime = KoboLangGraphRuntime(
         app_url="http://127.0.0.1:8000",
         openrouter_api_key="k",
         openrouter_base_url="https://openrouter.ai/api/v1",
@@ -672,8 +672,8 @@ async def test_astream_model_streams_openrouter_deepseek(
 async def test_ainvoke_model_retries_remote_protocol_error(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
-    monkeypatch.setenv("OPENTULPA_MODEL_TRANSIENT_RETRIES", "1")
-    runtime = OpenTulpaLangGraphRuntime(
+    monkeypatch.setenv("KOBO_MODEL_TRANSIENT_RETRIES", "1")
+    runtime = KoboLangGraphRuntime(
         app_url="http://127.0.0.1:8000",
         openrouter_api_key="k",
         model_name="deepseek/deepseek-v4-pro",
@@ -703,7 +703,7 @@ async def test_ainvoke_model_retries_remote_protocol_error(
 
 @pytest.mark.asyncio
 async def test_ainvoke_model_skips_llm_call_trace_when_behavior_log_disabled(tmp_path: Path) -> None:
-    runtime = OpenTulpaLangGraphRuntime(
+    runtime = KoboLangGraphRuntime(
         app_url="http://127.0.0.1:8000",
         openrouter_api_key="k",
         model_name="google/gemini-3-flash-preview",
@@ -723,7 +723,7 @@ async def test_ainvoke_model_skips_llm_call_trace_when_behavior_log_disabled(tmp
 
 @pytest.mark.asyncio
 async def test_ainvoke_model_redacts_inline_media_from_llm_call_trace(tmp_path: Path) -> None:
-    runtime = OpenTulpaLangGraphRuntime(
+    runtime = KoboLangGraphRuntime(
         app_url="http://127.0.0.1:8000",
         openrouter_api_key="k",
         model_name="google/gemini-3-flash-preview",
@@ -762,7 +762,7 @@ async def test_ainvoke_model_redacts_inline_media_from_llm_call_trace(tmp_path: 
 
 
 def test_llm_call_trace_keeps_latest_100_records(tmp_path: Path) -> None:
-    runtime = object.__new__(OpenTulpaLangGraphRuntime)
+    runtime = object.__new__(KoboLangGraphRuntime)
     runtime._llm_call_trace_path = tmp_path / "llm_call_traces.jsonl"
     runtime._llm_call_trace_lock = None
     runtime._llm_call_trace_limit = 100

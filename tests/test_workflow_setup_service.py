@@ -5,14 +5,14 @@ from typing import Any
 
 import pytest
 
-from opentulpa.application.workflow_setup_orchestrator import WorkflowSetupOrchestrator
-from opentulpa.context.file_vault import FileVaultService
-from opentulpa.intake.service import IntakeWorkflowService
-from opentulpa.intake.workflow_setup_service import WorkflowSetupService
-from opentulpa.intake.workflow_setup_store import WorkflowSetupSessionStore
-from opentulpa.interfaces.telegram.business import TelegramBusinessService
-from opentulpa.scheduler.service import SchedulerService
-from opentulpa.skills.service import SkillStoreService
+from kobo.application.workflow_setup_orchestrator import WorkflowSetupOrchestrator
+from kobo.context.file_vault import FileVaultService
+from kobo.intake.service import IntakeWorkflowService
+from kobo.intake.workflow_setup_service import WorkflowSetupService
+from kobo.intake.workflow_setup_store import WorkflowSetupSessionStore
+from kobo.interfaces.telegram.business import TelegramBusinessService
+from kobo.scheduler.service import SchedulerService
+from kobo.skills.service import SkillStoreService
 
 
 class _FakeRuntime:
@@ -186,7 +186,7 @@ def test_workflow_setup_begin_edit_loads_existing_workflow(tmp_path: Path) -> No
         required_fields=["day", "time", "car_type", "wash_type"],
         assistant_instructions="Be direct.",
         sink_type="local_csv",
-        sink_config={"file_path": "tulpa_stuff/bookings.csv"},
+        sink_config={"file_path": "kobo_stuff/bookings.csv"},
     )
 
     session = setup.begin_session(
@@ -215,7 +215,7 @@ def test_workflow_setup_confirm_requires_fresh_proposal(tmp_path: Path) -> None:
             "intent_description": "Handle booking requests from Instagram DMs.",
             "required_fields": ["day", "time", "car_type", "wash_type"],
             "sink_type": "local_csv",
-            "sink_config": {"file_path": "tulpa_stuff/bookings.csv"},
+            "sink_config": {"file_path": "kobo_stuff/bookings.csv"},
         },
     )
     setup.mark_proposed(customer_id="telegram_123", thread_id="thread_123")
@@ -243,7 +243,7 @@ def test_workflow_setup_commit_create_persists_active_workflow(tmp_path: Path) -
             "required_fields": ["day", "time", "car_type", "wash_type"],
             "assistant_instructions": "Be direct.",
             "sink_type": "local_csv",
-            "sink_config": {"file_path": "tulpa_stuff/bookings.csv"},
+            "sink_config": {"file_path": "kobo_stuff/bookings.csv"},
         },
     )
     setup.mark_proposed(customer_id="telegram_123", thread_id="thread_123")
@@ -274,7 +274,7 @@ def test_workflow_setup_finalize_confirmation_applies_final_patch_and_commits(
             "required_fields": ["day", "time", "car_type", "wash_type"],
             "assistant_instructions": "Be direct.",
             "sink_type": "local_csv",
-            "sink_config": {"file_path": "tulpa_stuff/bookings.csv"},
+            "sink_config": {"file_path": "kobo_stuff/bookings.csv"},
         },
     )
     setup.mark_proposed(customer_id="telegram_123", thread_id="thread_123")
@@ -312,7 +312,7 @@ def test_workflow_setup_web_finalize_keeps_explicit_instagram_reply_mode(
             "intent_description": "Handle booking requests from Instagram DMs.",
             "required_fields": ["day", "time"],
             "sink_type": "local_csv",
-            "sink_config": {"file_path": "tulpa_stuff/bookings.csv"},
+            "sink_config": {"file_path": "kobo_stuff/bookings.csv"},
             "reply_mode": "auto",
         },
     )
@@ -349,7 +349,7 @@ def test_workflow_setup_commit_edit_recreates_telegram_workflow(tmp_path: Path) 
         intent_description="Handle booking requests.",
         required_fields=["name", "time"],
         sink_type="local_csv",
-        sink_config={"file_path": "tulpa_stuff/bookings.csv"},
+        sink_config={"file_path": "kobo_stuff/bookings.csv"},
     )
 
     setup.begin_session(
@@ -448,7 +448,7 @@ def test_workflow_setup_preflight_blocks_stale_source_mismatch(tmp_path: Path) -
             "intent_description": "Book inbound Telegram leads.",
             "required_fields": ["name", "time"],
             "sink_type": "local_csv",
-            "sink_config": {"file_path": "tulpa_stuff/bookings.csv"},
+            "sink_config": {"file_path": "kobo_stuff/bookings.csv"},
         },
     )
     setup._store.update_session(  # type: ignore[attr-defined]
@@ -468,7 +468,7 @@ def test_workflow_setup_preflight_blocks_stale_source_mismatch(tmp_path: Path) -
             "business_facts": {},
             "knowledge_file_ids": [],
             "sink_type": "local_csv",
-            "sink_config": {"file_path": "tulpa_stuff/bookings.csv"},
+            "sink_config": {"file_path": "kobo_stuff/bookings.csv"},
             "schedule": "*/2 * * * *",
             "notify_user": True,
             "enabled": True,
@@ -574,11 +574,11 @@ def test_workflow_setup_update_normalizes_local_csv_filename_alias(tmp_path: Pat
         thread_id="thread_123",
         draft_patch={
             "sink_type": "local_csv",
-            "sink_config": {"filename": "tulpa_stuff/bookings.csv"},
+            "sink_config": {"filename": "kobo_stuff/bookings.csv"},
         },
     )
 
-    assert session["draft_upsert"]["sink_config"] == {"file_path": "tulpa_stuff/bookings.csv"}
+    assert session["draft_upsert"]["sink_config"] == {"file_path": "kobo_stuff/bookings.csv"}
 
 
 def test_workflow_setup_preflight_normalizes_single_google_sheet_tab_and_dry_runs(
@@ -715,7 +715,7 @@ def test_workflow_setup_orchestrator_marks_confirmable_proposal_reply(tmp_path: 
             "intent_description": "Book inbound Telegram leads.",
             "required_fields": ["name", "time"],
             "sink_type": "local_csv",
-            "sink_config": {"file_path": "tulpa_stuff/bookings.csv"},
+            "sink_config": {"file_path": "kobo_stuff/bookings.csv"},
         },
     )
 

@@ -9,8 +9,8 @@ from collections.abc import Callable
 from io import StringIO
 from typing import Any
 
-from opentulpa.business_knowledge.models import KnowledgeSourceSection
-from opentulpa.business_knowledge.table_normalizer import (
+from kobo.business_knowledge.models import KnowledgeSourceSection
+from kobo.business_knowledge.table_normalizer import (
     select_table_evidence,
     table_evidence_selection_stats,
     table_evidence_to_toon,

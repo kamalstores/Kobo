@@ -1,4 +1,4 @@
-"""Compact gateway tools for grouped OpenTulpa commands."""
+"""Compact gateway tools for grouped Kobo commands."""
 
 from __future__ import annotations
 
@@ -114,7 +114,7 @@ TOOL_GROUP_DEFINITIONS: dict[str, dict[str, Any]] = {
     },
     "workspace": {
         "summary": "Tulpa workspace files, terminal, validation, and task artifacts.",
-        "use_for": "writing/running code in tulpa_stuff, validating files, task status/artifacts.",
+        "use_for": "writing/running code in kobo_stuff, validating files, task status/artifacts.",
         "commands": {
             "tulpa_write_file",
             "tulpa_validate_file",
@@ -338,7 +338,7 @@ def register_tool_gateway_tools(runtime: Any, source_tools: dict[str, Any]) -> d
 
     @tool
     async def tool_group_list() -> Any:
-        """List compact OpenTulpa tool groups and when to use each group."""
+        """List compact Kobo tool groups and when to use each group."""
         groups: list[dict[str, Any]] = []
         for group, definition in TOOL_GROUP_DEFINITIONS.items():
             commands = _group_commands(group, source_tools)

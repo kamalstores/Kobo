@@ -9,8 +9,8 @@ from typing import Any
 from fastapi import FastAPI, Request
 from pydantic import BaseModel
 
-from opentulpa.api.web_auth import web_auth_error
-from opentulpa.interfaces.telegram.webhook_health import (
+from kobo.api.web_auth import web_auth_error
+from kobo.interfaces.telegram.webhook_health import (
     TelegramWebhookInfo,
     build_runtime_config,
     evaluate_webhook_readiness,
@@ -113,7 +113,7 @@ def _sanitize_telegram_error(exc: Exception, *, settings: Any) -> str:
     for secret_name in (
         "telegram_bot_token",
         "telegram_webhook_secret",
-        "opentulpa_web_token",
+        "kobo_web_token",
     ):
         secret = str(getattr(settings, secret_name, "") or "").strip()
         if secret:

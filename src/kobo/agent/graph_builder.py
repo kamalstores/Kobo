@@ -1,4 +1,4 @@
-"""Graph construction for OpenTulpa runtime."""
+"""Graph construction for Kobo runtime."""
 
 from __future__ import annotations
 
@@ -9,50 +9,50 @@ from typing import Any, Literal, cast
 from langgraph.graph import END, START, StateGraph
 from langgraph.types import Command, RetryPolicy
 
-from opentulpa.agent.context_engine import ContextEngine
-from opentulpa.agent.graph_control_tools import (
+from kobo.agent.context_engine import ContextEngine
+from kobo.agent.graph_control_tools import (
     execute_graph_control_tool as _execute_graph_control_tool,
 )
-from opentulpa.agent.graph_control_tools import (
+from kobo.agent.graph_control_tools import (
     is_graph_control_tool as _is_graph_control_tool,
 )
-from opentulpa.agent.graph_nodes.tool_validation import build_validate_tool_calls_node
-from opentulpa.agent.lc_messages import (
+from kobo.agent.graph_nodes.tool_validation import build_validate_tool_calls_node
+from kobo.agent.lc_messages import (
     AIMessage,
     ToolMessage,
 )
-from opentulpa.agent.models import AgentState
-from opentulpa.agent.tool_execution_policy import ToolExecutionPolicy
-from opentulpa.agent.tool_loop_guardrails import tool_action_signatures
-from opentulpa.agent.tool_outcome_context import (
+from kobo.agent.models import AgentState
+from kobo.agent.tool_execution_policy import ToolExecutionPolicy
+from kobo.agent.tool_loop_guardrails import tool_action_signatures
+from kobo.agent.tool_outcome_context import (
     compact_tool_result_for_model as _compact_tool_result_for_model,
 )
-from opentulpa.agent.tool_outcome_context import (
+from kobo.agent.tool_outcome_context import (
     next_tool_round_id as _next_tool_round_id,
 )
-from opentulpa.agent.tool_outcome_finalizers import (
+from kobo.agent.tool_outcome_finalizers import (
     final_response_hint_from_tool_outcomes as _final_response_hint_from_tool_outcomes,
 )
-from opentulpa.agent.turn_control import (
+from kobo.agent.turn_control import (
     consume_model_budget_for_turn as _consume_model_budget_for_turn,
 )
-from opentulpa.agent.turn_control import loop_limit_near as _loop_limit_near
-from opentulpa.agent.turn_control import record_tool_round_for_turn as _record_tool_round_for_turn
-from opentulpa.agent.turn_control import remaining_graph_steps as _remaining_graph_steps
-from opentulpa.agent.turn_finalizer import (
+from kobo.agent.turn_control import loop_limit_near as _loop_limit_near
+from kobo.agent.turn_control import record_tool_round_for_turn as _record_tool_round_for_turn
+from kobo.agent.turn_control import remaining_graph_steps as _remaining_graph_steps
+from kobo.agent.turn_finalizer import (
     finalize_turn_response as _finalize_turn_response,
 )
-from opentulpa.agent.turn_policy import (
+from kobo.agent.turn_policy import (
     normalize_turn_mode as _normalize_turn_mode,
 )
-from opentulpa.agent.turn_prompt_builder import build_turn_prompt as _build_turn_prompt
-from opentulpa.agent.utils import (
+from kobo.agent.turn_prompt_builder import build_turn_prompt as _build_turn_prompt
+from kobo.agent.utils import (
     content_to_text as _content_to_text,
 )
-from opentulpa.agent.utils import (
+from kobo.agent.utils import (
     latest_user_text as _latest_user_text,
 )
-from opentulpa.agent.utils import (
+from kobo.agent.utils import (
     safe_json as _safe_json,
 )
 
@@ -745,7 +745,7 @@ def build_runtime_graph(runtime: Any):
                     ToolMessage(
                         content=model_visible_result_text,
                         tool_call_id=call_id,
-                        additional_kwargs={"opentulpa_control": {"status": "ok"}},
+                        additional_kwargs={"kobo_control": {"status": "ok"}},
                     )
                 )
                 tool_outcomes.append(
@@ -796,7 +796,7 @@ def build_runtime_graph(runtime: Any):
                         content=error_text,
                         tool_call_id=call_id,
                         additional_kwargs={
-                            "opentulpa_control": {
+                            "kobo_control": {
                                 "status": "error",
                                 "error": str(exc)[:500],
                             }

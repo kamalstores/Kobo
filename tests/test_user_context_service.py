@@ -7,9 +7,9 @@ from typing import Any
 import pytest
 from pypdf import PdfWriter
 
-from opentulpa.business_knowledge.service import BusinessKnowledgeService
-from opentulpa.context.file_vault import FileVaultService
-from opentulpa.context.user_context import USER_CONTEXT_SCOPE_TYPE, UserContextService
+from kobo.business_knowledge.service import BusinessKnowledgeService
+from kobo.context.file_vault import FileVaultService
+from kobo.context.user_context import USER_CONTEXT_SCOPE_TYPE, UserContextService
 
 
 class _Oracle:

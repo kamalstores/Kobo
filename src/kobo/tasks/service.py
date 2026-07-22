@@ -13,9 +13,9 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
-from opentulpa.core.ids import new_short_id
-from opentulpa.persistence.sqlite import connect_sqlite
-from opentulpa.tasks.sandbox import (
+from kobo.core.ids import new_short_id
+from kobo.persistence.sqlite import connect_sqlite
+from kobo.tasks.sandbox import (
     append_task_event_log,
     list_artifacts,
     run_terminal,
@@ -478,7 +478,7 @@ class TaskService:
     ) -> bool:
         result = run_terminal(
             command=step.get("command", ""),
-            working_dir=step.get("working_dir", "tulpa_stuff"),
+            working_dir=step.get("working_dir", "kobo_stuff"),
             timeout_seconds=int(step.get("timeout_seconds", 90)),
             extra_env={"TASK_ARTIFACT_DIR": str(artifact_dir)},
         )
@@ -492,7 +492,7 @@ class TaskService:
         for test in tests:
             result = run_terminal(
                 command=test.get("command", ""),
-                working_dir=test.get("working_dir", "tulpa_stuff"),
+                working_dir=test.get("working_dir", "kobo_stuff"),
                 timeout_seconds=int(test.get("timeout_seconds", 90)),
                 extra_env={"TASK_ARTIFACT_DIR": str(artifact_dir)},
             )

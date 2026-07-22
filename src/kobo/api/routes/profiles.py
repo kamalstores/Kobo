@@ -9,7 +9,7 @@ from typing import Any
 
 from fastapi import FastAPI
 
-from opentulpa.context.customer_profile_models import (
+from kobo.context.customer_profile_models import (
     CustomerScopedClearResponse,
     CustomerScopedOkResponse,
     CustomerScopedRequest,
@@ -21,7 +21,7 @@ from opentulpa.context.customer_profile_models import (
     TimeProfileSetRequest,
     TimeProfileSetResponse,
 )
-from opentulpa.context.customer_profiles import CustomerProfileService
+from kobo.context.customer_profiles import CustomerProfileService
 
 
 def _schedule_best_effort_memory_add(

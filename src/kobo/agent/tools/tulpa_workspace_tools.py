@@ -6,19 +6,19 @@ from typing import Any
 
 from langchain.tools import tool
 
-from opentulpa.agent.tools.common import (
+from kobo.agent.tools.common import (
     normalize_command_for_working_dir,
     normalize_execution_origin,
     require_customer_id,
 )
-from opentulpa.agent.tools.core_tools import _decorate_python_dependency_failure
-from opentulpa.agent.utils import looks_like_shell_command as _looks_like_shell_command
+from kobo.agent.tools.core_tools import _decorate_python_dependency_failure
+from kobo.agent.utils import looks_like_shell_command as _looks_like_shell_command
 
 
 def register_tulpa_workspace_tools(runtime: Any) -> dict[str, Any]:
     @tool
     async def tulpa_write_file(path: str, content: str) -> Any:
-        """Write or update a file in approved tulpa_stuff workspace paths."""
+        """Write or update a file in approved kobo_stuff workspace paths."""
         r = await runtime._request_with_backoff(
             "POST",
             "/internal/tulpa/write_file",
@@ -44,7 +44,7 @@ def register_tulpa_workspace_tools(runtime: Any) -> dict[str, Any]:
 
     @tool
     async def tulpa_reload() -> Any:
-        """Reload tulpa_stuff routers so newly written connectors become active."""
+        """Reload kobo_stuff routers so newly written connectors become active."""
         r = await runtime._request_with_backoff(
             "POST",
             "/internal/tulpa/reload",
@@ -57,13 +57,13 @@ def register_tulpa_workspace_tools(runtime: Any) -> dict[str, Any]:
     @tool
     async def tulpa_run_terminal(
         command: str,
-        working_dir: str = "tulpa_stuff",
+        working_dir: str = "kobo_stuff",
         timeout_seconds: int = 90,
         thread_id: str = "",
         execution_origin: str | None = None,
     ) -> Any:
-        """Run a concrete shell/script command inside the tulpa_stuff agent venv."""
-        safe_working_dir = str(working_dir or "").strip() or "tulpa_stuff"
+        """Run a concrete shell/script command inside the kobo_stuff agent venv."""
+        safe_working_dir = str(working_dir or "").strip() or "kobo_stuff"
         safe_command = normalize_command_for_working_dir(
             command=str(command or "").strip(),
             working_dir=safe_working_dir,
@@ -104,7 +104,7 @@ def register_tulpa_workspace_tools(runtime: Any) -> dict[str, Any]:
 
     @tool
     async def tulpa_read_file(path: str, max_chars: int = 12000) -> Any:
-        """Read a bounded text excerpt from approved tulpa_stuff workspace paths."""
+        """Read a bounded text excerpt from approved kobo_stuff workspace paths."""
         safe_max_chars = max(500, min(int(max_chars), 20000))
         r = await runtime._request_with_backoff(
             "GET",
@@ -118,7 +118,7 @@ def register_tulpa_workspace_tools(runtime: Any) -> dict[str, Any]:
 
     @tool
     async def tulpa_catalog() -> Any:
-        """List tracked tulpa_stuff workspace files, generated artifacts, and metadata."""
+        """List tracked kobo_stuff workspace files, generated artifacts, and metadata."""
         r = await runtime._request_with_backoff("GET", "/internal/tulpa/catalog", timeout=10.0)
         if r.status_code != 200:
             return {"error": f"catalog failed: {r.text}"}

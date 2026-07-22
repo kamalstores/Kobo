@@ -18,7 +18,7 @@ from urllib.parse import urlparse
 
 import httpx
 
-from opentulpa.core.config import get_openai_compatible_api_key_from_env
+from kobo.core.config import get_openai_compatible_api_key_from_env
 
 logger = logging.getLogger(__name__)
 
@@ -233,7 +233,7 @@ class WebSearchProvider(abc.ABC):
 
     @abc.abstractmethod
     async def search(self, query: str, **kwargs: object) -> WebSearchResult | str:
-        """Run search and return OpenTulpa's existing web_search result shape."""
+        """Run search and return Kobo's existing web_search result shape."""
 
 
 class ExaSearchProvider(WebSearchProvider):
@@ -261,7 +261,7 @@ class ExaSearchProvider(WebSearchProvider):
             payload=payload,
             headers={
                 "x-api-key": api_key,
-                "x-exa-integration": "opentulpa",
+                "x-exa-integration": "kobo",
                 "Content-Type": "application/json",
             },
             provider_name=self.name,

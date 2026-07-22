@@ -4,7 +4,7 @@ from typing import Any
 
 import pytest
 
-from opentulpa.interfaces.telegram import relay as relay_module
+from kobo.interfaces.telegram import relay as relay_module
 
 
 class _FakeStateStore:

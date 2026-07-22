@@ -1,4 +1,4 @@
-"""HTTP client wrapper for calling OpenTulpa internal APIs with backoff."""
+"""HTTP client wrapper for calling Kobo internal APIs with backoff."""
 
 from __future__ import annotations
 

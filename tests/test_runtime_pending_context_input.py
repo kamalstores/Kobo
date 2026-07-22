@@ -6,20 +6,20 @@ from typing import Any
 import pytest
 from langgraph.checkpoint.memory import InMemorySaver
 
-from opentulpa.agent.graph_builder import build_runtime_graph
-from opentulpa.agent.graph_control_tools import register_graph_control_tools
-from opentulpa.agent.lc_messages import AIMessage, HumanMessage, ToolMessage
-from opentulpa.agent.runtime import OpenTulpaLangGraphRuntime
-from opentulpa.agent.runtime_context_provider import RuntimeContextSourceProvider
-from opentulpa.agent.runtime_input import ThreadInputCoordinator
-from opentulpa.agent.tool_execution_policy import ToolExecutionPolicy
-from opentulpa.agent.tools.owner_update_tools import register_owner_update_tools
-from opentulpa.agent.turn_context_preparer import (
+from kobo.agent.graph_builder import build_runtime_graph
+from kobo.agent.graph_control_tools import register_graph_control_tools
+from kobo.agent.lc_messages import AIMessage, HumanMessage, ToolMessage
+from kobo.agent.runtime import KoboLangGraphRuntime
+from kobo.agent.runtime_context_provider import RuntimeContextSourceProvider
+from kobo.agent.runtime_input import ThreadInputCoordinator
+from kobo.agent.tool_execution_policy import ToolExecutionPolicy
+from kobo.agent.tools.owner_update_tools import register_owner_update_tools
+from kobo.agent.turn_context_preparer import (
     build_graph_input,
     format_pending_context,
     pre_resolve_skill_state,
 )
-from opentulpa.agent.utils import approx_tokens as _approx_tokens
+from kobo.agent.utils import approx_tokens as _approx_tokens
 
 
 def _ready_setup_session() -> dict[str, Any]:
@@ -144,7 +144,7 @@ class _UnnamedFakeTool:
         return {"ok": True, "args": args}
 
 
-def _install_prompt_source_stubs(runtime: OpenTulpaLangGraphRuntime) -> None:
+def _install_prompt_source_stubs(runtime: KoboLangGraphRuntime) -> None:
     async def _list_available_skills(customer_id: str) -> list[dict[str, Any]]:
         del customer_id
         return []
@@ -161,7 +161,7 @@ def _install_prompt_source_stubs(runtime: OpenTulpaLangGraphRuntime) -> None:
 
 
 def _install_minimal_graph_runtime_stubs(
-    runtime: OpenTulpaLangGraphRuntime,
+    runtime: KoboLangGraphRuntime,
     *,
     ainvoke_model: Any,
     behavior_events: list[str] | None = None,
@@ -220,7 +220,7 @@ def _install_minimal_graph_runtime_stubs(
 
 
 def test_tool_execution_policy_allows_runtime_tools_without_name_attribute() -> None:
-    runtime = object.__new__(OpenTulpaLangGraphRuntime)
+    runtime = object.__new__(KoboLangGraphRuntime)
     runtime._tools = {"tool_group_exec": _UnnamedFakeTool()}
 
     policy = ToolExecutionPolicy.from_runtime_state(
@@ -238,7 +238,7 @@ def test_tool_execution_policy_allows_runtime_tools_without_name_attribute() -> 
 
 @pytest.mark.asyncio
 async def test_graph_keeps_turn_plan_in_state_for_next_agent_step() -> None:
-    runtime = object.__new__(OpenTulpaLangGraphRuntime)
+    runtime = object.__new__(KoboLangGraphRuntime)
     captured_second_pass_messages: list[Any] = []
     calls = 0
 
@@ -341,7 +341,7 @@ async def test_graph_keeps_turn_plan_in_state_for_next_agent_step() -> None:
 
 @pytest.mark.asyncio
 async def test_graph_turn_plan_validation_error_returns_to_model() -> None:
-    runtime = object.__new__(OpenTulpaLangGraphRuntime)
+    runtime = object.__new__(KoboLangGraphRuntime)
     calls = 0
 
     async def _ainvoke_model(
@@ -403,7 +403,7 @@ async def test_graph_turn_plan_validation_error_returns_to_model() -> None:
 
 @pytest.mark.asyncio
 async def test_graph_turn_budget_forces_no_tools_finalizer_after_budget_exhaustion() -> None:
-    runtime = object.__new__(OpenTulpaLangGraphRuntime)
+    runtime = object.__new__(KoboLangGraphRuntime)
     call_sites: list[str] = []
     prompts: list[list[Any]] = []
 
@@ -471,7 +471,7 @@ async def test_graph_turn_budget_forces_no_tools_finalizer_after_budget_exhausti
 
 @pytest.mark.asyncio
 async def test_graph_resets_turn_plan_for_new_user_turn() -> None:
-    runtime = object.__new__(OpenTulpaLangGraphRuntime)
+    runtime = object.__new__(KoboLangGraphRuntime)
     captured_prompts: list[list[Any]] = []
     calls = 0
 
@@ -545,7 +545,7 @@ async def test_graph_resets_turn_plan_for_new_user_turn() -> None:
 
 @pytest.mark.asyncio
 async def test_graph_does_not_inject_turn_plan_context_outside_interactive() -> None:
-    runtime = object.__new__(OpenTulpaLangGraphRuntime)
+    runtime = object.__new__(KoboLangGraphRuntime)
     captured_messages: list[Any] = []
 
     async def _ainvoke_model(
@@ -591,7 +591,7 @@ async def test_graph_does_not_inject_turn_plan_context_outside_interactive() -> 
 
 @pytest.mark.asyncio
 async def test_graph_surfaces_tool_call_preamble_as_live_update() -> None:
-    runtime = object.__new__(OpenTulpaLangGraphRuntime)
+    runtime = object.__new__(KoboLangGraphRuntime)
     sequence: list[str] = []
 
     class _FakeTool:
@@ -652,7 +652,7 @@ async def test_graph_surfaces_tool_call_preamble_as_live_update() -> None:
 
 @pytest.mark.asyncio
 async def test_graph_tool_call_preamble_not_suppressed_by_checkpointed_flag() -> None:
-    runtime = object.__new__(OpenTulpaLangGraphRuntime)
+    runtime = object.__new__(KoboLangGraphRuntime)
     sequence: list[str] = []
 
     class _FakeTool:
@@ -717,7 +717,7 @@ async def test_graph_tool_call_preamble_not_suppressed_by_checkpointed_flag() ->
 
 @pytest.mark.asyncio
 async def test_graph_tool_execution_sets_thread_context_from_state() -> None:
-    runtime = object.__new__(OpenTulpaLangGraphRuntime)
+    runtime = object.__new__(KoboLangGraphRuntime)
     emitted: list[dict[str, str]] = []
     calls = 0
 
@@ -779,7 +779,7 @@ async def test_graph_tool_execution_sets_thread_context_from_state() -> None:
 
 @pytest.mark.asyncio
 async def test_graph_surfaces_tool_call_preamble_for_workflow_setup() -> None:
-    runtime = object.__new__(OpenTulpaLangGraphRuntime)
+    runtime = object.__new__(KoboLangGraphRuntime)
     sequence: list[str] = []
 
     class _FakeTool:
@@ -840,7 +840,7 @@ async def test_graph_surfaces_tool_call_preamble_for_workflow_setup() -> None:
 
 @pytest.mark.asyncio
 async def test_graph_surfaces_default_progress_for_silent_workflow_setup_tool_call() -> None:
-    runtime = object.__new__(OpenTulpaLangGraphRuntime)
+    runtime = object.__new__(KoboLangGraphRuntime)
     sequence: list[str] = []
 
     class _FakeTool:
@@ -914,7 +914,7 @@ async def test_graph_surfaces_default_progress_for_silent_workflow_setup_tool_ca
 
 @pytest.mark.asyncio
 async def test_graph_finalizes_successful_workflow_delete_when_model_omits_confirmation() -> None:
-    runtime = object.__new__(OpenTulpaLangGraphRuntime)
+    runtime = object.__new__(KoboLangGraphRuntime)
 
     class _DeleteTool:
         async def ainvoke(self, args: dict[str, Any]) -> dict[str, Any]:
@@ -977,7 +977,7 @@ async def test_graph_finalizes_successful_workflow_delete_when_model_omits_confi
 
 @pytest.mark.asyncio
 async def test_graph_finalizes_ready_workflow_proposal_when_model_omits_summary() -> None:
-    runtime = object.__new__(OpenTulpaLangGraphRuntime)
+    runtime = object.__new__(KoboLangGraphRuntime)
 
     class _ProposeTool:
         async def ainvoke(self, args: dict[str, Any]) -> dict[str, Any]:
@@ -1061,7 +1061,7 @@ async def test_graph_finalizes_ready_workflow_proposal_when_model_omits_summary(
 
 @pytest.mark.asyncio
 async def test_graph_does_not_surface_tool_call_preamble_for_background_turns() -> None:
-    runtime = object.__new__(OpenTulpaLangGraphRuntime)
+    runtime = object.__new__(KoboLangGraphRuntime)
     sequence: list[str] = []
 
     class _FakeTool:
@@ -1121,7 +1121,7 @@ async def test_graph_does_not_surface_tool_call_preamble_for_background_turns() 
 
 @pytest.mark.asyncio
 async def test_graph_does_not_duplicate_send_owner_update_preamble() -> None:
-    runtime = object.__new__(OpenTulpaLangGraphRuntime)
+    runtime = object.__new__(KoboLangGraphRuntime)
     emitted: list[str] = []
     tool_calls: list[dict[str, Any]] = []
 
@@ -1188,7 +1188,7 @@ async def test_graph_does_not_duplicate_send_owner_update_preamble() -> None:
 
 @pytest.mark.asyncio
 async def test_graph_adds_loop_limit_instruction_for_final_prose() -> None:
-    runtime = object.__new__(OpenTulpaLangGraphRuntime)
+    runtime = object.__new__(KoboLangGraphRuntime)
     saw_loop_instruction = False
 
     async def _ainvoke_model(
@@ -1230,7 +1230,7 @@ async def test_graph_adds_loop_limit_instruction_for_final_prose() -> None:
 
 @pytest.mark.asyncio
 async def test_graph_blocks_new_tool_calls_when_loop_limit_is_near() -> None:
-    runtime = object.__new__(OpenTulpaLangGraphRuntime)
+    runtime = object.__new__(KoboLangGraphRuntime)
     tool_invoked = False
     model_calls = 0
 
@@ -1284,7 +1284,7 @@ async def test_graph_blocks_new_tool_calls_when_loop_limit_is_near() -> None:
 
 @pytest.mark.asyncio
 async def test_graph_carries_compact_tool_outcome_context_between_tool_rounds() -> None:
-    runtime = object.__new__(OpenTulpaLangGraphRuntime)
+    runtime = object.__new__(KoboLangGraphRuntime)
     calls = 0
     saw_tool_context = False
 
@@ -1344,7 +1344,7 @@ async def test_graph_carries_compact_tool_outcome_context_between_tool_rounds() 
 
 @pytest.mark.asyncio
 async def test_graph_finalize_does_not_reuse_prior_turn_assistant_reply() -> None:
-    runtime = object.__new__(OpenTulpaLangGraphRuntime)
+    runtime = object.__new__(KoboLangGraphRuntime)
     call_count = 0
 
     async def _ainvoke_model(
@@ -1398,7 +1398,7 @@ async def test_graph_finalize_does_not_reuse_prior_turn_assistant_reply() -> Non
 
 @pytest.mark.asyncio
 async def test_graph_keeps_empty_output_without_retry() -> None:
-    runtime = object.__new__(OpenTulpaLangGraphRuntime)
+    runtime = object.__new__(KoboLangGraphRuntime)
     call_count = 0
 
     async def _ainvoke_model(
@@ -1459,14 +1459,14 @@ def test_pending_context_surfaces_routine_execution_summary() -> None:
 
 
 def test_tool_group_exec_progress_label_uses_group_and_command() -> None:
-    message = OpenTulpaLangGraphRuntime._describe_tool_calls_for_progress(
+    message = KoboLangGraphRuntime._describe_tool_calls_for_progress(
         [
             {
                 "name": "tool_group_exec",
                 "args": {
                     "group": "composio",
                     "command": "GITHUB_LIST_PULL_REQUESTS",
-                    "args_json": {"owner": "kvyb"},
+                    "args_json": {"owner": "kamalstores"},
                 },
             }
         ]
@@ -1477,7 +1477,7 @@ def test_tool_group_exec_progress_label_uses_group_and_command() -> None:
 
 
 def test_batched_tool_group_exec_progress_label_uses_first_two_commands() -> None:
-    message = OpenTulpaLangGraphRuntime._describe_tool_calls_for_progress(
+    message = KoboLangGraphRuntime._describe_tool_calls_for_progress(
         [
             {
                 "name": "tool_group_exec",
@@ -1501,7 +1501,7 @@ def test_batched_tool_group_exec_progress_label_uses_first_two_commands() -> Non
 
 @pytest.mark.asyncio
 async def test_ainvoke_text_does_not_reuse_prior_turn_assistant_reply() -> None:
-    runtime = object.__new__(OpenTulpaLangGraphRuntime)
+    runtime = object.__new__(KoboLangGraphRuntime)
     runtime._graph = _AinvokeStaleMessageGraph()
     runtime._thread_inputs = ThreadInputCoordinator(debounce_seconds=0.0)
     runtime._context_events = None
@@ -1540,7 +1540,7 @@ async def test_ainvoke_text_does_not_reuse_prior_turn_assistant_reply() -> None:
 
 @pytest.mark.asyncio
 async def test_workflow_setup_empty_no_tool_response_gets_repair_retry() -> None:
-    runtime = object.__new__(OpenTulpaLangGraphRuntime)
+    runtime = object.__new__(KoboLangGraphRuntime)
     captured_prompts: list[list[Any]] = []
     behavior_events: list[str] = []
 
@@ -1589,7 +1589,7 @@ async def test_workflow_setup_empty_no_tool_response_gets_repair_retry() -> None
 
 @pytest.mark.asyncio
 async def test_workflow_setup_prompt_injects_authoritative_next_action() -> None:
-    runtime = object.__new__(OpenTulpaLangGraphRuntime)
+    runtime = object.__new__(KoboLangGraphRuntime)
     captured_prompts: list[list[Any]] = []
 
     async def _ainvoke_model(
@@ -1635,7 +1635,7 @@ async def test_workflow_setup_prompt_injects_authoritative_next_action() -> None
 
 @pytest.mark.asyncio
 async def test_workflow_setup_control_card_refreshes_after_tool_results() -> None:
-    runtime = object.__new__(OpenTulpaLangGraphRuntime)
+    runtime = object.__new__(KoboLangGraphRuntime)
     captured_prompts: list[list[Any]] = []
     captured_prefix_counts: list[int] = []
     service = _FakeWorkflowSetupService(_ready_setup_session())
@@ -1716,7 +1716,7 @@ async def test_workflow_setup_control_card_refreshes_after_tool_results() -> Non
 
 @pytest.mark.asyncio
 async def test_interactive_turn_promotes_to_workflow_setup_when_session_becomes_active() -> None:
-    runtime = object.__new__(OpenTulpaLangGraphRuntime)
+    runtime = object.__new__(KoboLangGraphRuntime)
     captured_prompts: list[list[Any]] = []
     behavior_events: list[str] = []
 
@@ -1767,7 +1767,7 @@ async def test_interactive_turn_promotes_to_workflow_setup_when_session_becomes_
 
 @pytest.mark.asyncio
 async def test_pending_context_is_not_merged_into_user_message() -> None:
-    runtime = object.__new__(OpenTulpaLangGraphRuntime)
+    runtime = object.__new__(KoboLangGraphRuntime)
     graph = _CapturingGraph()
     events = _FakeContextEvents()
 
@@ -1822,7 +1822,7 @@ async def test_pending_context_is_not_merged_into_user_message() -> None:
 
 @pytest.mark.asyncio
 async def test_concurrent_input_enqueues_next_turn_not_active_user_message() -> None:
-    runtime = object.__new__(OpenTulpaLangGraphRuntime)
+    runtime = object.__new__(KoboLangGraphRuntime)
     graph = _CapturingGraph()
 
     runtime._graph = graph
@@ -1890,7 +1890,7 @@ class _GraphModel:
 
 @pytest.mark.asyncio
 async def test_agent_reuses_turn_scoped_available_skills_without_relisting() -> None:
-    runtime = object.__new__(OpenTulpaLangGraphRuntime)
+    runtime = object.__new__(KoboLangGraphRuntime)
     model = _GraphModel()
     list_calls = 0
     resolve_calls = 0
@@ -1988,7 +1988,7 @@ async def test_agent_reuses_turn_scoped_available_skills_without_relisting() -> 
 
 @pytest.mark.asyncio
 async def test_pre_resolve_skill_state_does_not_call_llm_selector() -> None:
-    runtime = object.__new__(OpenTulpaLangGraphRuntime)
+    runtime = object.__new__(KoboLangGraphRuntime)
     selector_calls = 0
 
     async def _list_available_skills(customer_id: str) -> list[dict[str, Any]]:
@@ -2025,7 +2025,7 @@ async def test_pre_resolve_skill_state_does_not_call_llm_selector() -> None:
 
 @pytest.mark.asyncio
 async def test_interactive_prompt_keeps_core_policy_as_stable_prefix() -> None:
-    runtime = object.__new__(OpenTulpaLangGraphRuntime)
+    runtime = object.__new__(KoboLangGraphRuntime)
     captured: dict[str, Any] = {}
 
     async def _live_time(customer_id: str) -> dict[str, str]:
@@ -2111,7 +2111,7 @@ async def test_interactive_prompt_keeps_core_policy_as_stable_prefix() -> None:
         idx
         for idx, msg in enumerate(prompt_messages)
         if isinstance(msg, HumanMessage)
-        and "OpenTulpa cache anchor v1" in str(getattr(msg, "content", ""))
+        and "Kobo cache anchor v1" in str(getattr(msg, "content", ""))
     )
     assert anchor_index == captured["stable_prefix_count"] - 1
     web_backend_messages = [
@@ -2123,7 +2123,7 @@ async def test_interactive_prompt_keeps_core_policy_as_stable_prefix() -> None:
     current_turn_context_index = next(
         idx
         for idx, msg in enumerate(prompt_messages)
-        if "OPENTULPA_CURRENT_TURN_CONTEXT" in str(getattr(msg, "content", ""))
+        if "KOBO_CURRENT_TURN_CONTEXT" in str(getattr(msg, "content", ""))
     )
     assert current_turn_context_index >= captured["cacheable_prefix_count"]
     older_assistant_index = next(
@@ -2157,7 +2157,7 @@ async def test_interactive_prompt_keeps_core_policy_as_stable_prefix() -> None:
 
 @pytest.mark.asyncio
 async def test_agent_uses_server_time_tool_guidance_instead_of_live_time_context() -> None:
-    runtime = object.__new__(OpenTulpaLangGraphRuntime)
+    runtime = object.__new__(KoboLangGraphRuntime)
     captured_messages: list[list[Any]] = []
     captured_prefix_counts: list[int] = []
     live_time_calls = 0
@@ -2248,7 +2248,7 @@ async def test_agent_uses_server_time_tool_guidance_instead_of_live_time_context
         idx
         for idx, msg in enumerate(captured_messages[0])
         if isinstance(msg, HumanMessage)
-        and "OpenTulpa cache anchor v1" in str(getattr(msg, "content", ""))
+        and "Kobo cache anchor v1" in str(getattr(msg, "content", ""))
     )
     assert anchor_index == captured_prefix_counts[0] - 1
 
@@ -2272,7 +2272,7 @@ async def test_agent_uses_server_time_tool_guidance_instead_of_live_time_context
 
 @pytest.mark.asyncio
 async def test_agent_freezes_older_history_projection_and_stale_summary_across_tool_loop() -> None:
-    runtime = object.__new__(OpenTulpaLangGraphRuntime)
+    runtime = object.__new__(KoboLangGraphRuntime)
     captured_messages: list[list[Any]] = []
     captured_prefix_counts: list[int] = []
 
@@ -2382,7 +2382,7 @@ async def test_agent_freezes_older_history_projection_and_stale_summary_across_t
 
 @pytest.mark.asyncio
 async def test_deepseek_prompt_uses_only_current_turn_raw_history() -> None:
-    runtime = object.__new__(OpenTulpaLangGraphRuntime)
+    runtime = object.__new__(KoboLangGraphRuntime)
     captured_messages: list[Any] = []
 
     async def _live_time(customer_id: str) -> dict[str, str]:
@@ -2471,7 +2471,7 @@ async def test_deepseek_prompt_uses_only_current_turn_raw_history() -> None:
 
 @pytest.mark.asyncio
 async def test_deepseek_prompt_collapses_completed_tool_segments() -> None:
-    runtime = object.__new__(OpenTulpaLangGraphRuntime)
+    runtime = object.__new__(KoboLangGraphRuntime)
     captured_messages: list[list[Any]] = []
 
     class _FakeTool:
@@ -2580,7 +2580,7 @@ async def test_deepseek_prompt_collapses_completed_tool_segments() -> None:
 
 
 def test_memory_grounding_block_stays_compact() -> None:
-    runtime = object.__new__(OpenTulpaLangGraphRuntime)
+    runtime = object.__new__(KoboLangGraphRuntime)
     memories = [
         {
             "kind": "directive_fact",
@@ -2609,7 +2609,7 @@ def test_memory_grounding_block_stays_compact() -> None:
         },
         {
             "kind": "file_fact",
-            "text": "Uploaded planning PDF is stored in tulpa_stuff/uploads for later recall.",
+            "text": "Uploaded planning PDF is stored in kobo_stuff/uploads for later recall.",
             "score": 0.55,
         },
         {
@@ -2645,7 +2645,7 @@ def test_graph_input_preserves_frozen_prompt_state_between_turns() -> None:
 
 @pytest.mark.asyncio
 async def test_graph_preserves_frozen_history_projection_across_user_turns() -> None:
-    runtime = object.__new__(OpenTulpaLangGraphRuntime)
+    runtime = object.__new__(KoboLangGraphRuntime)
     captured_projection_starts: list[int | None] = []
 
     async def _ainvoke_model(

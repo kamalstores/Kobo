@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from opentulpa.agent.turn_runtime_policy import (
+from kobo.agent.turn_runtime_policy import (
     effective_turn_mode,
     recursion_limit_for_turn,
 )

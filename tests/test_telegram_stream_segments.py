@@ -4,11 +4,11 @@ import asyncio
 
 import pytest
 
-from opentulpa.agent.runtime import (
+from kobo.agent.runtime import (
     STREAM_PROGRESS_PREFIX,
     STREAM_WAIT_SIGNAL,
 )
-from opentulpa.interfaces.telegram import relay as relay_module
+from kobo.interfaces.telegram import relay as relay_module
 
 
 class _SegmentedRuntime:
@@ -718,7 +718,7 @@ def test_telegram_observability_context_maps_customer_and_thread_to_langfuse_kwa
 
     assert runtime.calls == [
         {
-            "name": "opentulpa.interactive.turn",
+            "name": "kobo.interactive.turn",
             "trace_id": None,
             "user_id": "telegram_1",
             "session_id": "chat_1",

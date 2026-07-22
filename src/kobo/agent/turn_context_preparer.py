@@ -6,10 +6,10 @@ from collections.abc import Callable
 from dataclasses import dataclass
 from typing import Any, Protocol
 
-from opentulpa.agent.lc_messages import HumanMessage
-from opentulpa.agent.prompt_classifier import classify_prompt_mode as _classify_prompt_mode
-from opentulpa.agent.turn_budget import initial_turn_budget
-from opentulpa.agent.turn_policy import normalize_turn_mode as _normalize_turn_mode
+from kobo.agent.lc_messages import HumanMessage
+from kobo.agent.prompt_classifier import classify_prompt_mode as _classify_prompt_mode
+from kobo.agent.turn_budget import initial_turn_budget
+from kobo.agent.turn_policy import normalize_turn_mode as _normalize_turn_mode
 
 
 @dataclass(slots=True)
@@ -305,7 +305,7 @@ async def prepare_turn_context(
                 for item in (str(turn_mode or "").strip(), str(prompt_mode or "").strip())
                 if item
             ],
-            "opentulpa_trace_id": str(trace_id or "").strip(),
+            "kobo_trace_id": str(trace_id or "").strip(),
             "thread_id": str(thread_id or "").strip(),
             "turn_mode": str(turn_mode or "").strip(),
             "prompt_mode": str(prompt_mode or "").strip(),

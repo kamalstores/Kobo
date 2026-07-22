@@ -9,8 +9,8 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any, Literal
 
-from opentulpa.core.ids import new_short_id
-from opentulpa.persistence.sqlite import connect_sqlite
+from kobo.core.ids import new_short_id
+from kobo.persistence.sqlite import connect_sqlite
 
 SetupSessionStatus = Literal["active", "paused", "completed", "cancelled"]
 SetupSessionMode = Literal["create", "edit"]

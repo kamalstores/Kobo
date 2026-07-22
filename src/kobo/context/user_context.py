@@ -1,7 +1,7 @@
 """Interactive user-context source management over the knowledge engine.
 
 User context is the durable, customer-scoped knowledge shelf for interactive chat.
-It can manage any uploaded content type that OpenTulpa can preserve in the file
+It can manage any uploaded content type that Kobo can preserve in the file
 vault: text, documents, spreadsheets, PDFs, images, audio, and video. The service
 does not make multimodal files directly queryable; upstream preparation turns
 each file into normalized text evidence first. Local parsers handle text-like
@@ -21,7 +21,7 @@ from contextlib import suppress
 from datetime import UTC, datetime
 from typing import Any
 
-from opentulpa.persistence.sqlite import connect_sqlite
+from kobo.persistence.sqlite import connect_sqlite
 
 USER_CONTEXT_SCOPE_TYPE = "user_context"
 

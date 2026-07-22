@@ -12,7 +12,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any, cast
 
-from opentulpa.persistence.sqlite import connect_sqlite
+from kobo.persistence.sqlite import connect_sqlite
 
 try:
     import fcntl as _fcntl
@@ -123,9 +123,9 @@ _DEFAULT_BROWSER_USE_OPERATOR_INSTRUCTIONS = (
 )
 _DEFAULT_COMPOSIO_OPERATOR_INSTRUCTIONS = (
     "## Purpose\n"
-    "Use OpenTulpa's Composio tools to connect external SaaS accounts and execute Composio-backed actions safely.\n\n"
+    "Use Kobo's Composio tools to connect external SaaS accounts and execute Composio-backed actions safely.\n\n"
     "## Available tools\n"
-    "1. `composio_status`: verify whether Composio is configured on this OpenTulpa instance.\n"
+    "1. `composio_status`: verify whether Composio is configured on this Kobo instance.\n"
     "2. `composio_authorize_toolkit`: create an auth link for a toolkit like `instagram`, `gmail`, or `slack`.\n"
     "3. `composio_wait_for_connection`: wait for a pending connection to become active after the user completes OAuth.\n"
     "4. `composio_toolkits`: inspect which toolkits are connected for the active user.\n"
@@ -165,7 +165,7 @@ _DEFAULT_ROUTINE_SCHEDULE_COMPOSER_INSTRUCTIONS = (
     "1. instruction: schedule-time scratchpad (what to run, files to read/write, expected output).\n"
     "2. implementation_command: concrete shell/script command for scheduled execution.\n\n"
     "3. implementation_command path style: keep script/file arguments relative to working_dir.\n"
-    "   Example with default working_dir=tulpa_stuff: use `python3 tg_login.py`, not `python3 tulpa_stuff/tg_login.py`.\n\n"
+    "   Example with default working_dir=kobo_stuff: use `python3 tg_login.py`, not `python3 kobo_stuff/tg_login.py`.\n\n"
     "## Instruction style\n"
     "1. Write instruction in second-person imperative voice: start with 'You must ...'.\n"
     "2. Include concrete steps, required scripts/files/keys source, and expected result.\n"

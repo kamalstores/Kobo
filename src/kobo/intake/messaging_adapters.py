@@ -7,7 +7,7 @@ from dataclasses import dataclass, field
 from datetime import UTC, datetime
 from typing import Any, NotRequired, Protocol, TypedDict
 
-from opentulpa.core.ids import new_short_id
+from kobo.core.ids import new_short_id
 
 _DEFAULT_INSTAGRAM_SCAN_LIMIT = 20
 _MAX_INSTAGRAM_SCAN_LIMIT = 20
@@ -375,7 +375,7 @@ class TelegramBusinessMessagingAdapter:
             result_message.setdefault("chat", {"id": conversation_id, "type": "private"})
             result_message.setdefault("text", reply_text)
             result_message.setdefault("business_connection_id", business_connection_id)
-            result_message.setdefault("sender_business_bot", {"id": "opentulpa"})
+            result_message.setdefault("sender_business_bot", {"id": "kobo"})
             with suppress(Exception):
                 telegram_business.upsert_message(
                     business_connection_id=business_connection_id,

@@ -12,28 +12,28 @@ from typing import Any
 from langchain.chat_models import init_chat_model
 from pydantic import BaseModel
 
-from opentulpa.agent import model_error_trace
-from opentulpa.agent import model_transport_policy as transport_policy
-from opentulpa.agent.lc_messages import AIMessage, HumanMessage, SystemMessage
-from opentulpa.agent.model_call_guards import (
+from kobo.agent import model_error_trace
+from kobo.agent import model_transport_policy as transport_policy
+from kobo.agent.lc_messages import AIMessage, HumanMessage, SystemMessage
+from kobo.agent.model_call_guards import (
     next_stream_chunk_with_timeout,
     raise_if_empty_model_response,
 )
-from opentulpa.agent.model_init_policy import (
+from kobo.agent.model_init_policy import (
     chat_model_init_kwargs_for_model,
     deep_merge_dicts,
     disable_deepseek_v4_pro_thinking_extra,
 )
-from opentulpa.agent.model_provider_profile import (
+from kobo.agent.model_provider_profile import (
     model_provider_profile,
     provider_prompt_cache_invoke_extras,
 )
-from opentulpa.agent.openrouter_chat_factory import (
+from kobo.agent.openrouter_chat_factory import (
     build_openrouter_chat_model,
     looks_like_openrouter_base_url,
     uses_openrouter_reasoning_adapter,
 )
-from opentulpa.agent.utils import content_to_text as _content_to_text
+from kobo.agent.utils import content_to_text as _content_to_text
 
 logger = logging.getLogger(__name__)
 
@@ -148,7 +148,7 @@ def _openrouter_session_id_for_call(
     if not thread_id and not customer_id:
         return ""
     raw = f"{customer_id}:{thread_id}"
-    return f"opentulpa-{hashlib.sha256(raw.encode('utf-8')).hexdigest()[:32]}"
+    return f"kobo-{hashlib.sha256(raw.encode('utf-8')).hexdigest()[:32]}"
 
 
 def _with_openrouter_session_id(

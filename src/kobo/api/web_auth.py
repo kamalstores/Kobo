@@ -34,7 +34,7 @@ def web_auth_error(
     if not secret:
         return JSONResponse(
             status_code=missing_status_code,
-            content={"detail": "OPENTULPA_WEB_TOKEN is not configured"},
+            content={"detail": "KOBO_WEB_TOKEN is not configured"},
         )
     if not authorized_web_request(request, secret):
         return JSONResponse(status_code=401, content={"detail": "unauthorized"})

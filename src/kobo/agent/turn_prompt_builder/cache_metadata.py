@@ -5,11 +5,11 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Any
 
-from opentulpa.agent.context_engine import ContextEngine
-from opentulpa.agent.lc_messages import AIMessage, AnyMessage, HumanMessage, ToolMessage
-from opentulpa.agent.prompt_cache_policy import PromptCachePlan
-from opentulpa.agent.prompt_cache_policy import build_prompt_cache_plan as _build_prompt_cache_plan
-from opentulpa.agent.prompt_cache_policy import message_tokens as _message_tokens
+from kobo.agent.context_engine import ContextEngine
+from kobo.agent.lc_messages import AIMessage, AnyMessage, HumanMessage, ToolMessage
+from kobo.agent.prompt_cache_policy import PromptCachePlan
+from kobo.agent.prompt_cache_policy import build_prompt_cache_plan as _build_prompt_cache_plan
+from kobo.agent.prompt_cache_policy import message_tokens as _message_tokens
 
 
 @dataclass(frozen=True, slots=True)

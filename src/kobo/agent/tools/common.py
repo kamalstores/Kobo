@@ -45,12 +45,12 @@ def normalize_cleanup_paths(paths: list[str] | None) -> list[str]:
 
 
 _WORKING_DIR_PREFIXES: dict[str, str] = {
-    "tulpa_stuff": "tulpa_stuff",
-    "integrations": "src/opentulpa/integrations",
-    "interfaces": "src/opentulpa/interfaces",
-    "tools": "src/opentulpa/tools",
-    "skills": "src/opentulpa/skills",
-    "opentulpa": "src/opentulpa",
+    "kobo_stuff": "kobo_stuff",
+    "integrations": "src/kobo/integrations",
+    "interfaces": "src/kobo/interfaces",
+    "tools": "src/kobo/tools",
+    "skills": "src/kobo/skills",
+    "kobo": "src/kobo",
 }
 
 _SCHEDULED_ORIGINS = {"scheduled", "schedule", "routine", "wake", "background"}

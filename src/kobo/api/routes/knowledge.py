@@ -8,8 +8,8 @@ from typing import Any
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 
-from opentulpa.api.customer_ids import resolve_body_customer_id
-from opentulpa.business_knowledge.service import query_result_payload
+from kobo.api.customer_ids import resolve_body_customer_id
+from kobo.business_knowledge.service import query_result_payload
 
 
 def register_knowledge_routes(

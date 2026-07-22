@@ -7,7 +7,7 @@ from typing import Any
 
 from fastapi import FastAPI, Request
 
-from opentulpa.api.customer_ids import resolve_customer_id as resolve_customer_id_value
+from kobo.api.customer_ids import resolve_customer_id as resolve_customer_id_value
 
 
 def register_memory_routes(

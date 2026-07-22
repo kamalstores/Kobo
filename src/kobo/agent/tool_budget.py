@@ -6,7 +6,7 @@ import json
 from dataclasses import dataclass
 from typing import Any
 
-from opentulpa.agent.turn_budget import initial_turn_budget, normalize_turn_budget
+from kobo.agent.turn_budget import initial_turn_budget, normalize_turn_budget
 
 
 @dataclass(frozen=True, slots=True)

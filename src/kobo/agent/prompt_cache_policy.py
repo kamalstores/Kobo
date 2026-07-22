@@ -6,12 +6,12 @@ from collections.abc import Sequence
 from dataclasses import dataclass
 from typing import Any
 
-from opentulpa.agent.model_pool import prompt_cache_breakpoint_message_index
-from opentulpa.agent.utils import approx_tokens as _approx_tokens
-from opentulpa.agent.utils import content_to_text as _content_to_text
+from kobo.agent.model_pool import prompt_cache_breakpoint_message_index
+from kobo.agent.utils import approx_tokens as _approx_tokens
+from kobo.agent.utils import content_to_text as _content_to_text
 
 CACHE_STICKY_ROUTING_ANCHOR = (
-    "OpenTulpa cache anchor v1. Real conversation messages follow; do not answer this marker."
+    "Kobo cache anchor v1. Real conversation messages follow; do not answer this marker."
 )
 
 

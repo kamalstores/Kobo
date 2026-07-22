@@ -6,8 +6,8 @@ from typing import Any
 
 from langchain.tools import tool
 
-from opentulpa.agent.tools.common import require_customer_id
-from opentulpa.agent.tools.core_tools import (
+from kobo.agent.tools.common import require_customer_id
+from kobo.agent.tools.core_tools import (
     _compact_uploaded_file_inspection,
     _tool_error_payload,
     _with_delivery_instruction,
@@ -82,7 +82,7 @@ def register_file_tools(runtime: Any) -> dict[str, Any]:
         path: str,
         caption: str | None = None,
     ) -> Any:
-        """Send a local file from tulpa_stuff/ back to the user's Telegram chat."""
+        """Send a local file from kobo_stuff/ back to the user's Telegram chat."""
         customer_id = require_customer_id(runtime)
         r = await runtime._request_with_backoff(
             "POST",

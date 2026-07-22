@@ -158,7 +158,7 @@ Core pieces: **FastAPI** for webhooks, **LangGraph** for orchestration, **SQLite
 
 The runtime is modular around models and tools. Bring an OpenAI-compatible model provider, use Composio-backed connectors, or add your own LangGraph tool definitions where the workflow needs custom actions.
 
-**Inspectable by design.** Everything the employee does lands on disk under `.opentulpa/` (checkpoints, context, logs, databases, knowledge packs) and `tulpa_stuff/` (generated artifacts). Back it up, mount it as a volume, or read it directly. You always know what's happening.
+**Inspectable by design.** Everything the employee does lands on disk under `.kobo/` (checkpoints, context, logs, databases, knowledge packs) and `kobo_stuff/` (generated artifacts). Back it up, mount it as a volume, or read it directly. You always know what's happening.
 
 ---
 

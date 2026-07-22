@@ -10,33 +10,33 @@ from datetime import datetime
 from pathlib import PurePosixPath
 from typing import Any
 
-from opentulpa.agent.lc_messages import ToolMessage
-from opentulpa.agent.turn_policy import normalize_turn_mode as _normalize_turn_mode
-from opentulpa.agent.utils import (
+from kobo.agent.lc_messages import ToolMessage
+from kobo.agent.turn_policy import normalize_turn_mode as _normalize_turn_mode
+from kobo.agent.utils import (
     content_to_text as _content_to_text,
 )
-from opentulpa.agent.utils import (
+from kobo.agent.utils import (
     extract_relative_delay_minutes as _extract_relative_delay_minutes,
 )
-from opentulpa.agent.utils import (
+from kobo.agent.utils import (
     is_cron_like_schedule as _is_cron_like_schedule,
 )
-from opentulpa.agent.utils import (
+from kobo.agent.utils import (
     looks_like_shell_command as _looks_like_shell_command,
 )
-from opentulpa.integrations.web_search import get_web_search_backend_name
+from kobo.integrations.web_search import get_web_search_backend_name
 
 logger = logging.getLogger(__name__)
 
 _INTAKE_WORKFLOW_ID_RE = re.compile(r"\biwf_[A-Za-z0-9_]+\b")
 
 _WORKING_DIR_PREFIXES: dict[str, str] = {
-    "tulpa_stuff": "tulpa_stuff",
-    "integrations": "src/opentulpa/integrations",
-    "interfaces": "src/opentulpa/interfaces",
-    "tools": "src/opentulpa/tools",
-    "skills": "src/opentulpa/skills",
-    "opentulpa": "src/opentulpa",
+    "kobo_stuff": "kobo_stuff",
+    "integrations": "src/kobo/integrations",
+    "interfaces": "src/kobo/interfaces",
+    "tools": "src/kobo/tools",
+    "skills": "src/kobo/skills",
+    "kobo": "src/kobo",
 }
 _SOURCE_ROOT_PREFIXES = (
     _WORKING_DIR_PREFIXES["integrations"],
@@ -164,17 +164,17 @@ def _path_tool_validation_error(call_name: str, args: Any) -> str | None:
             "TOOL_VALIDATION_ERROR: path includes a duplicated allowed-root prefix. "
             f"Use `{duplicate_prefix}/...`, not `{duplicate_prefix}/{duplicate_prefix}/...`."
         )
-    if call_name == "tulpa_file_send" and not normalized_path_arg.startswith("tulpa_stuff/"):
+    if call_name == "tulpa_file_send" and not normalized_path_arg.startswith("kobo_stuff/"):
         return (
             "TOOL_VALIDATION_ERROR: tulpa_file_send can only send files under "
-            "`tulpa_stuff/...`. If this is a user-deliverable artifact, first write it "
-            "there with tulpa_write_file, then send that tulpa_stuff path."
+            "`kobo_stuff/...`. If this is a user-deliverable artifact, first write it "
+            "there with tulpa_write_file, then send that kobo_stuff path."
         )
     source_root = _source_root_for_path(normalized_path_arg)
     if call_name == "tulpa_write_file" and source_root and not _is_python_source_path(normalized_path_arg):
         return (
             "TOOL_VALIDATION_ERROR: non-Python deliverables and artifacts must be written "
-            "under `tulpa_stuff/...`, not source roots such as "
+            "under `kobo_stuff/...`, not source roots such as "
             f"`{source_root}/...`. Reserve source roots for implementation `.py` files."
         )
     return None
@@ -355,8 +355,8 @@ def _validate_model_tool_call(
                 "ROUTINE_IMPLEMENTATION_COMMAND_REQUIRED: routine_create needs "
                 "implementation_command (a concrete shell/script command like "
                 "`python3 scripts/digest.py`) describing what will run "
-                "on each scheduled execution (the command runs with working_dir=tulpa_stuff "
-                "by default, so no tulpa_stuff/ prefix needed). Repair the call and retry."
+                "on each scheduled execution (the command runs with working_dir=kobo_stuff "
+                "by default, so no kobo_stuff/ prefix needed). Repair the call and retry."
             )
         return (
             f"TOOL_VALIDATION_ERROR: missing required argument(s) for "
@@ -370,12 +370,12 @@ def _validate_model_tool_call(
                 "TOOL_VALIDATION_ERROR: command must be a concrete shell command "
                 "with executable + args."
             )
-        working_dir = str(args.get("working_dir", "tulpa_stuff") or "").strip() or "tulpa_stuff"
+        working_dir = str(args.get("working_dir", "kobo_stuff") or "").strip() or "kobo_stuff"
         if _has_redundant_working_dir_prefix(command, working_dir):
             return (
                 "TOOL_VALIDATION_ERROR: command includes a redundant working-dir path prefix. "
                 "When working_dir is set, use paths relative to that directory "
-                "(example: use `python3 tg_login.py`, not `python3 tulpa_stuff/tg_login.py`)."
+                "(example: use `python3 tg_login.py`, not `python3 kobo_stuff/tg_login.py`)."
             )
 
     if call_name == "send_owner_update" and _normalize_turn_mode(turn_mode) in {
@@ -439,11 +439,11 @@ def _validate_model_tool_call(
                 "ROUTINE_IMPLEMENTATION_COMMAND_INVALID: implementation_command must "
                 "be a concrete shell command (executable + args), not natural language."
             )
-        if _has_redundant_working_dir_prefix(implementation_command, "tulpa_stuff"):
+        if _has_redundant_working_dir_prefix(implementation_command, "kobo_stuff"):
             return (
                 "ROUTINE_IMPLEMENTATION_COMMAND_INVALID: implementation_command should be relative "
-                "to working_dir=tulpa_stuff (example: `python3 tg_login.py`, "
-                "not `python3 tulpa_stuff/tg_login.py`)."
+                "to working_dir=kobo_stuff (example: `python3 tg_login.py`, "
+                "not `python3 kobo_stuff/tg_login.py`)."
             )
         delay_minutes = _extract_relative_delay_minutes(latest_user_text)
         if delay_minutes is not None and _is_cron_like_schedule(schedule):

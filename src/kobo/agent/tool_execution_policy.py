@@ -6,9 +6,9 @@ from dataclasses import dataclass
 from datetime import datetime, timedelta
 from typing import Any
 
-from opentulpa.agent.lc_messages import AnyMessage
-from opentulpa.agent.turn_policy import execution_origin_for_turn_mode, normalize_turn_mode
-from opentulpa.agent.utils import (
+from kobo.agent.lc_messages import AnyMessage
+from kobo.agent.turn_policy import execution_origin_for_turn_mode, normalize_turn_mode
+from kobo.agent.utils import (
     extract_relative_delay_minutes,
     is_cron_like_schedule,
     latest_user_text,

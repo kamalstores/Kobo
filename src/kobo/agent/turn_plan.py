@@ -6,7 +6,7 @@ import json
 from collections.abc import Mapping
 from typing import Any, cast
 
-from opentulpa.agent.models import TurnPlanItem, TurnPlanStatus
+from kobo.agent.models import TurnPlanItem, TurnPlanStatus
 
 VALID_TURN_PLAN_STATUSES: set[TurnPlanStatus] = {
     "pending",

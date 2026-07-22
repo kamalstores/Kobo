@@ -10,48 +10,48 @@ from contextlib import asynccontextmanager, suppress
 from datetime import UTC, datetime
 from typing import Any
 
-from opentulpa.context.file_vault import FileVaultService
-from opentulpa.core.config import get_openai_compatible_api_key_from_env
-from opentulpa.core.debug_logs import (
+from kobo.context.file_vault import FileVaultService
+from kobo.core.config import get_openai_compatible_api_key_from_env
+from kobo.core.debug_logs import (
     DEFAULT_DEBUG_LOG_LOOKBACK_DAYS,
     build_debug_logs_archive_bytes,
 )
-from opentulpa.core.ids import new_short_id
-from opentulpa.core.shutdown_drain import ShutdownDrainingError
-from opentulpa.interfaces.telegram.attachments import (
+from kobo.core.ids import new_short_id
+from kobo.core.shutdown_drain import ShutdownDrainingError
+from kobo.interfaces.telegram.attachments import (
     build_uploaded_files_context,
     extract_attachments,
     ingest_attachments,
 )
-from opentulpa.interfaces.telegram.chat_routing import (
+from kobo.interfaces.telegram.chat_routing import (
     TelegramAccessDecision,
     TelegramCommandRoute,
 )
-from opentulpa.interfaces.telegram.client import TelegramClient, parse_telegram_update
-from opentulpa.interfaces.telegram.constants import STATE_PATH
-from opentulpa.interfaces.telegram.env_management import (
+from kobo.interfaces.telegram.client import TelegramClient, parse_telegram_update
+from kobo.interfaces.telegram.constants import STATE_PATH
+from kobo.interfaces.telegram.env_management import (
     missing_key_prompt,
     status_text,
 )
-from opentulpa.interfaces.telegram.interactive_inbox import (
+from kobo.interfaces.telegram.interactive_inbox import (
     InteractiveSession,
     InteractiveSubmissionResult,
     TelegramInteractiveInbox,
 )
-from opentulpa.interfaces.telegram.models import TelegramContext
-from opentulpa.interfaces.telegram.relay import (
+from kobo.interfaces.telegram.models import TelegramContext
+from kobo.interfaces.telegram.relay import (
     _emit_typing_until_done,
     debug_log,
     stream_langgraph_reply_to_telegram,
 )
-from opentulpa.interfaces.telegram.relay import (
+from kobo.interfaces.telegram.relay import (
     relay_event_via_main_agent as _relay_event_via_main_agent,
 )
-from opentulpa.interfaces.telegram.relay import (
+from kobo.interfaces.telegram.relay import (
     relay_task_event_via_main_agent as _relay_task_event_via_main_agent,
 )
-from opentulpa.interfaces.telegram.security import is_user_allowed, parse_csv_set
-from opentulpa.interfaces.telegram.state_store import TelegramStateStore
+from kobo.interfaces.telegram.security import is_user_allowed, parse_csv_set
+from kobo.interfaces.telegram.state_store import TelegramStateStore
 
 STATE_STORE = TelegramStateStore(STATE_PATH)
 logger = logging.getLogger(__name__)
@@ -92,7 +92,7 @@ def _format_agent_error_for_user(exc: Exception) -> str:
     ):
         return (
             "Model authentication failed (the configured provider key is invalid or revoked). "
-            "Set a valid OPENAI_COMPATIBLE_API_KEY for your OpenAI-compatible endpoint and restart OpenTulpa. "
+            "Set a valid OPENAI_COMPATIBLE_API_KEY for your OpenAI-compatible endpoint and restart Kobo. "
             "OPENROUTER_API_KEY is still accepted as a legacy alias."
         )
     if "429" in lowered or "rate limit" in lowered:
@@ -163,7 +163,7 @@ def _reset_chat_session_context(
 
 def _start_help_text() -> str:
     return (
-        "OpenTulpa is connected.\n\n"
+        "Kobo is connected.\n\n"
         "What I can do:\n"
         "- Web + links: web search, read URLs, summarize current info\n"
         "- Interactive browsing: browser automation for dynamic sites (when configured)\n"
@@ -268,9 +268,9 @@ def _telegram_reply_to_context(message: dict[str, Any], *, require_bot_author: b
 
     message_id = reply.get("message_id")
     if require_bot_author:
-        lines = ["Telegram reply context: the user replied to one of OpenTulpa's earlier messages."]
+        lines = ["Telegram reply context: the user replied to one of Kobo's earlier messages."]
     else:
-        lines = ["Telegram quoted message context: the user mentioned OpenTulpa while replying to this message."]
+        lines = ["Telegram quoted message context: the user mentioned Kobo while replying to this message."]
     if isinstance(message_id, int) and message_id > 0:
         lines.append(f"- replied_message_id: {message_id}")
 
@@ -649,7 +649,7 @@ async def _send_debug_logs_file(*, chat_id: int, bot_token: str | None) -> str |
             raw_bytes=raw_bytes,
             kind="document",
             mime_type="application/zip",
-            caption=f"OpenTulpa debug logs dump (last {DEFAULT_DEBUG_LOG_LOOKBACK_DAYS} days)",
+            caption=f"Kobo debug logs dump (last {DEFAULT_DEBUG_LOG_LOOKBACK_DAYS} days)",
             parse_mode="HTML",
         )
     finally:
@@ -1185,7 +1185,7 @@ async def _run_interactive_session(
             await _send_direct_telegram_reply(
                 bot_token=bot_token,
                 chat_id=session.chat_id,
-                text="OpenTulpa is finishing a deploy. Please retry in a moment.",
+                text="Kobo is finishing a deploy. Please retry in a moment.",
             )
             return
         except Exception as exc:
@@ -1391,7 +1391,7 @@ async def handle_telegram_text(
     if not get_openai_compatible_api_key_from_env():
         return missing_key_prompt()
     if agent_runtime is None:
-        return "Agent runtime is unavailable. Restart OpenTulpa and try again."
+        return "Agent runtime is unavailable. Restart Kobo and try again."
 
     def _upsert_session(state: dict[str, Any]) -> tuple[str, str]:
         sessions = state.get("sessions")
@@ -1595,7 +1595,7 @@ async def handle_telegram_text(
                 )
                 return "I received your message but no final reply was available yet. Ask again or use /status."
         except ShutdownDrainingError:
-            return "OpenTulpa is finishing a deploy. Please retry in a moment."
+            return "Kobo is finishing a deploy. Please retry in a moment."
         except Exception as exc:
             logger.exception(
                 "Telegram streaming reply failed (chat_id=%s, thread_id=%s): %s",
@@ -1622,7 +1622,7 @@ async def handle_telegram_text(
                 )
             return str(response) if response is not None else None
     except ShutdownDrainingError:
-        return "OpenTulpa is finishing a deploy. Please retry in a moment."
+        return "Kobo is finishing a deploy. Please retry in a moment."
     except Exception as exc:
         logger.exception(
             "Telegram non-streaming reply failed (chat_id=%s, thread_id=%s): %s",

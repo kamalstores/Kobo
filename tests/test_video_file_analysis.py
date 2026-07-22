@@ -5,7 +5,7 @@ from typing import Any
 
 import pytest
 
-from opentulpa.agent import file_analysis
+from kobo.agent import file_analysis
 
 
 class _DummyModel:

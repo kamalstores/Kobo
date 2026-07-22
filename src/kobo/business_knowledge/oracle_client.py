@@ -14,12 +14,12 @@ from typing import Any
 
 import httpx
 
-from opentulpa.business_knowledge.extraction import content_hash
+from kobo.business_knowledge.extraction import content_hash
 
 DEFAULT_ORACLE_MODEL = "google/gemini-3.1-flash-lite-preview"
 DEFAULT_ORACLE_MAX_OUTPUT_TOKENS = 1000
-DEFAULT_OPENROUTER_APP_REFERER = "https://github.com/kvyb/opentulpa"
-DEFAULT_OPENROUTER_APP_TITLE = "OpenTulpa"
+DEFAULT_OPENROUTER_APP_REFERER = "https://github.com/kamalstores/kobo"
+DEFAULT_OPENROUTER_APP_TITLE = "Kobo"
 
 
 class OpenAICompatibleKnowledgeOracleClient:

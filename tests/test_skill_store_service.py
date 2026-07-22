@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from opentulpa.skills.service import SkillStoreService, build_skill_markdown
+from kobo.skills.service import SkillStoreService, build_skill_markdown
 
 
 def _mk_service(tmp_path: Path) -> SkillStoreService:

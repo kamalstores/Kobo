@@ -7,7 +7,7 @@ from typing import Any
 
 from fastapi.testclient import TestClient
 
-from opentulpa.core.config import get_settings
+from kobo.core.config import get_settings
 
 apscheduler_module = types.ModuleType("apscheduler")
 schedulers_module = types.ModuleType("apscheduler.schedulers")
@@ -80,9 +80,9 @@ sys.modules.setdefault("apscheduler.triggers.cron", cron_module)
 sys.modules.setdefault("apscheduler.triggers.date", date_module)
 sys.modules.setdefault("mem0", mem0_module)
 
-from opentulpa.api.app import create_app  # noqa: E402
-from opentulpa.integrations.composio import ComposioService  # noqa: E402
-from opentulpa.skills.service import SkillStoreService  # noqa: E402
+from kobo.api.app import create_app  # noqa: E402
+from kobo.integrations.composio import ComposioService  # noqa: E402
+from kobo.skills.service import SkillStoreService  # noqa: E402
 
 
 class _FakeComposioService:
@@ -454,7 +454,7 @@ def test_composio_status_route_returns_disabled_when_api_key_unset(tmp_path: Pat
             "composio_default_callback_url": None,
         }
     )
-    monkeypatch.setattr("opentulpa.api.app.get_settings", lambda: settings)
+    monkeypatch.setattr("kobo.api.app.get_settings", lambda: settings)
 
     skills = SkillStoreService(
         db_path=tmp_path / "skills.db",

@@ -4,9 +4,9 @@ from __future__ import annotations
 
 from typing import Any
 
-from opentulpa.agent.lc_messages import AIMessage, AnyMessage, SystemMessage, ToolMessage
-from opentulpa.agent.tool_parser import compact_tool_call_record, compact_tool_payload
-from opentulpa.agent.utils import content_to_text
+from kobo.agent.lc_messages import AIMessage, AnyMessage, SystemMessage, ToolMessage
+from kobo.agent.tool_parser import compact_tool_call_record, compact_tool_payload
+from kobo.agent.utils import content_to_text
 
 
 def sanitize_history_messages_for_model(messages: list[AnyMessage]) -> list[AnyMessage]:

@@ -9,7 +9,7 @@ from typing import Any
 
 import pytest
 
-from opentulpa.core.config import get_settings
+from kobo.core.config import get_settings
 
 _E2E_ROOT = Path(__file__).resolve().parent
 if str(_E2E_ROOT) not in sys.path:
@@ -19,7 +19,7 @@ from harness.runner import E2EHarness, build_harness, close_harness
 from harness.real_composio import build_recording_live_googlesheets_service
 from mocks.composio_instagram import FakeComposioInstagramService, build_instagram_conversation
 
-from opentulpa.integrations.composio import ComposioService
+from kobo.integrations.composio import ComposioService
 
 
 pytestmark = [pytest.mark.e2e]
@@ -37,7 +37,7 @@ def pytest_addoption(parser: pytest.Parser) -> None:
         "--run-real-composio",
         action="store_true",
         default=False,
-        help="allow opted-in e2e tests to use real Composio connections discovered from local OpenTulpa state",
+        help="allow opted-in e2e tests to use real Composio connections discovered from local Kobo state",
     )
 
 
@@ -100,7 +100,7 @@ def e2e_harness(
         if live_composio is None:
             pytest.skip(
                 "--run-real-composio requested, but no active Google Sheets Composio account "
-                "was found for local OpenTulpa customer ids"
+                "was found for local Kobo customer ids"
             )
         composio_service = live_composio
     harness = build_harness(

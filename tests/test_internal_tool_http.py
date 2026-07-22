@@ -4,7 +4,7 @@ from typing import Any
 
 import pytest
 
-from opentulpa.agent.tools.internal_http import InternalToolHTTPClient
+from kobo.agent.tools.internal_http import InternalToolHTTPClient
 
 
 class _Response:

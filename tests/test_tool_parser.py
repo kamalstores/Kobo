@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from opentulpa.agent.tool_parser import compact_tool_call_record, compact_tool_payload
+from kobo.agent.tool_parser import compact_tool_call_record, compact_tool_payload
 
 
 def test_compact_tool_payload_flattens_jsonish_dict() -> None:

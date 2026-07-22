@@ -9,7 +9,7 @@ from typing import Any
 
 from pydantic import BaseModel
 
-from opentulpa.agent.lc_messages import HumanMessage, SystemMessage
+from kobo.agent.lc_messages import HumanMessage, SystemMessage
 
 logger = logging.getLogger(__name__)
 

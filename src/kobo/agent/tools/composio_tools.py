@@ -6,8 +6,8 @@ from typing import Any
 
 from langchain.tools import tool
 
-from opentulpa.agent.tools.common import require_customer_id
-from opentulpa.agent.tools.internal_http import (
+from kobo.agent.tools.common import require_customer_id
+from kobo.agent.tools.internal_http import (
     RETRYABLE_INTERNAL_STATUS_CODES,
     InternalToolHTTPClient,
 )
@@ -159,7 +159,7 @@ def register_composio_tools(runtime: Any) -> dict[str, Any]:
 
     @tool
     async def composio_disable_connected_account(connected_account_id: str) -> Any:
-        """Disable a Composio connected account so OpenTulpa stops using it."""
+        """Disable a Composio connected account so Kobo stops using it."""
         return await http.request_item(
             "composio_disable_connected_account",
             "POST",

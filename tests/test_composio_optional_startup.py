@@ -4,9 +4,9 @@ from pathlib import Path
 
 from fastapi.testclient import TestClient
 
-from opentulpa.api.app import create_app
-from opentulpa.core.config import get_settings
-from opentulpa.skills.service import SkillStoreService
+from kobo.api.app import create_app
+from kobo.core.config import get_settings
+from kobo.skills.service import SkillStoreService
 
 
 def test_create_app_tolerates_configured_composio_without_sdk(
@@ -19,7 +19,7 @@ def test_create_app_tolerates_configured_composio_without_sdk(
             "composio_default_callback_url": None,
         }
     )
-    monkeypatch.setattr("opentulpa.api.app.get_settings", lambda: settings)
+    monkeypatch.setattr("kobo.api.app.get_settings", lambda: settings)
 
     skills = SkillStoreService(
         db_path=tmp_path / "skills.db",

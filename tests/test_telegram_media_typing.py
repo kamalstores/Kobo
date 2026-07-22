@@ -5,8 +5,8 @@ from typing import Any
 
 import pytest
 
-from opentulpa.core.shutdown_drain import ShutdownDrain
-from opentulpa.interfaces.telegram import chat_service as chat_module
+from kobo.core.shutdown_drain import ShutdownDrain
+from kobo.interfaces.telegram import chat_service as chat_module
 
 
 class _FakeStateStore:

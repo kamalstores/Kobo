@@ -8,17 +8,17 @@ from typing import Any
 
 import pytest
 
-from opentulpa.agent import runtime as runtime_module
-from opentulpa.agent.context_compaction import ContextCompactionResult
-from opentulpa.agent.lc_messages import AIMessage, HumanMessage
-from opentulpa.agent.runtime import (
+from kobo.agent import runtime as runtime_module
+from kobo.agent.context_compaction import ContextCompactionResult
+from kobo.agent.lc_messages import AIMessage, HumanMessage
+from kobo.agent.runtime import (
     STREAM_EMPTY_REPLY_FALLBACK,
     STREAM_PROGRESS_PREFIX,
     AgentStreamEvent,
-    OpenTulpaLangGraphRuntime,
+    KoboLangGraphRuntime,
 )
-from opentulpa.agent.runtime_context_provider import RuntimeContextSourceProvider
-from opentulpa.agent.runtime_input import ThreadInputCoordinator
+from kobo.agent.runtime_context_provider import RuntimeContextSourceProvider
+from kobo.agent.runtime_input import ThreadInputCoordinator
 
 
 class _NoVisibleOutputGraph:
@@ -82,7 +82,7 @@ class _StaleFallbackGraph:
         }
 
 
-def _install_turn_context_stubs(runtime: OpenTulpaLangGraphRuntime) -> None:
+def _install_turn_context_stubs(runtime: KoboLangGraphRuntime) -> None:
     async def _list_available_skills(customer_id: str) -> list[dict[str, Any]]:
         del customer_id
         return []
@@ -278,7 +278,7 @@ class _ReasoningThenToolThenAnswerGraph:
 
 @pytest.mark.asyncio
 async def test_astream_text_emits_fallback_when_no_visible_output(tmp_path) -> None:
-    runtime = object.__new__(OpenTulpaLangGraphRuntime)
+    runtime = object.__new__(KoboLangGraphRuntime)
     runtime._graph = _NoVisibleOutputGraph()
     runtime._thread_inputs = ThreadInputCoordinator(debounce_seconds=0.0)
     runtime._context_events = None
@@ -338,7 +338,7 @@ async def test_astream_text_logs_no_visible_progress_timeout(
             del config
             return {"messages": [HumanMessage(content="user"), AIMessage(content="")]}
 
-    runtime = object.__new__(OpenTulpaLangGraphRuntime)
+    runtime = object.__new__(KoboLangGraphRuntime)
     runtime._graph = _SlowNoVisibleOutputGraph()
     runtime._thread_inputs = ThreadInputCoordinator(debounce_seconds=0.0)
     runtime._context_events = None
@@ -374,7 +374,7 @@ async def test_astream_text_logs_no_visible_progress_timeout(
 async def test_astream_text_holds_early_schedule_claim_until_repair_finishes(
     tmp_path,
 ) -> None:
-    runtime = object.__new__(OpenTulpaLangGraphRuntime)
+    runtime = object.__new__(KoboLangGraphRuntime)
     runtime._graph = _BufferedRepairGraph()
     runtime._thread_inputs = ThreadInputCoordinator(debounce_seconds=0.0)
     runtime._context_events = None
@@ -412,7 +412,7 @@ async def test_astream_text_holds_early_schedule_claim_until_repair_finishes(
 async def test_astream_text_does_not_reuse_stale_prior_ai_message_in_fallback(
     tmp_path,
 ) -> None:
-    runtime = object.__new__(OpenTulpaLangGraphRuntime)
+    runtime = object.__new__(KoboLangGraphRuntime)
     runtime._graph = _StaleFallbackGraph()
     runtime._thread_inputs = ThreadInputCoordinator(debounce_seconds=0.0)
     runtime._context_events = None
@@ -443,7 +443,7 @@ async def test_astream_text_does_not_reuse_stale_prior_ai_message_in_fallback(
 async def test_astream_text_discards_provisional_only_reply_and_emits_fallback(
     tmp_path,
 ) -> None:
-    runtime = object.__new__(OpenTulpaLangGraphRuntime)
+    runtime = object.__new__(KoboLangGraphRuntime)
     runtime._graph = _ProvisionalOnlyGraph()
     runtime._thread_inputs = ThreadInputCoordinator(debounce_seconds=0.0)
     runtime._context_events = None
@@ -480,7 +480,7 @@ async def test_astream_text_discards_provisional_only_reply_and_emits_fallback(
 async def test_astream_text_emits_wait_signal_before_tool_first_result(
     tmp_path,
 ) -> None:
-    runtime = object.__new__(OpenTulpaLangGraphRuntime)
+    runtime = object.__new__(KoboLangGraphRuntime)
     runtime._graph = _ToolThenAnswerGraph()
     runtime._thread_inputs = ThreadInputCoordinator(debounce_seconds=0.0)
     runtime._context_events = None
@@ -513,7 +513,7 @@ async def test_astream_text_emits_wait_signal_before_tool_first_result(
 async def test_astream_text_drops_provisional_text_before_tool_with_zero_precommit(
     tmp_path,
 ) -> None:
-    runtime = object.__new__(OpenTulpaLangGraphRuntime)
+    runtime = object.__new__(KoboLangGraphRuntime)
     runtime._graph = _ProvisionalThenToolThenAnswerGraph()
     runtime._thread_inputs = ThreadInputCoordinator(debounce_seconds=0.0)
     runtime._context_events = None
@@ -545,7 +545,7 @@ async def test_astream_text_drops_provisional_text_before_tool_with_zero_precomm
 async def test_astream_text_holds_agent_draft_when_segment_declares_tool_calls(
     tmp_path,
 ) -> None:
-    runtime = object.__new__(OpenTulpaLangGraphRuntime)
+    runtime = object.__new__(KoboLangGraphRuntime)
     runtime._graph = _DraftThenToolThenAnswerGraph()
     runtime._thread_inputs = ThreadInputCoordinator(debounce_seconds=0.0)
     runtime._context_events = None
@@ -578,7 +578,7 @@ async def test_astream_text_holds_agent_draft_when_segment_declares_tool_calls(
 async def test_astream_text_streams_post_tool_incremental_chunks(
     tmp_path,
 ) -> None:
-    runtime = object.__new__(OpenTulpaLangGraphRuntime)
+    runtime = object.__new__(KoboLangGraphRuntime)
     runtime._graph = _DraftThenToolThenStreamingAnswerGraph()
     runtime._thread_inputs = ThreadInputCoordinator(debounce_seconds=0.0)
     runtime._context_events = None
@@ -613,7 +613,7 @@ async def test_astream_text_streams_post_tool_incremental_chunks(
 async def test_astream_text_keeps_second_tool_draft_buffered_after_tool_phase(
     tmp_path,
 ) -> None:
-    runtime = object.__new__(OpenTulpaLangGraphRuntime)
+    runtime = object.__new__(KoboLangGraphRuntime)
     runtime._graph = _DraftThenToolThenDraftToolThenAnswerGraph()
     runtime._thread_inputs = ThreadInputCoordinator(debounce_seconds=0.0)
     runtime._context_events = None
@@ -650,7 +650,7 @@ async def test_astream_text_flushes_post_tool_answer_after_early_visible_chunk(
     tmp_path,
 ) -> None:
     monkeypatch.setattr(runtime_module, "STREAM_PRECOMMIT_SECONDS", 0)
-    runtime = object.__new__(OpenTulpaLangGraphRuntime)
+    runtime = object.__new__(KoboLangGraphRuntime)
     runtime._graph = _EarlyVisibleThenToolThenAnswerGraph()
     runtime._thread_inputs = ThreadInputCoordinator(debounce_seconds=0.0)
     runtime._context_events = None
@@ -686,7 +686,7 @@ async def test_astream_text_flushes_post_tool_answer_after_early_visible_chunk(
 
 @pytest.mark.asyncio
 async def test_astream_text_emits_safe_reasoning_and_tool_status_events(tmp_path) -> None:
-    runtime = object.__new__(OpenTulpaLangGraphRuntime)
+    runtime = object.__new__(KoboLangGraphRuntime)
     runtime._graph = _ReasoningThenToolThenAnswerGraph()
     runtime._thread_inputs = ThreadInputCoordinator(debounce_seconds=0.0)
     runtime._context_events = None
@@ -726,7 +726,7 @@ async def test_astream_text_emits_compaction_status_before_compacting(
     monkeypatch: pytest.MonkeyPatch,
     tmp_path,
 ) -> None:
-    runtime = object.__new__(OpenTulpaLangGraphRuntime)
+    runtime = object.__new__(KoboLangGraphRuntime)
     runtime._graph = _ReasoningThenToolThenAnswerGraph()
     runtime._thread_inputs = ThreadInputCoordinator(debounce_seconds=0.0)
     runtime._context_events = None

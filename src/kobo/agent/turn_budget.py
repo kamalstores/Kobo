@@ -9,8 +9,8 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Any, TypedDict
 
-from opentulpa.agent.turn_policy import normalize_turn_mode
-from opentulpa.integrations.web_search import get_web_search_backend_name
+from kobo.agent.turn_policy import normalize_turn_mode
+from kobo.integrations.web_search import get_web_search_backend_name
 
 DEFAULT_MAX_WEB_SEARCH_CALLS_PER_TURN = 5
 MAX_EXA_SEARCH_CALLS_PER_TURN = 2

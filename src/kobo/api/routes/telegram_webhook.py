@@ -15,13 +15,13 @@ from typing import Any
 from fastapi import FastAPI, Request, Response
 from fastapi.responses import JSONResponse
 
-from opentulpa.core.shutdown_drain import ShutdownDrainingError
-from opentulpa.interfaces.telegram.client import (
+from kobo.core.shutdown_drain import ShutdownDrainingError
+from kobo.interfaces.telegram.client import (
     parse_telegram_callback_query,
     parse_telegram_update,
 )
-from opentulpa.interfaces.telegram.relay import NO_NOTIFY_TOKEN
-from opentulpa.tasks.sandbox import PROJECT_ROOT
+from kobo.interfaces.telegram.relay import NO_NOTIFY_TOKEN
+from kobo.tasks.sandbox import PROJECT_ROOT
 
 logger = logging.getLogger(__name__)
 _TELEGRAM_BUSINESS_UPDATE_KEYS = (
@@ -35,7 +35,7 @@ _TELEGRAM_BUSINESS_UPDATE_KEYS = (
 def _telegram_webhook_log_path(*, now: datetime | None = None) -> Path:
     stamp = (now or datetime.now(UTC)).astimezone(UTC).date().isoformat()
     return (
-        PROJECT_ROOT / ".opentulpa" / "logs" / "webhooks" / f"telegram-webhook-{stamp}.jsonl"
+        PROJECT_ROOT / ".kobo" / "logs" / "webhooks" / f"telegram-webhook-{stamp}.jsonl"
     ).resolve()
 
 

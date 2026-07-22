@@ -9,12 +9,12 @@ from typing import Any
 import pytest
 from fastapi.testclient import TestClient
 
-from opentulpa.agent.runtime import OpenTulpaLangGraphRuntime
-from opentulpa.api.app import create_app
-from opentulpa.core.config import get_settings
-from opentulpa.scheduler.service import SchedulerService
+from kobo.agent.runtime import KoboLangGraphRuntime
+from kobo.api.app import create_app
+from kobo.core.config import get_settings
+from kobo.scheduler.service import SchedulerService
 
-LIVE_FLAG = "OPENTULPA_ENABLE_LIVE_BROWSER_USE_E2E"
+LIVE_FLAG = "KOBO_ENABLE_LIVE_BROWSER_USE_E2E"
 TEST_CUSTOMER_ID = "cust_live_browser_use_google"
 pytestmark = [pytest.mark.e2e]
 
@@ -92,7 +92,7 @@ def _invoke_internal_chat(
 
 def test_live_llm_uses_browser_use_run_for_google_search(tmp_path: Path) -> None:
     behavior_log = tmp_path / "agent_behavior.browser_use_live.jsonl"
-    runtime = OpenTulpaLangGraphRuntime(
+    runtime = KoboLangGraphRuntime(
         app_url="http://127.0.0.1:8000",
         openrouter_api_key=str(_settings.openrouter_api_key or "").strip(),
         openrouter_base_url=str(_settings.openrouter_base_url or "").strip(),

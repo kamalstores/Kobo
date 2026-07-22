@@ -250,8 +250,8 @@ def _assert_llm_semantic_match(
     context: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     model = (
-        os.getenv("OPENTULPA_E2E_ASSERT_JUDGE_MODEL", "").strip()
-        or os.getenv("OPENTULPA_E2E_JUDGE_MODEL", "").strip()
+        os.getenv("KOBO_E2E_ASSERT_JUDGE_MODEL", "").strip()
+        or os.getenv("KOBO_E2E_JUDGE_MODEL", "").strip()
         or DEFAULT_ASSERT_JUDGE_MODEL
     )
     result = evaluate_e2e_scenario_with_llm_judge(
@@ -300,7 +300,7 @@ def _assert_llm_semantic_match(
 
 
 def _telegram_owner_thread_id(*, chat_id: int) -> str:
-    from opentulpa.interfaces.telegram import chat_service as chat_module
+    from kobo.interfaces.telegram import chat_service as chat_module
 
     state = chat_module.STATE_STORE.load()
     sessions = state.get("sessions") if isinstance(state, dict) else {}
@@ -499,8 +499,8 @@ def _car_wash_owner_profile(
             "style_rule": style_rule,
         },
         rules=[
-            "If OpenTulpa asks a setup question, answer with the known facts.",
-            "If OpenTulpa proposes a workflow, confirm saving and activation.",
+            "If Kobo asks a setup question, answer with the known facts.",
+            "If Kobo proposes a workflow, confirm saving and activation.",
             "Do not invent extra required fields.",
         ],
         max_turns=7,
@@ -634,7 +634,7 @@ def _plan_autospa_owner_turn(
     base_url = str(getattr(harness.runtime, "openrouter_base_url", "") or "").strip().rstrip("/")
     if not api_key or not base_url:
         raise RuntimeError("owner simulator requires the live LLM API key and base URL")
-    model = os.getenv("OPENTULPA_E2E_OWNER_SIM_MODEL", DEFAULT_LEAD_SIMULATOR_MODEL)
+    model = os.getenv("KOBO_E2E_OWNER_SIM_MODEL", DEFAULT_LEAD_SIMULATOR_MODEL)
     setup_state = _compact_owner_setup_state(
         harness,
         customer_id=customer_id,
@@ -653,7 +653,7 @@ def _plan_autospa_owner_turn(
                 "worksheet unless the customer explicitly asks about wheels, disks, or powder coating."
             ),
             "business_knowledge_contract": (
-                "Tell OpenTulpa to prepare the original XLSX with business_knowledge_index, "
+                "Tell Kobo to prepare the original XLSX with business_knowledge_index, "
                 "query it with business_knowledge_query for representative Мойка and Шиномонтаж "
                 "facts, and bind the original source file ids to the final workflow."
             ),
@@ -674,7 +674,7 @@ def _plan_autospa_owner_turn(
                 )
             },
             "sink": {"type": "local_csv", "file_path": csv_relative_path},
-            "confirmation_rule": "Confirm once OpenTulpa proposes a workflow matching this objective.",
+            "confirmation_rule": "Confirm once Kobo proposes a workflow matching this objective.",
         },
         "turn_index": int(turn_index),
         "current_setup_state": setup_state,
@@ -689,15 +689,15 @@ def _plan_autospa_owner_turn(
     }
     harness.recorder.add("owner_simulator_prompt", model=model, payload=payload)
     system_prompt = (
-        "You simulate the business owner using OpenTulpa through Telegram for a live e2e test.\n"
-        "Stay in character as the owner only; never speak as OpenTulpa.\n"
+        "You simulate the business owner using Kobo through Telegram for a live e2e test.\n"
+        "Stay in character as the owner only; never speak as Kobo.\n"
         "Write concise Russian Telegram messages.\n"
         "Your goal is to create and activate the exact workflow described in the hidden objective.\n"
         "If the file is not uploaded yet, attach_file must be true and the message must explain how "
-        "OpenTulpa should use the attached XLSX.\n"
+        "Kobo should use the attached XLSX.\n"
         "If current_setup_state.setup_session.has_proposal is true and no workflow exists yet, confirm "
         "saving and activating the proposed workflow.\n"
-        "If OpenTulpa asks a question, answer it with the hidden objective.\n"
+        "If Kobo asks a question, answer it with the hidden objective.\n"
         "Set done=true only when current_setup_state.workflow_count is greater than 0.\n"
         "Return strict JSON only with exactly these keys:\n"
         '{"done": boolean, "message": string, "attach_file": boolean, "reason": string}'
@@ -1781,7 +1781,7 @@ def test_live_ai_owner_creates_autospa_business_knowledge_workflow_and_simulated
         owner_chat_id=owner_chat_id,
         business_connection_id="bc_e2e_ai_owner_autospa",
     )
-    csv_relative_path = "tulpa_stuff/e2e_ai_owner_autospa.csv"
+    csv_relative_path = "kobo_stuff/e2e_ai_owner_autospa.csv"
     artifact_dir = e2e_harness.status_report_path.parent / "autospa_ai_owner_knowledge_artifacts"
     artifact_dir.mkdir(parents=True, exist_ok=True)
     state: dict[str, Any] = {
@@ -1847,7 +1847,7 @@ def test_live_ai_owner_creates_autospa_business_knowledge_workflow_and_simulated
                 lambda: len(_list_workflows(e2e_harness, customer_id=customer_id)) >= 1,
                 timeout_seconds=effective_live_llm_timeout_seconds(
                     8.0,
-                    override_env="OPENTULPA_E2E_OWNER_SETUP_WAIT_TIMEOUT_SECONDS",
+                    override_env="KOBO_E2E_OWNER_SETUP_WAIT_TIMEOUT_SECONDS",
                 ),
             ):
                 break
@@ -2043,7 +2043,7 @@ def test_live_ai_owner_creates_autospa_business_knowledge_workflow_and_simulated
             "customer_id": customer_id,
             "business_connection_id": business_connection_id,
             "owner_simulator_model": os.getenv(
-                "OPENTULPA_E2E_OWNER_SIM_MODEL",
+                "KOBO_E2E_OWNER_SIM_MODEL",
                 DEFAULT_LEAD_SIMULATOR_MODEL,
             ),
             "lead_simulator_model": e2e_harness.lead_simulator.model,
@@ -2105,7 +2105,7 @@ def test_live_owner_telegram_chat_can_create_telegram_intake_workflow_and_activa
                 "Use the workflow name 'E2E Telegram Car Wash'. "
                 "Collect exactly these fields: car_model, car_type, wash_type, date, time. "
                 "Goal: answer direct questions first, then collect only missing booking details. "
-                "Save results to local CSV tulpa_stuff/e2e_telegram_carwash.csv. "
+                "Save results to local CSV kobo_stuff/e2e_telegram_carwash.csv. "
                 "Start the workflow setup wizard, prepare the exact configuration, and wait for my confirmation before saving."
             ),
         )
@@ -2218,7 +2218,7 @@ def test_live_owner_telegram_chat_can_delete_existing_telegram_intake_workflow(
             "required_fields": ["name", "time"],
             "assistant_instructions": "Be concise.",
             "sink_type": "local_csv",
-            "sink_config": {"file_path": "tulpa_stuff/e2e_delete_me.csv"},
+            "sink_config": {"file_path": "kobo_stuff/e2e_delete_me.csv"},
             "enabled": True,
         },
     )
@@ -2299,7 +2299,7 @@ def test_live_telegram_business_lead_message_triggers_active_workflow_reply(
                 "and keep replies concise."
             ),
             "sink_type": "local_csv",
-            "sink_config": {"file_path": "tulpa_stuff/e2e_lead_replies.csv"},
+            "sink_config": {"file_path": "kobo_stuff/e2e_lead_replies.csv"},
             "enabled": True,
         },
     )
@@ -2380,7 +2380,7 @@ def test_live_owner_chat_can_create_quality_workflow_over_multiple_turns_and_han
         owner_user_id=owner_user_id,
         profile=_car_wash_owner_profile(
             workflow_name="E2E Quality Car Wash",
-            csv_relative_path="tulpa_stuff/e2e_quality_carwash.csv",
+            csv_relative_path="kobo_stuff/e2e_quality_carwash.csv",
             style_rule=(
                 "If a lead asks for price, answer directly before asking anything else. "
                 "As soon as wash_type and car_type are known, give the exact price immediately. "
@@ -2510,7 +2510,7 @@ def test_live_owner_chat_can_create_multiturn_telegram_booking_workflow_and_pers
         business_connection_id="bc_e2e_multiturn",
     )
 
-    csv_relative_path = "tulpa_stuff/e2e_multiturn_carwash.csv"
+    csv_relative_path = "kobo_stuff/e2e_multiturn_carwash.csv"
 
     owner_start_index = len(e2e_harness.telegram_client.sent_messages)
     owner_setup = e2e_harness.simulate_telegram_owner_workflow_setup(
@@ -2751,7 +2751,7 @@ def test_live_lead_simulator_can_complete_telegram_car_wash_booking(
         business_connection_id="bc_e2e_simulated_lead",
     )
 
-    csv_relative_path = "tulpa_stuff/e2e_simulated_lead_carwash.csv"
+    csv_relative_path = "kobo_stuff/e2e_simulated_lead_carwash.csv"
 
     owner_start_index = len(e2e_harness.telegram_client.sent_messages)
     owner_setup = e2e_harness.simulate_telegram_owner_workflow_setup(

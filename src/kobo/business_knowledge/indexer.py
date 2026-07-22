@@ -6,9 +6,9 @@ import json
 from collections.abc import Callable
 from typing import Any
 
-from opentulpa.business_knowledge.extraction import content_hash, extract_source_sections
-from opentulpa.business_knowledge.models import KnowledgeIndexedSource
-from opentulpa.business_knowledge.repository import BusinessKnowledgeRepository
+from kobo.business_knowledge.extraction import content_hash, extract_source_sections
+from kobo.business_knowledge.models import KnowledgeIndexedSource
+from kobo.business_knowledge.repository import BusinessKnowledgeRepository
 
 
 class BusinessKnowledgeIndexer:

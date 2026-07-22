@@ -10,7 +10,7 @@ from harness.llm_json import extract_chat_completion_text, normalize_bool, parse
 from harness.logging import JsonlRecorder
 
 DEFAULT_LEAD_SIMULATOR_MODEL = os.getenv(
-    "OPENTULPA_E2E_LEAD_SIM_MODEL",
+    "KOBO_E2E_LEAD_SIM_MODEL",
     "google/gemini-3-flash-preview",
 )
 

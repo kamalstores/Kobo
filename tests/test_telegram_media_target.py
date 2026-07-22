@@ -1,4 +1,4 @@
-from opentulpa.interfaces.telegram.client import _resolve_media_send_target
+from kobo.interfaces.telegram.client import _resolve_media_send_target
 
 
 def test_resolve_media_send_target_prefers_animation_for_gif_mime() -> None:

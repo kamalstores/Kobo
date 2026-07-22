@@ -10,16 +10,16 @@ from harness.runner import build_harness, close_harness
 from mocks.composio_instagram import FakeComposioInstagramService
 from mocks.telegram import FakeTelegramClient
 
-from opentulpa.api import app as app_module
-from opentulpa.api.app import create_app
-from opentulpa.context.file_vault import FileVaultService
-from opentulpa.core.config import get_settings
-from opentulpa.interfaces.telegram import attachments as attachments_module
-from opentulpa.interfaces.telegram import chat_service as chat_module
-from opentulpa.interfaces.telegram import relay as relay_module
-from opentulpa.interfaces.telegram.state_store import TelegramStateStore
-from opentulpa.scheduler.service import SchedulerService
-from opentulpa.tasks import sandbox as sandbox_module
+from kobo.api import app as app_module
+from kobo.api.app import create_app
+from kobo.context.file_vault import FileVaultService
+from kobo.core.config import get_settings
+from kobo.interfaces.telegram import attachments as attachments_module
+from kobo.interfaces.telegram import chat_service as chat_module
+from kobo.interfaces.telegram import relay as relay_module
+from kobo.interfaces.telegram.state_store import TelegramStateStore
+from kobo.scheduler.service import SchedulerService
+from kobo.tasks import sandbox as sandbox_module
 from tests.workbook_fixtures import (
     SAMPLE_VEHICLE_SERVICES_XLSX_FILENAME,
     SAMPLE_VEHICLE_SERVICES_XLSX_MIME_TYPE,
@@ -121,10 +121,10 @@ def support_app(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> dict[str, An
     runtime = _SupportRuntime()
     project_root = tmp_path / "project_root"
     project_root.mkdir(parents=True)
-    state_store = TelegramStateStore(project_root / ".opentulpa" / "telegram_state.json")
+    state_store = TelegramStateStore(project_root / ".kobo" / "telegram_state.json")
     file_vault = FileVaultService(
-        root_dir=project_root / ".opentulpa" / "file_vault",
-        db_path=project_root / ".opentulpa" / "file_vault.db",
+        root_dir=project_root / ".kobo" / "file_vault",
+        db_path=project_root / ".kobo" / "file_vault.db",
     )
     composio = FakeComposioInstagramService()
 

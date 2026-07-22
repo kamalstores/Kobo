@@ -7,9 +7,9 @@ from typing import Any
 
 from fastapi import FastAPI, Request
 
-from opentulpa.api.routes.file_use_cases import TULPA_STUFF_DIR as TULPA_STUFF_DIR
-from opentulpa.api.routes.file_use_cases import FileRouteUseCases
-from opentulpa.api.routes.file_use_cases import (
+from kobo.api.routes.file_use_cases import KOBO_STUFF_DIR as KOBO_STUFF_DIR
+from kobo.api.routes.file_use_cases import FileRouteUseCases
+from kobo.api.routes.file_use_cases import (
     download_image_from_web_url as download_image_from_web_url,
 )
 
@@ -32,7 +32,7 @@ def register_file_routes(
         get_agent_runtime=get_agent_runtime,
         telegram_enabled=telegram_enabled,
         resolve_customer_id=resolve_customer_id,
-        tulpa_stuff_dir=TULPA_STUFF_DIR,
+        kobo_stuff_dir=KOBO_STUFF_DIR,
         download_image=download_image_from_web_url,
     )
 

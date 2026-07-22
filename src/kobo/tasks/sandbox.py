@@ -15,32 +15,32 @@ from typing import Any, cast
 
 PROJECT_ROOT = Path(__file__).resolve().parents[3]
 PACKAGE_ROOT = Path(__file__).resolve().parents[1]
-TULPA_STUFF_DIR = (PROJECT_ROOT / "tulpa_stuff").resolve()
+KOBO_STUFF_DIR = (PROJECT_ROOT / "kobo_stuff").resolve()
 INTEGRATIONS_DIR = (PACKAGE_ROOT / "integrations").resolve()
 INTERFACES_DIR = (PACKAGE_ROOT / "interfaces").resolve()
 TOOLS_DIR = (PACKAGE_ROOT / "tools").resolve()
 SKILLS_DIR = (PACKAGE_ROOT / "skills").resolve()
 REPO_VENV_DIR = (PROJECT_ROOT / ".venv").resolve()
 AGENT_VENV_DIR = (
-    Path(os.environ.get("OPENTULPA_AGENT_VENV_PATH", "")).expanduser().resolve()
-    if str(os.environ.get("OPENTULPA_AGENT_VENV_PATH", "")).strip()
-    else (PROJECT_ROOT / ".opentulpa" / "agent_venv").resolve()
+    Path(os.environ.get("KOBO_AGENT_VENV_PATH", "")).expanduser().resolve()
+    if str(os.environ.get("KOBO_AGENT_VENV_PATH", "")).strip()
+    else (PROJECT_ROOT / ".kobo" / "agent_venv").resolve()
 )
-ARTIFACTS_ROOT = (TULPA_STUFF_DIR / "artifacts").resolve()
-CATALOG_PATH = (TULPA_STUFF_DIR / ".tulpa_catalog.json").resolve()
-CATALOG_README_PATH = (TULPA_STUFF_DIR / "README.md").resolve()
+ARTIFACTS_ROOT = (KOBO_STUFF_DIR / "artifacts").resolve()
+CATALOG_PATH = (KOBO_STUFF_DIR / ".tulpa_catalog.json").resolve()
+CATALOG_README_PATH = (KOBO_STUFF_DIR / "README.md").resolve()
 DEBUG_LOG_PATH = (PROJECT_ROOT / ".cursor" / "debug.log").resolve()
 
 ALLOWED_TERMINAL_DIRS = {
-    "tulpa_stuff": TULPA_STUFF_DIR,
+    "kobo_stuff": KOBO_STUFF_DIR,
     "integrations": INTEGRATIONS_DIR,
     "interfaces": INTERFACES_DIR,
     "tools": TOOLS_DIR,
     "skills": SKILLS_DIR,
-    "opentulpa": PACKAGE_ROOT,
+    "kobo": PACKAGE_ROOT,
 }
 ALLOWED_READ_DIRS = {
-    "tulpa_stuff": TULPA_STUFF_DIR,
+    "kobo_stuff": KOBO_STUFF_DIR,
     "integrations": INTEGRATIONS_DIR,
     "interfaces": INTERFACES_DIR,
     "tools": TOOLS_DIR,
@@ -48,12 +48,12 @@ ALLOWED_READ_DIRS = {
 }
 
 _WORKING_DIR_PREFIXES: dict[str, str] = {
-    "tulpa_stuff": "tulpa_stuff",
-    "integrations": "src/opentulpa/integrations",
-    "interfaces": "src/opentulpa/interfaces",
-    "tools": "src/opentulpa/tools",
-    "skills": "src/opentulpa/skills",
-    "opentulpa": "src/opentulpa",
+    "kobo_stuff": "kobo_stuff",
+    "integrations": "src/kobo/integrations",
+    "interfaces": "src/kobo/interfaces",
+    "tools": "src/kobo/tools",
+    "skills": "src/kobo/skills",
+    "kobo": "src/kobo",
 }
 
 DEFAULT_TERMINAL_COMMAND_ALLOWLIST = {
@@ -76,7 +76,7 @@ DEFAULT_TERMINAL_COMMAND_ALLOWLIST = {
     "pytest",
     "sqlite3",
 }
-TERMINAL_COMMAND_ALLOWLIST_ENV = "OPENTULPA_TERMINAL_COMMAND_ALLOWLIST"
+TERMINAL_COMMAND_ALLOWLIST_ENV = "KOBO_TERMINAL_COMMAND_ALLOWLIST"
 def get_terminal_command_allowlist() -> set[str]:
     raw = str(os.environ.get(TERMINAL_COMMAND_ALLOWLIST_ENV, "")).strip()
     if not raw:
@@ -89,7 +89,7 @@ def get_terminal_command_allowlist() -> set[str]:
 def _is_tulpa_router_module(path: Path) -> bool:
     return (
         path.suffix == ".py"
-        and is_within(path, TULPA_STUFF_DIR)
+        and is_within(path, KOBO_STUFF_DIR)
         and path.name != "__init__.py"
         and not path.name.startswith("_")
     )
@@ -145,15 +145,15 @@ def resolve_allowed_write_path(relative_path: str) -> Path:
 
     target = (PROJECT_ROOT / rel).resolve()
     if not (
-        is_within(target, TULPA_STUFF_DIR)
+        is_within(target, KOBO_STUFF_DIR)
         or is_within(target, INTEGRATIONS_DIR)
         or is_within(target, INTERFACES_DIR)
         or is_within(target, TOOLS_DIR)
         or is_within(target, SKILLS_DIR)
     ):
         raise ValueError(
-            "path must be under tulpa_stuff/, src/opentulpa/integrations/, src/opentulpa/interfaces/, "
-            "src/opentulpa/tools/, or src/opentulpa/skills/"
+            "path must be under kobo_stuff/, src/kobo/integrations/, src/kobo/interfaces/, "
+            "src/kobo/tools/, or src/kobo/skills/"
         )
     return target
 
@@ -268,7 +268,7 @@ def validate_generated_file(relative_path: str) -> dict[str, Any]:
         names = _extract_router_names(tree)
         if "router" not in names:
             raise ValueError(
-                "tulpa_stuff Python file must either define a top-level 'router' for FastAPI mounting "
+                "kobo_stuff Python file must either define a top-level 'router' for FastAPI mounting "
                 "or be a standalone executable script with if __name__ == '__main__':. "
                 "Use router modules only when the file is meant for tulpa_reload."
             )
@@ -372,7 +372,7 @@ def run_terminal(
             )
             raise RuntimeError(
                 f"Agent venv setup failed at {AGENT_VENV_DIR}. "
-                "Create it manually with: python3 -m venv --system-site-packages .opentulpa/agent_venv"
+                "Create it manually with: python3 -m venv --system-site-packages .kobo/agent_venv"
             ) from exc
         _debug_log(
             hypothesis_id="sandbox",
@@ -523,12 +523,12 @@ def _default_catalog() -> dict[str, Any]:
     return {
         "generated_at": _utc_now(),
         "roots": {
-            "tulpa_stuff": "tulpa_stuff",
-            "artifacts": "tulpa_stuff/artifacts",
-            "integrations": "src/opentulpa/integrations",
-            "interfaces": "src/opentulpa/interfaces",
-            "tools": "src/opentulpa/tools",
-            "skills": "src/opentulpa/skills",
+            "kobo_stuff": "kobo_stuff",
+            "artifacts": "kobo_stuff/artifacts",
+            "integrations": "src/kobo/integrations",
+            "interfaces": "src/kobo/interfaces",
+            "tools": "src/kobo/tools",
+            "skills": "src/kobo/skills",
         },
         "entries": [],
     }
@@ -537,8 +537,8 @@ def _default_catalog() -> dict[str, Any]:
 def _category_for_path(path: Path) -> str:
     if is_within(path, ARTIFACTS_ROOT):
         return "artifact"
-    if is_within(path, TULPA_STUFF_DIR):
-        return "tulpa_stuff"
+    if is_within(path, KOBO_STUFF_DIR):
+        return "kobo_stuff"
     if is_within(path, INTEGRATIONS_DIR):
         return "integration"
     if is_within(path, INTERFACES_DIR):
@@ -574,7 +574,7 @@ def _record_catalog_path(path: Path, kind: str | None = None) -> None:
 
 
 def _write_catalog(catalog: dict[str, Any]) -> None:
-    TULPA_STUFF_DIR.mkdir(parents=True, exist_ok=True)
+    KOBO_STUFF_DIR.mkdir(parents=True, exist_ok=True)
     CATALOG_PATH.write_text(json_dumps(catalog, indent=2) + "\n", encoding="utf-8")
 
 

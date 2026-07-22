@@ -5,8 +5,8 @@ from pathlib import Path
 import pytest
 from fastapi.testclient import TestClient
 
-from opentulpa.api.app import create_app
-from opentulpa.skills.service import SkillStoreService, _rmtree_ignore_missing
+from kobo.api.app import create_app
+from kobo.skills.service import SkillStoreService, _rmtree_ignore_missing
 
 
 def _mk_client(tmp_path: Path) -> TestClient:

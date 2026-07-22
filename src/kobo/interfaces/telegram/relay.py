@@ -13,18 +13,18 @@ from dataclasses import dataclass
 from datetime import UTC, datetime
 from typing import Any
 
-from opentulpa.agent.runtime import (
+from kobo.agent.runtime import (
     STREAM_PROGRESS_PREFIX,
     STREAM_WAIT_SIGNAL,
     MergedInputSuppressedError,
 )
-from opentulpa.agent.turn_policy import normalize_turn_mode
-from opentulpa.agent.turn_runtime_policy import effective_turn_mode as _effective_turn_mode
-from opentulpa.core.ids import new_short_id
-from opentulpa.interfaces.telegram.client import TelegramClient
-from opentulpa.interfaces.telegram.constants import DEBUG_LOG_PATH, LOW_SIGNAL_REPLIES
-from opentulpa.interfaces.telegram.status_generation import generate_llm_status_message
-from opentulpa.web.events import append_web_event
+from kobo.agent.turn_policy import normalize_turn_mode
+from kobo.agent.turn_runtime_policy import effective_turn_mode as _effective_turn_mode
+from kobo.core.ids import new_short_id
+from kobo.interfaces.telegram.client import TelegramClient
+from kobo.interfaces.telegram.constants import DEBUG_LOG_PATH, LOW_SIGNAL_REPLIES
+from kobo.interfaces.telegram.status_generation import generate_llm_status_message
+from kobo.web.events import append_web_event
 
 logger = logging.getLogger(__name__)
 NO_NOTIFY_TOKEN = "__NO_NOTIFY__"
@@ -146,7 +146,7 @@ def _telegram_observability_context(
     if not callable(trace_context):
         return nullcontext()
     return trace_context(
-        name="opentulpa.interactive.turn",
+        name="kobo.interactive.turn",
         trace_id=None,
         user_id=customer_id,
         session_id=thread_id,

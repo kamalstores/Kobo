@@ -32,7 +32,7 @@ def test_live_instagram_ingress_read_smoke(e2e_harness: E2EHarness) -> None:
 
 def test_live_instagram_ingress_extract_and_local_sink(e2e_harness: E2EHarness) -> None:
     customer_id = "cust_e2e_ingress"
-    csv_relative_path = f"tulpa_stuff/e2e/live_instagram_ingress_{uuid4().hex[:8]}.csv"
+    csv_relative_path = f"kobo_stuff/e2e/live_instagram_ingress_{uuid4().hex[:8]}.csv"
 
     upsert = e2e_harness.upsert_instagram_workflow(
         customer_id=customer_id,

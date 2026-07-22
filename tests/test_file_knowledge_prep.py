@@ -6,10 +6,10 @@ from pathlib import Path
 from fastapi.testclient import TestClient
 from openpyxl import Workbook
 
-from opentulpa.agent.file_analysis import extract_uploaded_text
-from opentulpa.agent.knowledge_prep import inspect_uploaded_file_structure
-from opentulpa.api.app import create_app
-from opentulpa.context.file_vault import FileVaultService
+from kobo.agent.file_analysis import extract_uploaded_text
+from kobo.agent.knowledge_prep import inspect_uploaded_file_structure
+from kobo.api.app import create_app
+from kobo.context.file_vault import FileVaultService
 
 
 class _DisabledComposio:

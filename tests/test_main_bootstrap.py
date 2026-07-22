@@ -78,7 +78,7 @@ sys.modules.setdefault("apscheduler.triggers.cron", cron_module)
 sys.modules.setdefault("apscheduler.triggers.date", date_module)
 sys.modules.setdefault("mem0", mem0_module)
 
-from opentulpa import __main__ as entry  # noqa: E402
+from kobo import __main__ as entry  # noqa: E402
 
 
 def test_resolve_public_base_url_prefers_explicit_public_base(monkeypatch) -> None:
@@ -108,10 +108,10 @@ def test_ensure_telegram_webhook_secret_generates_when_missing(monkeypatch) -> N
 
 
 def test_shutdown_grace_seconds_defaults_and_parses(monkeypatch) -> None:
-    monkeypatch.delenv("OPENTULPA_SHUTDOWN_DRAIN_TIMEOUT_SECONDS", raising=False)
+    monkeypatch.delenv("KOBO_SHUTDOWN_DRAIN_TIMEOUT_SECONDS", raising=False)
     assert entry._shutdown_grace_seconds() == 300
 
-    monkeypatch.setenv("OPENTULPA_SHUTDOWN_DRAIN_TIMEOUT_SECONDS", "45.5")
+    monkeypatch.setenv("KOBO_SHUTDOWN_DRAIN_TIMEOUT_SECONDS", "45.5")
     assert entry._shutdown_grace_seconds() == 45
 
 
@@ -177,10 +177,10 @@ def test_telegram_bot_commands_include_debug_logs() -> None:
 def test_bootstrap_persistent_storage_aliases_runtime_dirs(tmp_path: Path) -> None:
     project_root = tmp_path / "project"
     project_root.mkdir()
-    (project_root / ".opentulpa").mkdir()
-    (project_root / ".opentulpa" / "state.db").write_text("checkpoint", encoding="utf-8")
-    (project_root / "tulpa_stuff").mkdir()
-    (project_root / "tulpa_stuff" / "__init__.py").write_text(
+    (project_root / ".kobo").mkdir()
+    (project_root / ".kobo" / "state.db").write_text("checkpoint", encoding="utf-8")
+    (project_root / "kobo_stuff").mkdir()
+    (project_root / "kobo_stuff" / "__init__.py").write_text(
         '"""Agent-created integrations and skills."""\n',
         encoding="utf-8",
     )
@@ -188,26 +188,26 @@ def test_bootstrap_persistent_storage_aliases_runtime_dirs(tmp_path: Path) -> No
     data_root = tmp_path / "data"
     entry._bootstrap_persistent_storage(project_root, str(data_root))
 
-    assert (project_root / ".opentulpa").is_symlink()
-    assert (project_root / "tulpa_stuff").is_symlink()
-    assert (data_root / ".opentulpa" / "state.db").read_text(encoding="utf-8") == "checkpoint"
-    assert (data_root / "tulpa_stuff" / "__init__.py").read_text(encoding="utf-8").strip()
+    assert (project_root / ".kobo").is_symlink()
+    assert (project_root / "kobo_stuff").is_symlink()
+    assert (data_root / ".kobo" / "state.db").read_text(encoding="utf-8") == "checkpoint"
+    assert (data_root / "kobo_stuff" / "__init__.py").read_text(encoding="utf-8").strip()
 
 
 def test_bootstrap_persistent_storage_keeps_existing_volume_contents(tmp_path: Path) -> None:
     project_root = tmp_path / "project"
     project_root.mkdir()
-    (project_root / "tulpa_stuff").mkdir()
-    (project_root / "tulpa_stuff" / "README.md").write_text("image seed", encoding="utf-8")
+    (project_root / "kobo_stuff").mkdir()
+    (project_root / "kobo_stuff" / "README.md").write_text("image seed", encoding="utf-8")
 
     data_root = tmp_path / "data"
-    (data_root / "tulpa_stuff").mkdir(parents=True)
-    (data_root / "tulpa_stuff" / "README.md").write_text("persisted", encoding="utf-8")
+    (data_root / "kobo_stuff").mkdir(parents=True)
+    (data_root / "kobo_stuff" / "README.md").write_text("persisted", encoding="utf-8")
 
     entry._bootstrap_persistent_storage(project_root, str(data_root))
 
-    assert (project_root / "tulpa_stuff").is_symlink()
-    assert (data_root / "tulpa_stuff" / "README.md").read_text(encoding="utf-8") == "persisted"
+    assert (project_root / "kobo_stuff").is_symlink()
+    assert (data_root / "kobo_stuff" / "README.md").read_text(encoding="utf-8") == "persisted"
 
 
 def test_auto_configure_telegram_commands_posts_set_my_commands(monkeypatch) -> None:

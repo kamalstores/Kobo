@@ -2,8 +2,8 @@ from __future__ import annotations
 
 import pytest
 
-from opentulpa.agent.lc_messages import HumanMessage
-from opentulpa.agent.tool_execution_policy import ToolExecutionPolicy
+from kobo.agent.lc_messages import HumanMessage
+from kobo.agent.tool_execution_policy import ToolExecutionPolicy
 
 
 class _Tool:

@@ -9,17 +9,17 @@ from contextlib import suppress
 from dataclasses import dataclass
 from typing import Any, Literal
 
-from opentulpa.agent.context_engine import (
+from kobo.agent.context_engine import (
     trim_text_to_token_budget as _ce_trim_text_to_token_budget,
 )
-from opentulpa.agent.lc_messages import HumanMessage, SystemMessage
-from opentulpa.agent.utils import (
+from kobo.agent.lc_messages import HumanMessage, SystemMessage
+from kobo.agent.utils import (
     approx_tokens as _approx_tokens,
 )
-from opentulpa.agent.utils import (
+from kobo.agent.utils import (
     content_to_text as _content_to_text,
 )
-from opentulpa.agent.utils import (
+from kobo.agent.utils import (
     message_to_text as _message_to_text,
 )
 

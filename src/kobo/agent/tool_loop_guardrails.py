@@ -6,7 +6,7 @@ import json
 from dataclasses import dataclass
 from typing import Any
 
-from opentulpa.agent.tool_budget import coerce_tool_group_calls
+from kobo.agent.tool_budget import coerce_tool_group_calls
 
 
 @dataclass(frozen=True, slots=True)

@@ -7,18 +7,18 @@ from typing import Any
 import pytest
 from openpyxl import Workbook
 
-from opentulpa.business_knowledge.extraction import XLSX_MIME_TYPE, extract_source_sections
-from opentulpa.business_knowledge.service import (
+from kobo.business_knowledge.extraction import XLSX_MIME_TYPE, extract_source_sections
+from kobo.business_knowledge.service import (
     BusinessKnowledgeService,
     OpenAICompatibleKnowledgeOracleClient,
 )
-from opentulpa.business_knowledge.table_normalizer import (
+from kobo.business_knowledge.table_normalizer import (
     select_table_evidence,
     table_evidence_selection_stats,
     table_evidence_to_toon,
     table_facts_from_sections,
 )
-from opentulpa.context.file_vault import FileVaultService
+from kobo.context.file_vault import FileVaultService
 
 
 class _FakeOracle:
@@ -386,7 +386,7 @@ def test_oracle_client_posts_default_model_with_openrouter_attribution(
         captured.update(kwargs)
         return _Response()
 
-    monkeypatch.setattr("opentulpa.business_knowledge.oracle_client.httpx.post", _post)
+    monkeypatch.setattr("kobo.business_knowledge.oracle_client.httpx.post", _post)
 
     client = OpenAICompatibleKnowledgeOracleClient(
         api_key="test-key",
@@ -402,8 +402,8 @@ def test_oracle_client_posts_default_model_with_openrouter_attribution(
     assert captured["json"]["max_tokens"] == 1000
     assert captured["json"]["reasoning"] == {"effort": "none", "exclude": True}
     assert captured["headers"]["Authorization"] == "Bearer test-key"
-    assert captured["headers"]["HTTP-Referer"] == "https://github.com/kvyb/opentulpa"
-    assert captured["headers"]["X-OpenRouter-Title"] == "OpenTulpa"
+    assert captured["headers"]["HTTP-Referer"] == "https://github.com/kamalstores/kobo"
+    assert captured["headers"]["X-OpenRouter-Title"] == "Kobo"
     trace_text = (tmp_path / "llm_call_traces.jsonl").read_text(encoding="utf-8")
     assert '"model_name": "google/gemini-3.1-flash-lite-preview"' in trace_text
     assert '"call_site": "knowledge_oracle"' in trace_text
@@ -438,7 +438,7 @@ def test_oracle_client_traces_intent_extraction(
     def _post(url: str, **kwargs: Any) -> _Response:
         return _Response()
 
-    monkeypatch.setattr("opentulpa.business_knowledge.oracle_client.httpx.post", _post)
+    monkeypatch.setattr("kobo.business_knowledge.oracle_client.httpx.post", _post)
 
     client = OpenAICompatibleKnowledgeOracleClient(
         api_key="test-key",

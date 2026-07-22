@@ -4,16 +4,16 @@ from __future__ import annotations
 
 import pytest
 
-from opentulpa.agent.composio_context import load_connected_composio_toolkits_context
-from opentulpa.agent.lc_messages import AIMessage, HumanMessage, SystemMessage, ToolMessage
-from opentulpa.agent.model_pool import prompt_cache_breakpoint_message_index
-from opentulpa.agent.prompt_cache_policy import (
+from kobo.agent.composio_context import load_connected_composio_toolkits_context
+from kobo.agent.lc_messages import AIMessage, HumanMessage, SystemMessage, ToolMessage
+from kobo.agent.model_pool import prompt_cache_breakpoint_message_index
+from kobo.agent.prompt_cache_policy import (
     build_prompt_cache_plan,
 )
-from opentulpa.agent.prompt_policy import build_system_prompt_message
-from opentulpa.agent.prompt_sections import PROMPT_DYNAMIC_BOUNDARY
-from opentulpa.agent.runtime import OpenTulpaLangGraphRuntime
-from opentulpa.agent.turn_prompt_builder.frozen_context import (
+from kobo.agent.prompt_policy import build_system_prompt_message
+from kobo.agent.prompt_sections import PROMPT_DYNAMIC_BOUNDARY
+from kobo.agent.runtime import KoboLangGraphRuntime
+from kobo.agent.turn_prompt_builder.frozen_context import (
     _build_late_turn_control_text,
 )
 
@@ -38,7 +38,7 @@ class _PromptComposio:
 
 
 def test_prompt_dynamic_boundary_marker_is_single_line_prefix() -> None:
-    assert PROMPT_DYNAMIC_BOUNDARY.startswith("[OPENTULPA_PROMPT_DYNAMIC_BOUNDARY]")
+    assert PROMPT_DYNAMIC_BOUNDARY.startswith("[KOBO_PROMPT_DYNAMIC_BOUNDARY]")
 
 
 def test_full_runtime_policy_retains_hardened_rules() -> None:
@@ -95,33 +95,33 @@ def test_late_turn_control_can_include_connected_composio_toolkits() -> None:
 
 
 def test_model_invoke_extras_empty_when_caching_disabled() -> None:
-    rt = OpenTulpaLangGraphRuntime(
+    rt = KoboLangGraphRuntime(
         app_url="http://127.0.0.1:8000",
         openrouter_api_key="k",
         model_name="anthropic/claude-sonnet-4",
-        checkpoint_db_path=".opentulpa/test-prompt-cache.sqlite",
+        checkpoint_db_path=".kobo/test-prompt-cache.sqlite",
         prompt_caching_enabled=False,
     )
     assert rt.model_invoke_extras() == {}
 
 
 def test_model_invoke_extras_anthropic_when_enabled() -> None:
-    rt = OpenTulpaLangGraphRuntime(
+    rt = KoboLangGraphRuntime(
         app_url="http://127.0.0.1:8000",
         openrouter_api_key="k",
         model_name="anthropic/claude-sonnet-4",
-        checkpoint_db_path=".opentulpa/test-prompt-cache.sqlite",
+        checkpoint_db_path=".kobo/test-prompt-cache.sqlite",
         prompt_caching_enabled=True,
     )
     assert rt.model_invoke_extras() == {"extra_body": {"cache_control": {"type": "ephemeral"}}}
 
 
 def test_model_invoke_extras_skips_non_claude_models() -> None:
-    rt = OpenTulpaLangGraphRuntime(
+    rt = KoboLangGraphRuntime(
         app_url="http://127.0.0.1:8000",
         openrouter_api_key="k",
         model_name="google/gemini-2.0-flash-001",
-        checkpoint_db_path=".opentulpa/test-prompt-cache.sqlite",
+        checkpoint_db_path=".kobo/test-prompt-cache.sqlite",
         prompt_caching_enabled=True,
     )
     assert rt.model_invoke_extras() == {}
@@ -129,11 +129,11 @@ def test_model_invoke_extras_skips_non_claude_models() -> None:
 
 
 def test_model_invoke_extras_gemini_3_uses_breakpoints() -> None:
-    rt = OpenTulpaLangGraphRuntime(
+    rt = KoboLangGraphRuntime(
         app_url="http://127.0.0.1:8000",
         openrouter_api_key="k",
         model_name="google/gemini-3-flash-preview",
-        checkpoint_db_path=".opentulpa/test-prompt-cache.sqlite",
+        checkpoint_db_path=".kobo/test-prompt-cache.sqlite",
         prompt_caching_enabled=True,
     )
     assert rt.model_invoke_extras() == {}
@@ -143,22 +143,22 @@ def test_model_invoke_extras_gemini_3_uses_breakpoints() -> None:
 
 
 def test_model_invoke_extras_claude_slug_without_anthropic_prefix() -> None:
-    rt = OpenTulpaLangGraphRuntime(
+    rt = KoboLangGraphRuntime(
         app_url="http://127.0.0.1:8000",
         openrouter_api_key="k",
         model_name="openrouter/auto-claude-foo",
-        checkpoint_db_path=".opentulpa/test-prompt-cache.sqlite",
+        checkpoint_db_path=".kobo/test-prompt-cache.sqlite",
         prompt_caching_enabled=True,
     )
     assert rt.model_invoke_extras() == {"extra_body": {"cache_control": {"type": "ephemeral"}}}
 
 
 def test_model_invoke_extras_ttl_1h() -> None:
-    rt = OpenTulpaLangGraphRuntime(
+    rt = KoboLangGraphRuntime(
         app_url="http://127.0.0.1:8000",
         openrouter_api_key="k",
         model_name="anthropic/claude-sonnet-4",
-        checkpoint_db_path=".opentulpa/test-prompt-cache.sqlite",
+        checkpoint_db_path=".kobo/test-prompt-cache.sqlite",
         prompt_caching_enabled=True,
         prompt_cache_ttl_1h=True,
     )
@@ -168,11 +168,11 @@ def test_model_invoke_extras_ttl_1h() -> None:
 
 
 def test_prompt_cache_profile_openai_is_automatic() -> None:
-    rt = OpenTulpaLangGraphRuntime(
+    rt = KoboLangGraphRuntime(
         app_url="http://127.0.0.1:8000",
         openrouter_api_key="k",
         model_name="openai/gpt-5-mini",
-        checkpoint_db_path=".opentulpa/test-prompt-cache.sqlite",
+        checkpoint_db_path=".kobo/test-prompt-cache.sqlite",
         prompt_caching_enabled=True,
     )
     profile = rt.prompt_cache_profile()
@@ -182,11 +182,11 @@ def test_prompt_cache_profile_openai_is_automatic() -> None:
 
 
 def test_prompt_cache_profile_zai_glm52_is_automatic() -> None:
-    rt = OpenTulpaLangGraphRuntime(
+    rt = KoboLangGraphRuntime(
         app_url="http://127.0.0.1:8000",
         openrouter_api_key="k",
         model_name="z-ai/glm-5.2",
-        checkpoint_db_path=".opentulpa/test-prompt-cache.sqlite",
+        checkpoint_db_path=".kobo/test-prompt-cache.sqlite",
         prompt_caching_enabled=True,
     )
     profile = rt.prompt_cache_profile()
@@ -196,11 +196,11 @@ def test_prompt_cache_profile_zai_glm52_is_automatic() -> None:
 
 
 def test_prompt_cache_profile_qwen_uses_implicit_stable_prefix() -> None:
-    rt = OpenTulpaLangGraphRuntime(
+    rt = KoboLangGraphRuntime(
         app_url="http://127.0.0.1:8000",
         openrouter_api_key="k",
         model_name="qwen/qwen3.7-max",
-        checkpoint_db_path=".opentulpa/test-prompt-cache.sqlite",
+        checkpoint_db_path=".kobo/test-prompt-cache.sqlite",
         prompt_caching_enabled=True,
     )
 
@@ -213,11 +213,11 @@ def test_prompt_cache_profile_qwen_uses_implicit_stable_prefix() -> None:
 
 
 def test_prompt_cache_profile_minimax_uses_implicit_stable_prefix() -> None:
-    rt = OpenTulpaLangGraphRuntime(
+    rt = KoboLangGraphRuntime(
         app_url="http://127.0.0.1:8000",
         openrouter_api_key="k",
         model_name="minimax/minimax-m3",
-        checkpoint_db_path=".opentulpa/test-prompt-cache.sqlite",
+        checkpoint_db_path=".kobo/test-prompt-cache.sqlite",
         prompt_caching_enabled=True,
     )
 
@@ -230,11 +230,11 @@ def test_prompt_cache_profile_minimax_uses_implicit_stable_prefix() -> None:
 
 
 def test_prepare_messages_for_prompt_cache_wraps_stable_system_message_for_gemini_by_default() -> None:
-    rt = OpenTulpaLangGraphRuntime(
+    rt = KoboLangGraphRuntime(
         app_url="http://127.0.0.1:8000",
         openrouter_api_key="k",
         model_name="google/gemini-3-flash-preview",
-        checkpoint_db_path=".opentulpa/test-prompt-cache.sqlite",
+        checkpoint_db_path=".kobo/test-prompt-cache.sqlite",
         prompt_caching_enabled=True,
     )
     messages = [
@@ -253,11 +253,11 @@ def test_prepare_messages_for_prompt_cache_wraps_stable_system_message_for_gemin
 
 
 def test_prepare_messages_for_prompt_cache_skips_when_no_stable_system_prefix() -> None:
-    rt = OpenTulpaLangGraphRuntime(
+    rt = KoboLangGraphRuntime(
         app_url="http://127.0.0.1:8000",
         openrouter_api_key="k",
         model_name="google/gemini-3-flash-preview",
-        checkpoint_db_path=".opentulpa/test-prompt-cache.sqlite",
+        checkpoint_db_path=".kobo/test-prompt-cache.sqlite",
         prompt_caching_enabled=True,
     )
     messages = [HumanMessage(content="Dynamic user question")]
@@ -268,11 +268,11 @@ def test_prepare_messages_for_prompt_cache_skips_when_no_stable_system_prefix() 
 
 
 def test_prepare_messages_for_prompt_cache_prefers_stable_prefix_when_provided() -> None:
-    rt = OpenTulpaLangGraphRuntime(
+    rt = KoboLangGraphRuntime(
         app_url="http://127.0.0.1:8000",
         openrouter_api_key="k",
         model_name="google/gemini-3-flash-preview",
-        checkpoint_db_path=".opentulpa/test-prompt-cache.sqlite",
+        checkpoint_db_path=".kobo/test-prompt-cache.sqlite",
         prompt_caching_enabled=True,
     )
     messages = [
@@ -293,16 +293,16 @@ def test_prepare_messages_for_prompt_cache_prefers_stable_prefix_when_provided()
 
 
 def test_prepare_messages_for_qwen_leaves_content_unmarked_for_implicit_cache() -> None:
-    rt = OpenTulpaLangGraphRuntime(
+    rt = KoboLangGraphRuntime(
         app_url="http://127.0.0.1:8000",
         openrouter_api_key="k",
         model_name="qwen/qwen3.7-max",
-        checkpoint_db_path=".opentulpa/test-prompt-cache.sqlite",
+        checkpoint_db_path=".kobo/test-prompt-cache.sqlite",
         prompt_caching_enabled=True,
     )
     messages = [
         SystemMessage(content="Stable system prompt"),
-        HumanMessage(content="OpenTulpa cache anchor v1. Real conversation messages follow."),
+        HumanMessage(content="Kobo cache anchor v1. Real conversation messages follow."),
         AIMessage(content="Prior assistant answer"),
         ToolMessage(content='{"ok": true}', tool_call_id="call_1"),
         HumanMessage(content="Prior user turn"),
@@ -316,7 +316,7 @@ def test_prepare_messages_for_qwen_leaves_content_unmarked_for_implicit_cache() 
     )
 
     assert prepared[0].content == "Stable system prompt"
-    assert prepared[1].content == "OpenTulpa cache anchor v1. Real conversation messages follow."
+    assert prepared[1].content == "Kobo cache anchor v1. Real conversation messages follow."
     assert prepared[2].content == "Prior assistant answer"
     assert prepared[3].content == '{"ok": true}'
     assert prepared[4].content == "Prior user turn"
@@ -326,7 +326,7 @@ def test_prepare_messages_for_qwen_leaves_content_unmarked_for_implicit_cache() 
 def test_prompt_cache_plan_qwen_implicit_uses_stable_prefix_only() -> None:
     messages = [
         SystemMessage(content="Stable system prompt"),
-        HumanMessage(content="OpenTulpa cache anchor v1. Real conversation messages follow."),
+        HumanMessage(content="Kobo cache anchor v1. Real conversation messages follow."),
         HumanMessage(content="Committed history"),
         HumanMessage(content="Current user turn"),
     ]
@@ -355,7 +355,7 @@ def test_prompt_cache_plan_qwen_implicit_uses_stable_prefix_only() -> None:
 def test_prompt_cache_breakpoint_index_matches_actual_cacheable_message() -> None:
     messages = [
         SystemMessage(content="Stable system prompt"),
-        HumanMessage(content="OpenTulpa cache anchor v1"),
+        HumanMessage(content="Kobo cache anchor v1"),
         AIMessage(content="", tool_calls=[{"name": "tool_group_exec", "args": {}, "id": "call_1"}]),
         HumanMessage(content="Current user turn"),
     ]
@@ -368,7 +368,7 @@ def test_prompt_cache_breakpoint_index_matches_actual_cacheable_message() -> Non
 def test_prompt_cache_plan_explicit_stable_prefix_marks_only_stable_boundary() -> None:
     prefix = [
         SystemMessage(content="Stable system prompt"),
-        HumanMessage(content="OpenTulpa cache anchor v1"),
+        HumanMessage(content="Kobo cache anchor v1"),
     ]
     older = [HumanMessage(content="older " * 900)]
     latest = [
@@ -425,11 +425,11 @@ class _ProviderRouteCaptureModel:
 
 @pytest.mark.asyncio
 async def test_ainvoke_model_adds_breakpoint_content_for_gemini() -> None:
-    rt = OpenTulpaLangGraphRuntime(
+    rt = KoboLangGraphRuntime(
         app_url="http://127.0.0.1:8000",
         openrouter_api_key="k",
         model_name="google/gemini-3-flash-preview",
-        checkpoint_db_path=".opentulpa/test-prompt-cache.sqlite",
+        checkpoint_db_path=".kobo/test-prompt-cache.sqlite",
         prompt_caching_enabled=True,
     )
     model = _CaptureModel()
@@ -453,12 +453,12 @@ async def test_ainvoke_model_adds_breakpoint_content_for_gemini() -> None:
 
 @pytest.mark.asyncio
 async def test_ainvoke_model_keeps_deepseek_v4_pro_reasoning_with_default_medium_effort() -> None:
-    rt = OpenTulpaLangGraphRuntime(
+    rt = KoboLangGraphRuntime(
         app_url="http://127.0.0.1:8000",
         openrouter_api_key="k",
         openrouter_base_url="https://openrouter.ai/api/v1",
         model_name="deepseek/deepseek-v4-pro",
-        checkpoint_db_path=".opentulpa/test-prompt-cache.sqlite",
+        checkpoint_db_path=".kobo/test-prompt-cache.sqlite",
         prompt_caching_enabled=False,
     )
     model = _ProviderRouteCaptureModel()
@@ -476,13 +476,13 @@ async def test_ainvoke_model_keeps_deepseek_v4_pro_reasoning_with_default_medium
 
 @pytest.mark.asyncio
 async def test_ainvoke_model_can_disable_deepseek_v4_pro_reasoning() -> None:
-    rt = OpenTulpaLangGraphRuntime(
+    rt = KoboLangGraphRuntime(
         app_url="http://127.0.0.1:8000",
         openrouter_api_key="k",
         openrouter_base_url="https://openrouter.ai/api/v1",
         model_name="deepseek/deepseek-v4-pro",
         reasoning_effort="",
-        checkpoint_db_path=".opentulpa/test-prompt-cache.sqlite",
+        checkpoint_db_path=".kobo/test-prompt-cache.sqlite",
         prompt_caching_enabled=False,
     )
     model = _ProviderRouteCaptureModel()
@@ -499,12 +499,12 @@ async def test_ainvoke_model_can_disable_deepseek_v4_pro_reasoning() -> None:
 
 
 def test_model_request_attempts_are_default_off_openrouter() -> None:
-    rt = OpenTulpaLangGraphRuntime(
+    rt = KoboLangGraphRuntime(
         app_url="http://127.0.0.1:8000",
         openrouter_api_key="k",
         openrouter_base_url="https://example.com/v1",
         model_name="deepseek/deepseek-v4-pro",
-        checkpoint_db_path=".opentulpa/test-prompt-cache.sqlite",
+        checkpoint_db_path=".kobo/test-prompt-cache.sqlite",
         prompt_caching_enabled=False,
     )
 
@@ -514,12 +514,12 @@ def test_model_request_attempts_are_default_off_openrouter() -> None:
 
 
 def test_model_request_attempts_are_default_for_deepseek_v4_pro_on_openrouter() -> None:
-    rt = OpenTulpaLangGraphRuntime(
+    rt = KoboLangGraphRuntime(
         app_url="http://127.0.0.1:8000",
         openrouter_api_key="k",
         openrouter_base_url="https://openrouter.ai/api/v1",
         model_name="deepseek/deepseek-v4-pro",
-        checkpoint_db_path=".opentulpa/test-prompt-cache.sqlite",
+        checkpoint_db_path=".kobo/test-prompt-cache.sqlite",
         prompt_caching_enabled=False,
     )
 
@@ -529,11 +529,11 @@ def test_model_request_attempts_are_default_for_deepseek_v4_pro_on_openrouter() 
 
 
 def test_extract_response_usage_fields_normalizes_native_deepseek_cache_usage() -> None:
-    rt = OpenTulpaLangGraphRuntime(
+    rt = KoboLangGraphRuntime(
         app_url="http://127.0.0.1:8000",
         openrouter_api_key="k",
         model_name="deepseek/deepseek-v4-pro",
-        checkpoint_db_path=".opentulpa/test-prompt-cache.sqlite",
+        checkpoint_db_path=".kobo/test-prompt-cache.sqlite",
         prompt_caching_enabled=True,
     )
 
@@ -558,11 +558,11 @@ def test_extract_response_usage_fields_normalizes_native_deepseek_cache_usage() 
 
 
 def test_extract_response_usage_fields_normalizes_openrouter_usage() -> None:
-    rt = OpenTulpaLangGraphRuntime(
+    rt = KoboLangGraphRuntime(
         app_url="http://127.0.0.1:8000",
         openrouter_api_key="k",
         model_name="google/gemini-3-flash-preview",
-        checkpoint_db_path=".opentulpa/test-prompt-cache.sqlite",
+        checkpoint_db_path=".kobo/test-prompt-cache.sqlite",
         prompt_caching_enabled=True,
     )
 
@@ -593,11 +593,11 @@ def test_extract_response_usage_fields_normalizes_openrouter_usage() -> None:
 
 
 def test_extract_response_usage_fields_normalizes_langchain_stream_usage_metadata() -> None:
-    rt = OpenTulpaLangGraphRuntime(
+    rt = KoboLangGraphRuntime(
         app_url="http://127.0.0.1:8000",
         openrouter_api_key="k",
         model_name="qwen/qwen3.7-max",
-        checkpoint_db_path=".opentulpa/test-prompt-cache.sqlite",
+        checkpoint_db_path=".kobo/test-prompt-cache.sqlite",
         prompt_caching_enabled=True,
     )
 
@@ -623,11 +623,11 @@ def test_extract_response_usage_fields_normalizes_langchain_stream_usage_metadat
 
 @pytest.mark.asyncio
 async def test_ainvoke_model_adds_breakpoint_to_stable_prefix_for_gemini() -> None:
-    rt = OpenTulpaLangGraphRuntime(
+    rt = KoboLangGraphRuntime(
         app_url="http://127.0.0.1:8000",
         openrouter_api_key="k",
         model_name="google/gemini-3-flash-preview",
-        checkpoint_db_path=".opentulpa/test-prompt-cache.sqlite",
+        checkpoint_db_path=".kobo/test-prompt-cache.sqlite",
         prompt_caching_enabled=True,
     )
     model = _CaptureModel()
@@ -656,12 +656,12 @@ async def test_ainvoke_model_adds_breakpoint_to_stable_prefix_for_gemini() -> No
 async def test_ainvoke_model_adds_openrouter_session_id_for_implicit_cache_stickiness(
     model_name: str,
 ) -> None:
-    rt = OpenTulpaLangGraphRuntime(
+    rt = KoboLangGraphRuntime(
         app_url="http://127.0.0.1:8000",
         openrouter_api_key="k",
         openrouter_base_url="https://openrouter.ai/api/v1",
         model_name=model_name,
-        checkpoint_db_path=".opentulpa/test-prompt-cache.sqlite",
+        checkpoint_db_path=".kobo/test-prompt-cache.sqlite",
         prompt_caching_enabled=True,
     )
     model = _CaptureModel()
@@ -670,7 +670,7 @@ async def test_ainvoke_model_adds_openrouter_session_id_for_implicit_cache_stick
         model,
         [
             SystemMessage(content="Stable system prompt"),
-            HumanMessage(content="OpenTulpa cache anchor v1. Real conversation messages follow."),
+            HumanMessage(content="Kobo cache anchor v1. Real conversation messages follow."),
             HumanMessage(content="Dynamic user question"),
         ],
         model_name=model_name,
@@ -680,17 +680,17 @@ async def test_ainvoke_model_adds_openrouter_session_id_for_implicit_cache_stick
 
     call = model.calls[0]
     extra_body = call["kwargs"]["extra_body"]
-    assert extra_body["session_id"].startswith("opentulpa-")
+    assert extra_body["session_id"].startswith("kobo-")
     assert len(extra_body["session_id"]) == 42
 
 
 @pytest.mark.asyncio
 async def test_ainvoke_model_adds_top_level_cache_control_for_claude() -> None:
-    rt = OpenTulpaLangGraphRuntime(
+    rt = KoboLangGraphRuntime(
         app_url="http://127.0.0.1:8000",
         openrouter_api_key="k",
         model_name="anthropic/claude-sonnet-4",
-        checkpoint_db_path=".opentulpa/test-prompt-cache.sqlite",
+        checkpoint_db_path=".kobo/test-prompt-cache.sqlite",
         prompt_caching_enabled=True,
     )
     model = _CaptureModel()

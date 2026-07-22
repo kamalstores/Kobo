@@ -7,7 +7,7 @@ from typing import Any
 
 import pytest
 
-from opentulpa.agent.tools.core_tools import _crawl4ai_extract
+from kobo.agent.tools.core_tools import _crawl4ai_extract
 
 
 @dataclass

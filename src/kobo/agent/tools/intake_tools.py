@@ -4,8 +4,8 @@ from __future__ import annotations
 
 from typing import Any
 
-from opentulpa.agent.tools.intake_setup_tools import register_intake_setup_tools
-from opentulpa.agent.tools.intake_workflow_tools import register_intake_workflow_tools
+from kobo.agent.tools.intake_setup_tools import register_intake_setup_tools
+from kobo.agent.tools.intake_workflow_tools import register_intake_workflow_tools
 
 
 def register_intake_tools(runtime: Any) -> dict[str, Any]:

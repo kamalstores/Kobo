@@ -13,32 +13,32 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
-from opentulpa.business_knowledge.extraction import (
+from kobo.business_knowledge.extraction import (
     content_hash,
 )
-from opentulpa.business_knowledge.indexer import BusinessKnowledgeIndexer
-from opentulpa.business_knowledge.models import (
+from kobo.business_knowledge.indexer import BusinessKnowledgeIndexer
+from kobo.business_knowledge.models import (
     KnowledgeIndexedSource,
     KnowledgeQueryAnswer,
     KnowledgeQueryResult,
     KnowledgeSourceSection,
 )
-from opentulpa.business_knowledge.oracle_client import (
+from kobo.business_knowledge.oracle_client import (
     DEFAULT_ORACLE_MAX_OUTPUT_TOKENS as _DEFAULT_ORACLE_MAX_OUTPUT_TOKENS,
 )
-from opentulpa.business_knowledge.oracle_client import (
+from kobo.business_knowledge.oracle_client import (
     DEFAULT_ORACLE_MODEL as _DEFAULT_ORACLE_MODEL,
 )
-from opentulpa.business_knowledge.oracle_client import (
+from kobo.business_knowledge.oracle_client import (
     OpenAICompatibleKnowledgeOracleClient as OpenAICompatibleKnowledgeOracleClient,
 )
-from opentulpa.business_knowledge.oracle_client import clean_query_intent
-from opentulpa.business_knowledge.repository import (
+from kobo.business_knowledge.oracle_client import clean_query_intent
+from kobo.business_knowledge.repository import (
     KNOWLEDGE_PREFLIGHT_CACHE_VERSION,
     BusinessKnowledgeRepository,
 )
-from opentulpa.business_knowledge.source_pack_planner import BusinessKnowledgeSourcePackPlanner
-from opentulpa.context.file_vault import FileVaultService
+from kobo.business_knowledge.source_pack_planner import BusinessKnowledgeSourcePackPlanner
+from kobo.context.file_vault import FileVaultService
 
 _VALID_SCOPE_TYPES = {"workflow_setup", "intake_workflow", "customer_business", "user_context"}
 _DEFAULT_SOURCE_PACK_CHAR_LIMIT = 800_000

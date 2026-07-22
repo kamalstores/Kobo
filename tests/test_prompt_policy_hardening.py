@@ -4,45 +4,45 @@ import json
 
 import pytest
 
-from opentulpa.agent.graph_builder import (
+from kobo.agent.graph_builder import (
     _extract_invoked_skill_snapshot,
 )
-from opentulpa.agent.graph_nodes.tool_validation import build_validate_tool_calls_node
-from opentulpa.agent.lc_messages import AIMessage, HumanMessage, SystemMessage, ToolMessage
-from opentulpa.agent.prompt_classifier import classify_prompt_mode
-from opentulpa.agent.prompt_policy import (
+from kobo.agent.graph_nodes.tool_validation import build_validate_tool_calls_node
+from kobo.agent.lc_messages import AIMessage, HumanMessage, SystemMessage, ToolMessage
+from kobo.agent.prompt_classifier import classify_prompt_mode
+from kobo.agent.prompt_policy import (
     build_system_prompt_message as _build_system_prompt_message,
 )
-from opentulpa.agent.prompt_policy import (
+from kobo.agent.prompt_policy import (
     build_web_search_backend_prompt_message as _build_web_search_backend_prompt_message,
 )
-from opentulpa.agent.prompt_sections import (
+from kobo.agent.prompt_sections import (
     build_prompt_mode_message,
 )
-from opentulpa.agent.tool_message_protocol import (
+from kobo.agent.tool_message_protocol import (
     collapse_completed_tool_call_segments_for_model,
 )
-from opentulpa.agent.tool_message_protocol import (
+from kobo.agent.tool_message_protocol import (
     enforce_tool_message_protocol as _enforce_tool_message_protocol,
 )
-from opentulpa.agent.tool_message_protocol import (
+from kobo.agent.tool_message_protocol import (
     sanitize_history_messages_for_model as _sanitize_history_messages_for_model,
 )
-from opentulpa.agent.tool_validation import (
+from kobo.agent.tool_validation import (
     _build_tool_validation_repair_message,
     _routine_create_intent_validation_error,
     _summarize_tool_validation_errors,
     _validate_model_tool_call,
 )
-from opentulpa.agent.turn_policy import (
+from kobo.agent.turn_policy import (
     build_turn_mode_system_message,
     execution_origin_for_turn_mode,
     normalize_turn_mode,
 )
-from opentulpa.agent.turn_prompt_builder.frozen_context import (
+from kobo.agent.turn_prompt_builder.frozen_context import (
     build_relevant_skill_discovery_context,
 )
-from opentulpa.agent.utils import message_to_text
+from kobo.agent.utils import message_to_text
 
 
 class _RoutineIntentRuntime:
@@ -186,11 +186,11 @@ def test_build_relevant_skill_discovery_context_lists_registry_without_selector(
 
 
 def test_tool_validation_helpers_live_in_dedicated_module() -> None:
-    assert _validate_model_tool_call.__module__ == "opentulpa.agent.tool_validation"
-    assert _build_tool_validation_repair_message.__module__ == "opentulpa.agent.tool_validation"
+    assert _validate_model_tool_call.__module__ == "kobo.agent.tool_validation"
+    assert _build_tool_validation_repair_message.__module__ == "kobo.agent.tool_validation"
     assert (
         build_validate_tool_calls_node.__module__
-        == "opentulpa.agent.graph_nodes.tool_validation"
+        == "kobo.agent.graph_nodes.tool_validation"
     )
 
 
@@ -448,9 +448,9 @@ async def test_routine_create_rejects_telegram_business_intake_workflow_schedule
         }
     )
     args = {
-        "name": "OpenTulpa Sales — Вика (intake каждые 2 мин)",
+        "name": "Kobo Sales — Вика (intake каждые 2 мин)",
         "schedule": "*/2 * * * *",
-        "implementation_command": "python3 -m opentulpa.intake_runner --workflow-id iwf_fa2uqd",
+        "implementation_command": "python3 -m kobo.intake_runner --workflow-id iwf_fa2uqd",
         "instruction": (
             "Запустить intake workflow iwf_fa2uqd. Проверить входящие сообщения "
             "в Telegram Business DM."
@@ -497,7 +497,7 @@ async def test_routine_create_allows_scheduled_instagram_intake_workflow() -> No
     args = {
         "name": "Instagram intake poller",
         "schedule": "*/2 * * * *",
-        "implementation_command": "python3 -m opentulpa.intake_runner --workflow-id iwf_insta",
+        "implementation_command": "python3 -m kobo.intake_runner --workflow-id iwf_insta",
         "instruction": "Run intake workflow iwf_insta.",
     }
 
@@ -694,7 +694,7 @@ async def test_validate_tool_calls_blocks_web_search_after_five_successes(
                 ToolMessage(
                     content='{"status":"ok"}',
                     tool_call_id="call_1",
-                    additional_kwargs={"opentulpa_control": {"status": "ok"}},
+                    additional_kwargs={"kobo_control": {"status": "ok"}},
                 ),
                 AIMessage(
                     content="searching",
@@ -703,7 +703,7 @@ async def test_validate_tool_calls_blocks_web_search_after_five_successes(
                 ToolMessage(
                     content='{"status":"ok"}',
                     tool_call_id="call_2",
-                    additional_kwargs={"opentulpa_control": {"status": "ok"}},
+                    additional_kwargs={"kobo_control": {"status": "ok"}},
                 ),
                 AIMessage(
                     content="searching",
@@ -712,7 +712,7 @@ async def test_validate_tool_calls_blocks_web_search_after_five_successes(
                 ToolMessage(
                     content='{"status":"ok"}',
                     tool_call_id="call_3",
-                    additional_kwargs={"opentulpa_control": {"status": "ok"}},
+                    additional_kwargs={"kobo_control": {"status": "ok"}},
                 ),
                 AIMessage(
                     content="searching",
@@ -721,7 +721,7 @@ async def test_validate_tool_calls_blocks_web_search_after_five_successes(
                 ToolMessage(
                     content='{"status":"ok"}',
                     tool_call_id="call_4",
-                    additional_kwargs={"opentulpa_control": {"status": "ok"}},
+                    additional_kwargs={"kobo_control": {"status": "ok"}},
                 ),
                 AIMessage(
                     content="searching",
@@ -730,7 +730,7 @@ async def test_validate_tool_calls_blocks_web_search_after_five_successes(
                 ToolMessage(
                     content='{"status":"ok"}',
                     tool_call_id="call_5",
-                    additional_kwargs={"opentulpa_control": {"status": "ok"}},
+                    additional_kwargs={"kobo_control": {"status": "ok"}},
                 ),
                 AIMessage(
                     content="searching again",
@@ -780,7 +780,7 @@ async def test_validate_tool_calls_blocks_exa_web_search_after_two_successes(
                 ToolMessage(
                     content='{"status":"ok"}',
                     tool_call_id="call_1",
-                    additional_kwargs={"opentulpa_control": {"status": "ok"}},
+                    additional_kwargs={"kobo_control": {"status": "ok"}},
                 ),
                 AIMessage(
                     content="searching again",
@@ -789,7 +789,7 @@ async def test_validate_tool_calls_blocks_exa_web_search_after_two_successes(
                 ToolMessage(
                     content='{"status":"ok"}',
                     tool_call_id="call_2",
-                    additional_kwargs={"opentulpa_control": {"status": "ok"}},
+                    additional_kwargs={"kobo_control": {"status": "ok"}},
                 ),
                 AIMessage(
                     content="searching third time",
@@ -1102,7 +1102,7 @@ async def test_validate_tool_calls_repairs_sendable_file_written_to_source_root(
                             "id": "call_1",
                             "name": "tulpa_write_file",
                             "args": {
-                                "path": "src/opentulpa/skills/chipmunk_url.txt",
+                                "path": "src/kobo/skills/chipmunk_url.txt",
                                 "content": (
                                     "Chipmunk photo URL: "
                                     "https://images.unsplash.com/photo-1425082661507-d6d2f66e4044?w=800"
@@ -1121,7 +1121,7 @@ async def test_validate_tool_calls_repairs_sendable_file_written_to_source_root(
     update_messages = result.update["messages"]
     assert isinstance(update_messages[0], ToolMessage)
     assert "non-Python deliverables and artifacts" in str(update_messages[0].content)
-    assert "tulpa_stuff" in str(update_messages[0].content)
+    assert "kobo_stuff" in str(update_messages[0].content)
     assert isinstance(update_messages[1], SystemMessage)
     assert "requested tool action was not completed yet" in str(update_messages[1].content)
     assert "Do not claim success" in str(update_messages[1].content)
@@ -1129,7 +1129,7 @@ async def test_validate_tool_calls_repairs_sendable_file_written_to_source_root(
 
 
 @pytest.mark.asyncio
-async def test_validate_tool_calls_repairs_file_send_outside_tulpa_stuff() -> None:
+async def test_validate_tool_calls_repairs_file_send_outside_kobo_stuff() -> None:
     node = build_validate_tool_calls_node(
         runtime=object(),
         required_args={"tulpa_file_send": ("path",)},
@@ -1149,7 +1149,7 @@ async def test_validate_tool_calls_repairs_file_send_outside_tulpa_stuff() -> No
                         {
                             "id": "call_1",
                             "name": "tulpa_file_send",
-                            "args": {"path": "src/opentulpa/skills/chipmunk_url.txt"},
+                            "args": {"path": "src/kobo/skills/chipmunk_url.txt"},
                         }
                     ],
                 ),
@@ -1191,7 +1191,7 @@ async def test_validate_tool_calls_repairs_grouped_write_to_source_root() -> Non
                                 "group": "workspace",
                                 "command": "tulpa_write_file",
                                 "args_json": {
-                                    "path": "src/opentulpa/skills/chipmunk_url.txt",
+                                    "path": "src/kobo/skills/chipmunk_url.txt",
                                     "content": (
                                         "Chipmunk photo URL: "
                                         "https://images.unsplash.com/photo-1425082661507-d6d2f66e4044?w=800"
@@ -1217,7 +1217,7 @@ async def test_validate_tool_calls_repairs_grouped_write_to_source_root() -> Non
 
 
 @pytest.mark.asyncio
-async def test_validate_tool_calls_repairs_grouped_file_send_outside_tulpa_stuff() -> None:
+async def test_validate_tool_calls_repairs_grouped_file_send_outside_kobo_stuff() -> None:
     node = build_validate_tool_calls_node(
         runtime=object(),
         required_args={},
@@ -1240,7 +1240,7 @@ async def test_validate_tool_calls_repairs_grouped_file_send_outside_tulpa_stuff
                             "args": {
                                 "group": "files",
                                 "command": "tulpa_file_send",
-                                "args_json": '{"path": "src/opentulpa/skills/chipmunk_url.txt"}',
+                                "args_json": '{"path": "src/kobo/skills/chipmunk_url.txt"}',
                             },
                         }
                     ],
@@ -1316,8 +1316,8 @@ def test_validate_model_tool_call_rejects_redundant_tulpa_prefix_for_terminal() 
     err = _validate_model_tool_call(
         call_name="tulpa_run_terminal",
         args={
-            "command": "python3 tulpa_stuff/tg_login.py",
-            "working_dir": "tulpa_stuff",
+            "command": "python3 kobo_stuff/tg_login.py",
+            "working_dir": "kobo_stuff",
         },
         latest_user_text="run login",
         turn_mode="interactive",
@@ -1335,7 +1335,7 @@ def test_validate_model_tool_call_rejects_redundant_tulpa_prefix_for_routine_com
             "name": "Login refresh",
             "schedule": "0 */6 * * *",
             "instruction": "You must run scripts/tg_login.py and report output.",
-            "implementation_command": "python3 tulpa_stuff/tg_login.py",
+            "implementation_command": "python3 kobo_stuff/tg_login.py",
         },
         latest_user_text="set recurring login refresh",
         turn_mode="interactive",
@@ -1343,14 +1343,14 @@ def test_validate_model_tool_call_rejects_redundant_tulpa_prefix_for_routine_com
         forbidden_tool_args={"routine_create": {"customer_id", "message"}},
     )
     assert err is not None
-    assert "should be relative to working_dir=tulpa_stuff" in err
+    assert "should be relative to working_dir=kobo_stuff" in err
 
 
 def test_validate_model_tool_call_rejects_duplicate_tulpa_root_prefix_for_read_file() -> None:
     err = _validate_model_tool_call(
         call_name="tulpa_read_file",
         args={
-            "path": "tulpa_stuff/tulpa_stuff/solana_trading_wallet.json",
+            "path": "kobo_stuff/kobo_stuff/solana_trading_wallet.json",
         },
         latest_user_text="read the wallet file",
         turn_mode="interactive",
@@ -1359,14 +1359,14 @@ def test_validate_model_tool_call_rejects_duplicate_tulpa_root_prefix_for_read_f
     )
     assert err is not None
     assert "duplicated allowed-root prefix" in err
-    assert "tulpa_stuff/tulpa_stuff" in err
+    assert "kobo_stuff/kobo_stuff" in err
 
 
-def test_validate_model_tool_call_rejects_file_send_outside_tulpa_stuff() -> None:
+def test_validate_model_tool_call_rejects_file_send_outside_kobo_stuff() -> None:
     err = _validate_model_tool_call(
         call_name="tulpa_file_send",
         args={
-            "path": "src/opentulpa/skills/chipmunk_url.txt",
+            "path": "src/kobo/skills/chipmunk_url.txt",
         },
         latest_user_text="send me the file",
         turn_mode="interactive",
@@ -1375,14 +1375,14 @@ def test_validate_model_tool_call_rejects_file_send_outside_tulpa_stuff() -> Non
     )
     assert err is not None
     assert "tulpa_file_send can only send files under" in err
-    assert "tulpa_stuff" in err
+    assert "kobo_stuff" in err
 
 
 def test_validate_model_tool_call_rejects_deliverable_write_under_source_root() -> None:
     err = _validate_model_tool_call(
         call_name="tulpa_write_file",
         args={
-            "path": "src/opentulpa/skills/chipmunk_url.txt",
+            "path": "src/kobo/skills/chipmunk_url.txt",
             "content": "Chipmunk photo URL: https://images.unsplash.com/photo-1425082661507-d6d2f66e4044?w=800",
         },
         latest_user_text="write the chipmunk url to a file and send it",
@@ -1392,14 +1392,14 @@ def test_validate_model_tool_call_rejects_deliverable_write_under_source_root() 
     )
     assert err is not None
     assert "non-Python deliverables and artifacts" in err
-    assert "src/opentulpa/skills" in err
+    assert "src/kobo/skills" in err
 
 
 def test_validate_model_tool_call_rejects_traversal_deliverable_write_under_source_root() -> None:
     err = _validate_model_tool_call(
         call_name="tulpa_write_file",
         args={
-            "path": "tulpa_stuff/../src/opentulpa/skills/chipmunk_url.txt",
+            "path": "kobo_stuff/../src/kobo/skills/chipmunk_url.txt",
             "content": "Chipmunk photo URL: https://example.com/chipmunk.jpg",
         },
         latest_user_text="write the chipmunk url to a file and send it",
@@ -1409,14 +1409,14 @@ def test_validate_model_tool_call_rejects_traversal_deliverable_write_under_sour
     )
     assert err is not None
     assert "non-Python deliverables and artifacts" in err
-    assert "src/opentulpa/skills" in err
+    assert "src/kobo/skills" in err
 
 
 def test_validate_model_tool_call_allows_python_source_write_under_source_root() -> None:
     err = _validate_model_tool_call(
         call_name="tulpa_write_file",
         args={
-            "path": "src/opentulpa/skills/example_skill.py",
+            "path": "src/kobo/skills/example_skill.py",
             "content": "def run() -> None:\n    return None\n",
         },
         latest_user_text="patch the skill implementation",
@@ -1564,15 +1564,15 @@ def test_sanitize_history_keeps_tool_calls_and_results_verbatim() -> None:
                     "name": "tulpa_run_terminal",
                     "args": {
                         "command": huge_command,
-                        "working_dir": "tulpa_stuff",
-                        "path": "tulpa_stuff/solar_antarctica.py",
+                        "working_dir": "kobo_stuff",
+                        "path": "kobo_stuff/solar_antarctica.py",
                     },
                 }
             ],
         ),
         ToolMessage(
             content=(
-                '{"ok":true,"returncode":0,"cwd":"tulpa_stuff","stdout":"'
+                '{"ok":true,"returncode":0,"cwd":"kobo_stuff","stdout":"'
                 + huge_stdout
                 + '","stderr":"","execution_origin":"interactive"}'
             ),
@@ -1588,12 +1588,12 @@ def test_sanitize_history_keeps_tool_calls_and_results_verbatim() -> None:
     sanitized_call = sanitized[1].tool_calls[0]
     assert sanitized_call["id"] == "call_1"
     assert sanitized_call["name"] == "tulpa_run_terminal"
-    assert sanitized_call["args"]["working_dir"] == "tulpa_stuff"
-    assert sanitized_call["args"]["path"] == "tulpa_stuff/solar_antarctica.py"
+    assert sanitized_call["args"]["working_dir"] == "kobo_stuff"
+    assert sanitized_call["args"]["path"] == "kobo_stuff/solar_antarctica.py"
     assert sanitized_call["args"]["command"] == huge_command
     sanitized_tool_text = str(sanitized[2].content or "")
     assert sanitized_tool_text == (
-        '{"ok":true,"returncode":0,"cwd":"tulpa_stuff","stdout":"'
+        '{"ok":true,"returncode":0,"cwd":"kobo_stuff","stdout":"'
         + huge_stdout
         + '","stderr":"","execution_origin":"interactive"}'
     )
@@ -1608,7 +1608,7 @@ def test_message_to_text_uses_compact_json_for_tool_calls() -> None:
                 "id": "call_1",
                 "name": "tulpa_write_file",
                 "args": {
-                    "path": "tulpa_stuff/antarctica_solar.py",
+                    "path": "kobo_stuff/antarctica_solar.py",
                     "content": script,
                 },
             }
@@ -1619,7 +1619,7 @@ def test_message_to_text_uses_compact_json_for_tool_calls() -> None:
 
     assert "tool_calls=" in text
     assert "tulpa_write_file" in text
-    assert "tulpa_stuff/antarctica_solar.py" in text
+    assert "kobo_stuff/antarctica_solar.py" in text
     assert '": "' not in text
     assert '", "' not in text
 
@@ -1644,7 +1644,7 @@ def test_enforce_tool_message_protocol_keeps_complete_tool_segment_after_system_
         HumanMessage(content="read the file"),
         AIMessage(
             content="",
-            tool_calls=[{"id": "call_1", "name": "tulpa_read_file", "args": {"path": "tulpa_stuff/a.txt"}}],
+            tool_calls=[{"id": "call_1", "name": "tulpa_read_file", "args": {"path": "kobo_stuff/a.txt"}}],
         ),
         ToolMessage(content="hello", tool_call_id="call_1"),
         SystemMessage(content="VALIDATION_REPAIR_REQUIRED: internal note."),

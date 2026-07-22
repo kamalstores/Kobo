@@ -6,8 +6,8 @@ from typing import Any
 
 from langchain.tools import tool
 
-from opentulpa.agent.tools.common import require_customer_id
-from opentulpa.context.customer_profile_models import (
+from kobo.agent.tools.common import require_customer_id
+from kobo.context.customer_profile_models import (
     CustomerScopedRequest,
     TimeProfileGetResponse,
     TimeProfileSetRequest,

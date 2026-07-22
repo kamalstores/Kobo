@@ -6,7 +6,7 @@ from fastapi import FastAPI
 from fastapi.responses import FileResponse, JSONResponse
 from starlette.responses import Response
 
-from opentulpa.core.debug_logs import get_debug_log_path
+from kobo.core.debug_logs import get_debug_log_path
 
 
 def register_debug_log_routes(app: FastAPI) -> None:

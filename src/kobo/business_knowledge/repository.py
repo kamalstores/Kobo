@@ -7,10 +7,10 @@ import sqlite3
 from pathlib import Path
 from typing import Any, cast
 
-from opentulpa.business_knowledge.extraction import metadata_json
-from opentulpa.business_knowledge.models import KnowledgeSourceSection
-from opentulpa.core.ids import new_short_id
-from opentulpa.persistence.sqlite import connect_sqlite
+from kobo.business_knowledge.extraction import metadata_json
+from kobo.business_knowledge.models import KnowledgeSourceSection
+from kobo.core.ids import new_short_id
+from kobo.persistence.sqlite import connect_sqlite
 
 KNOWLEDGE_PREFLIGHT_CACHE_VERSION = 1
 _SCHEMA_SQL = """

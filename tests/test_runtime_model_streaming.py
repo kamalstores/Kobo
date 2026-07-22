@@ -8,8 +8,8 @@ from langchain_core.messages import AIMessageChunk
 from langgraph.graph import END, START, StateGraph
 from langgraph.graph.message import add_messages
 
-from opentulpa.agent.lc_messages import AIMessage, HumanMessage
-from opentulpa.agent.runtime import OpenTulpaLangGraphRuntime
+from kobo.agent.lc_messages import AIMessage, HumanMessage
+from kobo.agent.runtime import KoboLangGraphRuntime
 
 
 class _State(TypedDict):
@@ -18,7 +18,7 @@ class _State(TypedDict):
 
 @pytest.mark.asyncio
 async def test_astream_model_surfaces_provider_chunks_to_langgraph(tmp_path) -> None:
-    runtime = OpenTulpaLangGraphRuntime(
+    runtime = KoboLangGraphRuntime(
         app_url="http://127.0.0.1:8000",
         openrouter_api_key="k",
         model_name="z-ai/glm-5.1",
@@ -79,7 +79,7 @@ class _ConfigCapturingStreamModel:
 
 @pytest.mark.asyncio
 async def test_astream_model_preserves_streamed_tool_calls(tmp_path) -> None:
-    runtime = OpenTulpaLangGraphRuntime(
+    runtime = KoboLangGraphRuntime(
         app_url="http://127.0.0.1:8000",
         openrouter_api_key="k",
         model_name="z-ai/glm-5.1",
@@ -101,7 +101,7 @@ async def test_astream_model_preserves_streamed_tool_calls(tmp_path) -> None:
 
 @pytest.mark.asyncio
 async def test_astream_model_forwards_graph_stream_config(tmp_path) -> None:
-    runtime = OpenTulpaLangGraphRuntime(
+    runtime = KoboLangGraphRuntime(
         app_url="http://127.0.0.1:8000",
         openrouter_api_key="k",
         model_name="z-ai/glm-5.1",

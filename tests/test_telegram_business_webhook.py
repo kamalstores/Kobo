@@ -10,10 +10,10 @@ from types import SimpleNamespace
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
 
-from opentulpa.api.app import _telegram_business_owner_customer_id
-from opentulpa.api.routes import telegram_webhook as telegram_webhook_module
-from opentulpa.api.routes.telegram_webhook import register_telegram_webhook_routes
-from opentulpa.interfaces.telegram.business import TelegramBusinessService
+from kobo.api.app import _telegram_business_owner_customer_id
+from kobo.api.routes import telegram_webhook as telegram_webhook_module
+from kobo.api.routes.telegram_webhook import register_telegram_webhook_routes
+from kobo.interfaces.telegram.business import TelegramBusinessService
 
 
 class _RecordingTelegramClient:
@@ -127,7 +127,7 @@ def test_telegram_business_owner_customer_id_uses_first_allowed_username(
                 "sessions": {
                     "100": {
                         "user_id": 83969136,
-                        "username": "kvybiral",
+                        "username": "kamalstoresiral",
                         "customer_id": "telegram_83969136",
                         "role": "owner",
                     }
@@ -139,7 +139,7 @@ def test_telegram_business_owner_customer_id_uses_first_allowed_username(
 
     assert (
         _telegram_business_owner_customer_id(
-            allowed_usernames="kvybiral,nastyayanb",
+            allowed_usernames="kamalstoresiral,nastyayanb",
             allowed_user_ids="6907589464",
             state_path=state_path,
         )
@@ -346,7 +346,7 @@ def test_telegram_webhook_writes_debug_log_events_for_secret_and_business_update
     assert rejected.status_code == 403
     assert accepted.status_code == 200
 
-    log_paths = sorted((tmp_path / ".opentulpa" / "logs" / "webhooks").glob("telegram-webhook-*.jsonl"))
+    log_paths = sorted((tmp_path / ".kobo" / "logs" / "webhooks").glob("telegram-webhook-*.jsonl"))
     assert len(log_paths) == 1
     events = [json.loads(line) for line in log_paths[0].read_text(encoding="utf-8").splitlines()]
     assert [event["event"] for event in events] == [

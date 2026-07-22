@@ -6,38 +6,38 @@ from collections.abc import Callable
 from dataclasses import dataclass
 from typing import Any, cast
 
-from opentulpa.agent.context_engine import ContextEngine, ContextSourceProvider
-from opentulpa.agent.lc_messages import (
+from kobo.agent.context_engine import ContextEngine, ContextSourceProvider
+from kobo.agent.lc_messages import (
     AnyMessage,
     HumanMessage,
     SystemMessage,
 )
-from opentulpa.agent.models import AgentState
-from opentulpa.agent.prompt_cache_policy import CACHE_STICKY_ROUTING_ANCHOR
-from opentulpa.agent.prompt_policy import (
+from kobo.agent.models import AgentState
+from kobo.agent.prompt_cache_policy import CACHE_STICKY_ROUTING_ANCHOR
+from kobo.agent.prompt_policy import (
     build_current_web_search_backend_prompt_message,
 )
-from opentulpa.agent.prompt_policy import (
+from kobo.agent.prompt_policy import (
     build_system_prompt_message as _build_system_prompt_message,
 )
-from opentulpa.agent.turn_budget import budget_status_context as _budget_status_context
-from opentulpa.agent.turn_context import build_dynamic_turn_context as _build_dynamic_turn_context
-from opentulpa.agent.turn_prompt_builder.cache_metadata import (
+from kobo.agent.turn_budget import budget_status_context as _budget_status_context
+from kobo.agent.turn_context import build_dynamic_turn_context as _build_dynamic_turn_context
+from kobo.agent.turn_prompt_builder.cache_metadata import (
     build_prompt_cache_metadata,
 )
-from opentulpa.agent.turn_prompt_builder.entries import (
+from kobo.agent.turn_prompt_builder.entries import (
     normalize_prompt_context_entries,
     select_optional_prompt_entries,
 )
-from opentulpa.agent.turn_prompt_builder.entries import (
+from kobo.agent.turn_prompt_builder.entries import (
     prompt_overhead_tokens as _prompt_overhead_tokens,
 )
-from opentulpa.agent.turn_prompt_builder.frozen_context import (
+from kobo.agent.turn_prompt_builder.frozen_context import (
     build_frozen_prompt_context,
     frozen_prompt_context_matches,
 )
-from opentulpa.agent.turn_prompt_builder.history_projection import build_history_projection
-from opentulpa.agent.utils import latest_user_text as _latest_user_text
+from kobo.agent.turn_prompt_builder.history_projection import build_history_projection
+from kobo.agent.utils import latest_user_text as _latest_user_text
 
 LOOP_LIMIT_REPAIR_INSTRUCTION = (
     "LOOP_LIMIT_APPROACHING: This turn is near its graph step limit. Do not call more tools. "

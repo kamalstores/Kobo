@@ -6,7 +6,7 @@ from typing import Any
 
 from langchain.tools import tool
 
-from opentulpa.agent.tools.common import require_customer_id, require_thread_id
+from kobo.agent.tools.common import require_customer_id, require_thread_id
 
 
 def register_owner_update_tools(runtime: Any) -> dict[str, Any]:

@@ -6,7 +6,7 @@ from typing import Any
 import pytest
 from langchain.tools import tool
 
-from opentulpa.agent.tools.tool_gateway_tools import register_tool_gateway_tools
+from kobo.agent.tools.tool_gateway_tools import register_tool_gateway_tools
 
 
 @pytest.mark.asyncio

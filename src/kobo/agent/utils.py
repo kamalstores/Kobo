@@ -8,7 +8,7 @@ import re
 import shlex
 from typing import Any
 
-from opentulpa.agent.lc_messages import (
+from kobo.agent.lc_messages import (
     AIMessage,
     AnyMessage,
     HumanMessage,

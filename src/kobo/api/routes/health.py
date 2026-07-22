@@ -46,7 +46,7 @@ def register_health_routes(
 def _deployment_identity() -> dict[str, str | None]:
     return {
         "commit_sha": _clean_env("RAILWAY_GIT_COMMIT_SHA") or _clean_env("GIT_COMMIT_SHA"),
-        "deployment_id": _clean_env("RAILWAY_DEPLOYMENT_ID") or _clean_env("OPENTULPA_DEPLOYMENT_ID"),
+        "deployment_id": _clean_env("RAILWAY_DEPLOYMENT_ID") or _clean_env("KOBO_DEPLOYMENT_ID"),
         "started_at": STARTED_AT,
     }
 

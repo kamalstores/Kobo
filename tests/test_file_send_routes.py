@@ -6,9 +6,9 @@ from typing import Any
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
 
-from opentulpa.api.routes import files as file_routes
-from opentulpa.api.routes.files import register_file_routes
-from opentulpa.context.file_vault import FileVaultService
+from kobo.api.routes import files as file_routes
+from kobo.api.routes.files import register_file_routes
+from kobo.context.file_vault import FileVaultService
 
 
 class _UnusedVault:
@@ -43,12 +43,12 @@ def test_send_local_returns_delivery_marker_after_telegram_accepts_file(
     tmp_path: Path,
     monkeypatch,
 ) -> None:
-    tulpa_stuff = tmp_path / "tulpa_stuff"
-    tulpa_stuff.mkdir()
-    local_file = tulpa_stuff / "sample_delivery_report.txt"
+    kobo_stuff = tmp_path / "kobo_stuff"
+    kobo_stuff.mkdir()
+    local_file = kobo_stuff / "sample_delivery_report.txt"
     local_file.write_text("done", encoding="utf-8")
 
-    monkeypatch.setattr(file_routes, "TULPA_STUFF_DIR", tulpa_stuff.resolve())
+    monkeypatch.setattr(file_routes, "KOBO_STUFF_DIR", kobo_stuff.resolve())
 
     app = FastAPI()
     telegram_client = _RecordingTelegramClient()
@@ -66,7 +66,7 @@ def test_send_local_returns_delivery_marker_after_telegram_accepts_file(
             "/internal/files/send_local",
             json={
                 "customer_id": "telegram_123",
-                "path": "tulpa_stuff/sample_delivery_report.txt",
+                "path": "kobo_stuff/sample_delivery_report.txt",
                 "caption": "Sample delivery report",
             },
         )
@@ -75,7 +75,7 @@ def test_send_local_returns_delivery_marker_after_telegram_accepts_file(
     payload = response.json()
     assert payload["ok"] is True
     assert payload["delivered_to_chat"] is True
-    assert payload["path"] == "tulpa_stuff/sample_delivery_report.txt"
+    assert payload["path"] == "kobo_stuff/sample_delivery_report.txt"
     assert payload["chat_id"] == 12345
     assert "DELIVERED_TO_CHAT" in payload["model_instruction"]
     assert "Do not call the file-send tool again" in payload["model_instruction"]

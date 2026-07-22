@@ -3,8 +3,8 @@ from __future__ import annotations
 import httpx
 import pytest
 
-from opentulpa.interfaces.telegram import client as telegram_client_module
-from opentulpa.interfaces.telegram.client import TelegramClient
+from kobo.interfaces.telegram import client as telegram_client_module
+from kobo.interfaces.telegram.client import TelegramClient
 
 
 class _AlwaysTimeoutClient:

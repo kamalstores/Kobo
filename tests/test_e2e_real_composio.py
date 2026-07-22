@@ -72,8 +72,8 @@ class _FakeLiveComposio:
         return {"successful": True, "error": None, "data": {"updatedRows": 1}}
 
 
-def test_discover_local_customer_ids_from_opentulpa_state(tmp_path: Path) -> None:
-    state_path = tmp_path / ".opentulpa" / "telegram_state.json"
+def test_discover_local_customer_ids_from_kobo_state(tmp_path: Path) -> None:
+    state_path = tmp_path / ".kobo" / "telegram_state.json"
     state_path.parent.mkdir(parents=True)
     state_path.write_text(
         json.dumps(
@@ -86,7 +86,7 @@ def test_discover_local_customer_ids_from_opentulpa_state(tmp_path: Path) -> Non
         ),
         encoding="utf-8",
     )
-    (tmp_path / ".opentulpa" / "file_vault" / "telegram_789").mkdir(parents=True)
+    (tmp_path / ".kobo" / "file_vault" / "telegram_789").mkdir(parents=True)
 
     assert discover_local_customer_ids(project_root=tmp_path) == [
         "telegram_123",
@@ -98,7 +98,7 @@ def test_discover_local_customer_ids_from_opentulpa_state(tmp_path: Path) -> Non
 def test_build_recording_live_googlesheets_service_discovers_and_creates_sheet(
     tmp_path: Path,
 ) -> None:
-    (tmp_path / ".opentulpa" / "file_vault" / "telegram_123").mkdir(parents=True)
+    (tmp_path / ".kobo" / "file_vault" / "telegram_123").mkdir(parents=True)
     fake = _FakeLiveComposio()
 
     service = build_recording_live_googlesheets_service(

@@ -9,7 +9,7 @@ from collections import defaultdict
 from dataclasses import dataclass
 from typing import Any
 
-from opentulpa.business_knowledge.models import KnowledgeSourceSection
+from kobo.business_knowledge.models import KnowledgeSourceSection
 
 _ROW_RE = re.compile(r"^Row\s+(\d+):\s*(.*)$")
 _TOKEN_RE = re.compile(r"[\w`-]+", re.UNICODE)

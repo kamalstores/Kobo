@@ -9,9 +9,9 @@ from typing import Any
 from fastapi import FastAPI, Request
 from fastapi.responses import HTMLResponse, JSONResponse
 
-from opentulpa.api.customer_ids import resolve_body_customer_id
-from opentulpa.api.customer_ids import resolve_customer_id as resolve_customer_id_value
-from opentulpa.core.public_urls import build_public_composio_callback_path
+from kobo.api.customer_ids import resolve_body_customer_id
+from kobo.api.customer_ids import resolve_customer_id as resolve_customer_id_value
+from kobo.core.public_urls import build_public_composio_callback_path
 
 logger = logging.getLogger(__name__)
 def _parse_csv(value: str) -> list[str]:
@@ -48,7 +48,7 @@ def register_composio_routes(
             or ""
         ).strip()
         title = "Connection complete"
-        details: list[str] = ["You can close this tab and return to OpenTulpa."]
+        details: list[str] = ["You can close this tab and return to Kobo."]
         if toolkit:
             details.insert(0, f"Composio finished connecting {toolkit}.")
         if connection_id:

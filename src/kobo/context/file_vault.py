@@ -11,8 +11,8 @@ from typing import Any
 from xml.etree import ElementTree
 from zipfile import BadZipFile, ZipFile
 
-from opentulpa.core.ids import new_short_id
-from opentulpa.persistence.sqlite import connect_sqlite
+from kobo.core.ids import new_short_id
+from kobo.persistence.sqlite import connect_sqlite
 
 
 def _utc_now_iso() -> str:

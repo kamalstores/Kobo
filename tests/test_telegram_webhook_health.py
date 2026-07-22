@@ -6,9 +6,9 @@ from typing import Any
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
 
-from opentulpa.api.routes.telegram_webhook_health import register_telegram_webhook_health_routes
-from opentulpa.interfaces.telegram.constants import TELEGRAM_WEBHOOK_ALLOWED_UPDATES
-from opentulpa.interfaces.telegram.webhook_health import (
+from kobo.api.routes.telegram_webhook_health import register_telegram_webhook_health_routes
+from kobo.interfaces.telegram.constants import TELEGRAM_WEBHOOK_ALLOWED_UPDATES
+from kobo.interfaces.telegram.webhook_health import (
     TelegramWebhookInfo,
     build_runtime_config,
     evaluate_webhook_readiness,
@@ -34,7 +34,7 @@ def _settings(*, token: str = "123:abc", secret: str = "secret") -> SimpleNamesp
     return SimpleNamespace(
         telegram_bot_token=token,
         telegram_webhook_secret=secret,
-        opentulpa_web_token="web-secret",
+        kobo_web_token="web-secret",
     )
 
 
@@ -197,7 +197,7 @@ def test_web_status_route_reports_unavailable_when_web_token_missing(monkeypatch
         )
 
     assert response.status_code == 503
-    assert response.json() == {"detail": "OPENTULPA_WEB_TOKEN is not configured"}
+    assert response.json() == {"detail": "KOBO_WEB_TOKEN is not configured"}
     assert fake_client.calls == 0
 
 

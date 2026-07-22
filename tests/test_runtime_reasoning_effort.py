@@ -3,9 +3,9 @@ from __future__ import annotations
 import json
 from typing import Any
 
-from opentulpa.agent import runtime as runtime_module
-from opentulpa.agent.deepseek_chat_model import OpenRouterDeepSeekChatModel
-from opentulpa.agent.lc_messages import AIMessage, ToolMessage
+from kobo.agent import runtime as runtime_module
+from kobo.agent.deepseek_chat_model import OpenRouterDeepSeekChatModel
+from kobo.agent.lc_messages import AIMessage, ToolMessage
 
 
 def test_runtime_passes_reasoning_effort_to_init_chat_model(monkeypatch) -> None:
@@ -17,14 +17,14 @@ def test_runtime_passes_reasoning_effort_to_init_chat_model(monkeypatch) -> None
 
     monkeypatch.setattr(runtime_module, "init_chat_model", _fake_init_chat_model)
 
-    runtime_module.OpenTulpaLangGraphRuntime(
+    runtime_module.KoboLangGraphRuntime(
         app_url="http://127.0.0.1:8000",
         openrouter_api_key="test-key",
         openrouter_base_url="https://example.com/v1",
         model_name="openai/gpt-5-mini",
         reasoning_effort="medium",
         wake_classifier_model_name="openai/gpt-5-mini",
-        checkpoint_db_path=".opentulpa/test.sqlite",
+        checkpoint_db_path=".kobo/test.sqlite",
     )
 
     assert calls
@@ -41,7 +41,7 @@ def test_runtime_caps_gemini_flash_lite_preview_output_tokens(monkeypatch) -> No
 
     monkeypatch.setattr(runtime_module, "init_chat_model", _fake_init_chat_model)
 
-    runtime_module.OpenTulpaLangGraphRuntime(
+    runtime_module.KoboLangGraphRuntime(
         app_url="http://127.0.0.1:8000",
         openrouter_api_key="test-key",
         openrouter_base_url="https://example.com/v1",
@@ -50,7 +50,7 @@ def test_runtime_caps_gemini_flash_lite_preview_output_tokens(monkeypatch) -> No
         wake_execution_model_name="google/gemini-3.1-flash-lite-preview",
         telegram_media_model_name="google/gemini-3.1-flash-lite-preview",
         max_completion_tokens=4096,
-        checkpoint_db_path=".opentulpa/test.sqlite",
+        checkpoint_db_path=".kobo/test.sqlite",
     )
 
     assert calls
@@ -67,7 +67,7 @@ def test_runtime_defaults_reasoning_effort_medium_for_all_agent_models(monkeypat
 
     monkeypatch.setattr(runtime_module, "init_chat_model", _fake_init_chat_model)
 
-    runtime_module.OpenTulpaLangGraphRuntime(
+    runtime_module.KoboLangGraphRuntime(
         app_url="http://127.0.0.1:8000",
         openrouter_api_key="test-key",
         openrouter_base_url="https://example.com/v1",
@@ -75,7 +75,7 @@ def test_runtime_defaults_reasoning_effort_medium_for_all_agent_models(monkeypat
         wake_classifier_model_name="google/gemini-3-flash-preview",
         wake_execution_model_name="google/gemini-3-flash-preview",
         telegram_media_model_name="google/gemini-3-flash-preview",
-        checkpoint_db_path=".opentulpa/test.sqlite",
+        checkpoint_db_path=".kobo/test.sqlite",
     )
 
     assert calls
@@ -96,7 +96,7 @@ def test_runtime_can_disable_deepseek_v4_pro_thinking_with_empty_reasoning_effor
 
     monkeypatch.setattr(runtime_module, "init_chat_model", _fake_init_chat_model)
 
-    runtime_module.OpenTulpaLangGraphRuntime(
+    runtime_module.KoboLangGraphRuntime(
         app_url="http://127.0.0.1:8000",
         openrouter_api_key="test-key",
         openrouter_base_url="https://example.com/v1",
@@ -105,7 +105,7 @@ def test_runtime_can_disable_deepseek_v4_pro_thinking_with_empty_reasoning_effor
         wake_classifier_model_name="google/gemini-3-flash-preview",
         wake_execution_model_name="google/gemini-3-flash-preview",
         telegram_media_model_name="google/gemini-3-flash-preview",
-        checkpoint_db_path=".opentulpa/test.sqlite",
+        checkpoint_db_path=".kobo/test.sqlite",
     )
 
     deepseek_call = next(call for call in calls if call["model"] == "deepseek/deepseek-v4-pro")
@@ -127,14 +127,14 @@ def test_runtime_keeps_explicit_reasoning_effort_for_deepseek_v4_pro(monkeypatch
 
     monkeypatch.setattr(runtime_module, "init_chat_model", _fake_init_chat_model)
 
-    runtime_module.OpenTulpaLangGraphRuntime(
+    runtime_module.KoboLangGraphRuntime(
         app_url="http://127.0.0.1:8000",
         openrouter_api_key="test-key",
         openrouter_base_url="https://example.com/v1",
         model_name="deepseek/deepseek-v4-pro",
         reasoning_effort="medium",
         wake_classifier_model_name="deepseek/deepseek-v4-pro",
-        checkpoint_db_path=".opentulpa/test.sqlite",
+        checkpoint_db_path=".kobo/test.sqlite",
     )
 
     assert calls
@@ -159,7 +159,7 @@ def test_runtime_uses_deepseek_adapter_for_openrouter_deepseek_reasoning(monkeyp
     monkeypatch.setattr(runtime_module, "ChatOpenAI", _FakeChatOpenAI)
     monkeypatch.delenv("OPENROUTER_APP_TITLE", raising=False)
 
-    runtime = runtime_module.OpenTulpaLangGraphRuntime(
+    runtime = runtime_module.KoboLangGraphRuntime(
         app_url="http://127.0.0.1:8000",
         openrouter_api_key="test-key",
         openrouter_base_url="https://openrouter.ai/api/v1",
@@ -168,7 +168,7 @@ def test_runtime_uses_deepseek_adapter_for_openrouter_deepseek_reasoning(monkeyp
         wake_classifier_model_name="google/gemini-3-flash-preview",
         wake_execution_model_name="google/gemini-3-flash-preview",
         telegram_media_model_name="google/gemini-3-flash-preview",
-        checkpoint_db_path=".opentulpa/test.sqlite",
+        checkpoint_db_path=".kobo/test.sqlite",
     )
 
     assert not openai_calls
@@ -193,7 +193,7 @@ def test_runtime_uses_openrouter_adapter_for_qwen_prompt_cache(monkeypatch) -> N
     monkeypatch.setattr(runtime_module, "ChatOpenAI", _FakeChatOpenAI)
     monkeypatch.delenv("OPENROUTER_APP_TITLE", raising=False)
 
-    runtime_module.OpenTulpaLangGraphRuntime(
+    runtime_module.KoboLangGraphRuntime(
         app_url="http://127.0.0.1:8000",
         openrouter_api_key="test-key",
         openrouter_base_url="https://openrouter.ai/api/v1",
@@ -202,7 +202,7 @@ def test_runtime_uses_openrouter_adapter_for_qwen_prompt_cache(monkeypatch) -> N
         wake_classifier_model_name="google/gemini-3-flash-preview",
         wake_execution_model_name="google/gemini-3-flash-preview",
         telegram_media_model_name="google/gemini-3-flash-preview",
-        checkpoint_db_path=".opentulpa/test.sqlite",
+        checkpoint_db_path=".kobo/test.sqlite",
     )
 
     assert openai_calls
@@ -213,8 +213,8 @@ def test_runtime_uses_openrouter_adapter_for_qwen_prompt_cache(monkeypatch) -> N
     assert qwen_call["streaming"] is True
     assert qwen_call["stream_usage"] is True
     assert qwen_call["default_headers"] == {
-        "HTTP-Referer": "https://github.com/kvyb/opentulpa",
-        "X-OpenRouter-Title": "OpenTulpa",
+        "HTTP-Referer": "https://github.com/kamalstores/kobo",
+        "X-OpenRouter-Title": "Kobo",
     }
     assert "reasoning" not in qwen_call
     assert "openrouter_provider" not in qwen_call
@@ -222,14 +222,14 @@ def test_runtime_uses_openrouter_adapter_for_qwen_prompt_cache(monkeypatch) -> N
 
 
 def test_runtime_deepseek_adapter_can_disable_deepseek_reasoning() -> None:
-    runtime = runtime_module.OpenTulpaLangGraphRuntime(
+    runtime = runtime_module.KoboLangGraphRuntime(
         app_url="http://127.0.0.1:8000",
         openrouter_api_key="test-key",
         openrouter_base_url="https://openrouter.ai/api/v1",
         model_name="deepseek/deepseek-v4-pro",
         reasoning_effort="",
         wake_classifier_model_name="deepseek/deepseek-v4-pro",
-        checkpoint_db_path=".opentulpa/test.sqlite",
+        checkpoint_db_path=".kobo/test.sqlite",
     )
 
     assert type(runtime._model).__name__ == "OpenRouterDeepSeekChatModel"
@@ -291,18 +291,18 @@ def test_runtime_sets_openrouter_app_headers_on_model_init(monkeypatch) -> None:
     monkeypatch.setattr(runtime_module, "init_chat_model", _fake_init_chat_model)
     monkeypatch.delenv("OPENROUTER_APP_TITLE", raising=False)
 
-    runtime_module.OpenTulpaLangGraphRuntime(
+    runtime_module.KoboLangGraphRuntime(
         app_url="http://127.0.0.1:8000",
         openrouter_api_key="test-key",
         openrouter_base_url="https://openrouter.ai/api/v1",
         model_name="openai/gpt-5-mini",
         wake_classifier_model_name="openai/gpt-5-mini",
-        checkpoint_db_path=".opentulpa/test.sqlite",
+        checkpoint_db_path=".kobo/test.sqlite",
     )
 
     assert calls
     assert calls[0]["default_headers"] == {
-        "HTTP-Referer": "https://github.com/kvyb/opentulpa",
-        "X-OpenRouter-Title": "OpenTulpa",
+        "HTTP-Referer": "https://github.com/kamalstores/kobo",
+        "X-OpenRouter-Title": "Kobo",
     }
     assert calls[0]["use_responses_api"] is False

@@ -7,11 +7,11 @@ import re
 from contextlib import suppress
 from typing import Any
 
-from opentulpa.agent.tools.common import (
+from kobo.agent.tools.common import (
     require_customer_id,
     require_thread_id,
 )
-from opentulpa.agent.utils import html_to_text as _html_to_text
+from kobo.agent.utils import html_to_text as _html_to_text
 
 
 def _tool_error_payload(tool_name: str, response: Any) -> dict[str, Any]:
@@ -42,7 +42,7 @@ def _decorate_python_dependency_failure(payload: Any) -> Any:
     safe_payload = dict(payload)
     safe_payload["missing_python_module"] = missing_module
     safe_payload["agent_hint"] = (
-        "Missing Python dependency in .opentulpa/agent_venv. "
+        "Missing Python dependency in .kobo/agent_venv. "
         "If this package is needed for the task, install it in that venv and retry once. "
         "Otherwise report the dependency blocker clearly."
     )
@@ -475,18 +475,18 @@ async def _sync_proactive_heartbeat(
     }
 
 def register_core_tools(runtime: Any) -> dict[str, Any]:
-    from opentulpa.agent.graph_control_tools import register_graph_control_tools
-    from opentulpa.agent.tools.business_knowledge_tools import register_business_knowledge_tools
-    from opentulpa.agent.tools.directive_tools import register_directive_tools
-    from opentulpa.agent.tools.file_tools import register_file_tools
-    from opentulpa.agent.tools.memory_tools import register_memory_tools
-    from opentulpa.agent.tools.owner_update_tools import register_owner_update_tools
-    from opentulpa.agent.tools.server_time_tools import register_server_time_tools
-    from opentulpa.agent.tools.task_tools import register_task_tools
-    from opentulpa.agent.tools.time_profile_tools import register_time_profile_tools
-    from opentulpa.agent.tools.tulpa_workspace_tools import register_tulpa_workspace_tools
-    from opentulpa.agent.tools.user_context_tools import register_user_context_tools
-    from opentulpa.agent.tools.web_tools import register_web_tools
+    from kobo.agent.graph_control_tools import register_graph_control_tools
+    from kobo.agent.tools.business_knowledge_tools import register_business_knowledge_tools
+    from kobo.agent.tools.directive_tools import register_directive_tools
+    from kobo.agent.tools.file_tools import register_file_tools
+    from kobo.agent.tools.memory_tools import register_memory_tools
+    from kobo.agent.tools.owner_update_tools import register_owner_update_tools
+    from kobo.agent.tools.server_time_tools import register_server_time_tools
+    from kobo.agent.tools.task_tools import register_task_tools
+    from kobo.agent.tools.time_profile_tools import register_time_profile_tools
+    from kobo.agent.tools.tulpa_workspace_tools import register_tulpa_workspace_tools
+    from kobo.agent.tools.user_context_tools import register_user_context_tools
+    from kobo.agent.tools.web_tools import register_web_tools
 
     tools: dict[str, Any] = {}
     tools.update(register_owner_update_tools(runtime))

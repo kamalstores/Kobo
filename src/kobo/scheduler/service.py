@@ -14,13 +14,13 @@ from apscheduler.schedulers.asyncio import AsyncIOScheduler  # type: ignore[impo
 from apscheduler.triggers.cron import CronTrigger  # type: ignore[import-untyped]
 from apscheduler.triggers.date import DateTrigger  # type: ignore[import-untyped]
 
-from opentulpa.persistence.sqlite import connect_sqlite
-from opentulpa.scheduler.models import Routine
+from kobo.persistence.sqlite import connect_sqlite
+from kobo.scheduler.models import Routine
 
 logger = logging.getLogger(__name__)
 PROJECT_ROOT = Path(__file__).resolve().parents[3]
 DEBUG_LOG_PATH = PROJECT_ROOT / ".cursor" / "debug.log"
-DEFAULT_DB_PATH = PROJECT_ROOT / ".opentulpa" / "scheduler.db"
+DEFAULT_DB_PATH = PROJECT_ROOT / ".kobo" / "scheduler.db"
 
 
 def _debug_log(*, hypothesis_id: str, location: str, message: str, data: dict[str, Any]) -> None:

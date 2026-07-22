@@ -23,9 +23,9 @@ __pycache__/
 *.log.old
 
 # Agent-generated/user runtime artifacts
-tulpa_stuff/**
-!tulpa_stuff/**/
-tulpa_stuff/artifacts/**
+kobo_stuff/**
+!kobo_stuff/**/
+kobo_stuff/artifacts/**
 tests/e2e/assets/*.xls
 tests/e2e/assets/*.xlsx
 tests/e2e/**/artifacts/**

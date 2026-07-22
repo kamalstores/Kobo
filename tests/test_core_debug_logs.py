@@ -10,8 +10,8 @@ from pathlib import Path
 
 
 def _load_debug_logs_module():
-    module_path = Path(__file__).resolve().parents[1] / "src" / "opentulpa" / "core" / "debug_logs.py"
-    spec = importlib.util.spec_from_file_location("opentulpa.core.debug_logs_under_test", module_path)
+    module_path = Path(__file__).resolve().parents[1] / "src" / "kobo" / "core" / "debug_logs.py"
+    spec = importlib.util.spec_from_file_location("kobo.core.debug_logs_under_test", module_path)
     if spec is None or spec.loader is None:
         raise RuntimeError("failed to load debug_logs module")
     module = importlib.util.module_from_spec(spec)
@@ -22,7 +22,7 @@ def _load_debug_logs_module():
 def test_get_debug_log_path_prefers_cursor_file(monkeypatch, tmp_path: Path) -> None:
     debug_logs = _load_debug_logs_module()
     cursor_path = tmp_path / ".cursor" / "debug.log"
-    app_path = tmp_path / ".opentulpa" / "logs" / "app.log"
+    app_path = tmp_path / ".kobo" / "logs" / "app.log"
     cursor_path.parent.mkdir(parents=True, exist_ok=True)
     app_path.parent.mkdir(parents=True, exist_ok=True)
     cursor_path.write_text("cursor", encoding="utf-8")
@@ -35,7 +35,7 @@ def test_get_debug_log_path_prefers_cursor_file(monkeypatch, tmp_path: Path) -> 
 
 def test_read_debug_log_bytes_falls_back_to_legacy_app_log(monkeypatch, tmp_path: Path) -> None:
     debug_logs = _load_debug_logs_module()
-    app_path = tmp_path / ".opentulpa" / "logs" / "app.log"
+    app_path = tmp_path / ".kobo" / "logs" / "app.log"
     app_path.parent.mkdir(parents=True, exist_ok=True)
     app_path.write_bytes(b"legacy")
 
@@ -55,7 +55,7 @@ def test_iter_available_debug_log_paths_includes_logs_dir_files(
     monkeypatch, tmp_path: Path
 ) -> None:
     debug_logs = _load_debug_logs_module()
-    logs_dir = tmp_path / ".opentulpa" / "logs"
+    logs_dir = tmp_path / ".kobo" / "logs"
     logs_dir.mkdir(parents=True, exist_ok=True)
     behavior_path = logs_dir / "agent_behavior.jsonl"
     behavior_path.write_bytes(b"{}\n")
@@ -70,7 +70,7 @@ def test_iter_available_debug_log_paths_filters_to_lookback(
     monkeypatch, tmp_path: Path
 ) -> None:
     debug_logs = _load_debug_logs_module()
-    logs_dir = tmp_path / ".opentulpa" / "logs" / "server"
+    logs_dir = tmp_path / ".kobo" / "logs" / "server"
     logs_dir.mkdir(parents=True, exist_ok=True)
     now = datetime(2026, 4, 27, 12, 0, tzinfo=UTC)
     recent_path = logs_dir / "server-2026-04-27.log"
@@ -93,7 +93,7 @@ def test_build_debug_logs_archive_bytes_contains_recent_logs(
     monkeypatch, tmp_path: Path
 ) -> None:
     debug_logs = _load_debug_logs_module()
-    logs_dir = tmp_path / ".opentulpa" / "logs" / "server"
+    logs_dir = tmp_path / ".kobo" / "logs" / "server"
     logs_dir.mkdir(parents=True, exist_ok=True)
     now = datetime(2026, 4, 27, 12, 0, tzinfo=UTC)
     server_path = logs_dir / "server-2026-04-27.log"
@@ -106,10 +106,10 @@ def test_build_debug_logs_archive_bytes_contains_recent_logs(
 
     assert archive is not None
     filename, raw_bytes = archive
-    assert filename.startswith("opentulpa-debug-logs-last-7-days-")
+    assert filename.startswith("kobo-debug-logs-last-7-days-")
     with zipfile.ZipFile(io.BytesIO(raw_bytes), mode="r") as zipped:
-        assert ".opentulpa/logs/server/server-2026-04-27.log" in zipped.namelist()
-        assert zipped.read(".opentulpa/logs/server/server-2026-04-27.log") == b"server stderr\n"
+        assert ".kobo/logs/server/server-2026-04-27.log" in zipped.namelist()
+        assert zipped.read(".kobo/logs/server/server-2026-04-27.log") == b"server stderr\n"
 
 
 def test_install_process_output_log_capture_tees_stdout_and_stderr(

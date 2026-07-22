@@ -2,8 +2,8 @@ from __future__ import annotations
 
 from typing import Any
 
-from opentulpa.agent import runtime as runtime_module
-from opentulpa.integrations.headroom import HeadroomService
+from kobo.agent import runtime as runtime_module
+from kobo.integrations.headroom import HeadroomService
 
 
 def test_headroom_service_keeps_small_results_verbatim() -> None:
@@ -92,7 +92,7 @@ def test_runtime_compress_tool_result_for_model_uses_headroom_service(monkeypatc
 
     monkeypatch.setattr(runtime_module, "init_chat_model", _fake_init_chat_model)
 
-    runtime = runtime_module.OpenTulpaLangGraphRuntime(
+    runtime = runtime_module.KoboLangGraphRuntime(
         app_url="http://127.0.0.1:8000",
         openrouter_api_key="test-key",
         openrouter_base_url="https://example.com/v1",
@@ -100,7 +100,7 @@ def test_runtime_compress_tool_result_for_model_uses_headroom_service(monkeypatc
         wake_classifier_model_name="openai/gpt-5-mini",
         wake_execution_model_name="openai/gpt-5-mini",
         telegram_media_model_name="openai/gpt-5-mini",
-        checkpoint_db_path=".opentulpa/test.sqlite",
+        checkpoint_db_path=".kobo/test.sqlite",
     )
 
     result = runtime.compress_tool_result_for_model(

@@ -6,11 +6,11 @@ from typing import Any
 
 import pytest
 
-from opentulpa.agent.runtime import OpenTulpaLangGraphRuntime
+from kobo.agent.runtime import KoboLangGraphRuntime
 
 
-def _runtime_for_updates() -> OpenTulpaLangGraphRuntime:
-    runtime = object.__new__(OpenTulpaLangGraphRuntime)
+def _runtime_for_updates() -> KoboLangGraphRuntime:
+    runtime = object.__new__(KoboLangGraphRuntime)
     runtime._interactive_update_senders_lock = asyncio.Lock()
     runtime._interactive_update_senders = {}
     runtime._interactive_update_sent_keys = {}

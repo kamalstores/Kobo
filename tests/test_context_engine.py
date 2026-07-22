@@ -1,7 +1,7 @@
 from __future__ import annotations
 
-from opentulpa.agent.context_engine import ContextEngine
-from opentulpa.agent.lc_messages import AIMessage, HumanMessage, ToolMessage
+from kobo.agent.context_engine import ContextEngine
+from kobo.agent.lc_messages import AIMessage, HumanMessage, ToolMessage
 
 
 def test_context_engine_keeps_recent_chat_and_tool_windows() -> None:

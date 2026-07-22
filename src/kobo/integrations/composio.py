@@ -5,9 +5,9 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import Any, cast
 
-from opentulpa.core.public_urls import build_public_composio_callback_url
-from opentulpa.integrations.composio_google_sheets import GoogleSheetsComposioAdapter
-from opentulpa.integrations.composio_instagram import InstagramComposioAdapter
+from kobo.core.public_urls import build_public_composio_callback_url
+from kobo.integrations.composio_google_sheets import GoogleSheetsComposioAdapter
+from kobo.integrations.composio_instagram import InstagramComposioAdapter
 
 
 def _load_composio_sdk() -> tuple[type[Any], type[Any]]:
@@ -107,7 +107,7 @@ def _blocked_instagram_send_result(
         "successful": False,
         "error": (
             "Instagram send blocked: no inbound message timestamp was found on the "
-            "verified thread, so OpenTulpa cannot claim the reply window is open."
+            "verified thread, so Kobo cannot claim the reply window is open."
         ),
         "data": {"blocked": True, "preflight": preflight},
     }
@@ -141,7 +141,7 @@ def _tool_result_data_with_preflight(
     if retried_without_reply_to:
         payload["retried_without_reply_to_message_id"] = True
         payload["retry_reason"] = (
-            "Meta rejected reply_to_message_id as invalid, so OpenTulpa retried as a plain DM."
+            "Meta rejected reply_to_message_id as invalid, so Kobo retried as a plain DM."
         )
     if not bool(result.get("successful", False)) and "outside of allowed window" in str(
         result.get("error") or ""
@@ -155,7 +155,7 @@ def _tool_result_data_with_preflight(
 
 @dataclass(slots=True)
 class ComposioService:
-    """Thin wrapper around the Composio SDK for OpenTulpa."""
+    """Thin wrapper around the Composio SDK for Kobo."""
 
     api_key: str
     default_callback_url: str | None = None

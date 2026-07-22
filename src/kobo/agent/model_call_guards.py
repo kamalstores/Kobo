@@ -5,7 +5,7 @@ from __future__ import annotations
 import asyncio
 from typing import Any
 
-from opentulpa.agent.utils import content_to_text
+from kobo.agent.utils import content_to_text
 
 
 class EmptyModelResponseError(RuntimeError):

@@ -8,11 +8,11 @@ from typing import Any
 from langchain_openai import ChatOpenAI
 from pydantic import SecretStr
 
-from opentulpa.agent import model_transport_policy as transport_policy
-from opentulpa.agent.deepseek_chat_model import OpenRouterDeepSeekChatModel
+from kobo.agent import model_transport_policy as transport_policy
+from kobo.agent.deepseek_chat_model import OpenRouterDeepSeekChatModel
 
-DEFAULT_OPENROUTER_APP_REFERER = "https://github.com/kvyb/opentulpa"
-DEFAULT_OPENROUTER_APP_TITLE = "OpenTulpa"
+DEFAULT_OPENROUTER_APP_REFERER = "https://github.com/kamalstores/kobo"
+DEFAULT_OPENROUTER_APP_TITLE = "Kobo"
 
 
 def looks_like_openrouter_base_url(base_url: str | None) -> bool:

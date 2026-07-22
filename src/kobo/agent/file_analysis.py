@@ -19,8 +19,8 @@ from zipfile import BadZipFile, ZipFile
 
 import httpx
 
-from opentulpa.agent.lc_messages import HumanMessage, SystemMessage
-from opentulpa.agent.utils import content_to_text as _content_to_text
+from kobo.agent.lc_messages import HumanMessage, SystemMessage
+from kobo.agent.utils import content_to_text as _content_to_text
 
 _VIDEO_EXTENSIONS = {
     ".mp4",

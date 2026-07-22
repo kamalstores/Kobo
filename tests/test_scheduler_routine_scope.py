@@ -4,10 +4,10 @@ from pathlib import Path
 
 from fastapi.testclient import TestClient
 
-from opentulpa.api.app import create_app
-from opentulpa.context.customer_profiles import CustomerProfileService
-from opentulpa.scheduler.models import Routine
-from opentulpa.scheduler.service import SchedulerService
+from kobo.api.app import create_app
+from kobo.context.customer_profiles import CustomerProfileService
+from kobo.scheduler.models import Routine
+from kobo.scheduler.service import SchedulerService
 
 
 def _mk_client(

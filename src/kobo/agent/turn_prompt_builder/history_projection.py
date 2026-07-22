@@ -5,29 +5,29 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Any
 
-from opentulpa.agent.context_engine import ContextEngine
-from opentulpa.agent.lc_messages import (
+from kobo.agent.context_engine import ContextEngine
+from kobo.agent.lc_messages import (
     AIMessage,
     AnyMessage,
     HumanMessage,
     SystemMessage,
     ToolMessage,
 )
-from opentulpa.agent.models import AgentState
-from opentulpa.agent.tool_message_protocol import (
+from kobo.agent.models import AgentState
+from kobo.agent.tool_message_protocol import (
     collapse_completed_tool_call_segments_for_model as _collapse_completed_tool_call_segments_for_model,
 )
-from opentulpa.agent.tool_message_protocol import (
+from kobo.agent.tool_message_protocol import (
     enforce_tool_message_protocol as _enforce_tool_message_protocol,
 )
-from opentulpa.agent.tool_message_protocol import (
+from kobo.agent.tool_message_protocol import (
     sanitize_history_messages_for_model as _sanitize_history_messages_for_model,
 )
-from opentulpa.agent.turn_prompt_builder.entries import (
+from kobo.agent.turn_prompt_builder.entries import (
     make_retrieved_context_entry,
     select_optional_prompt_entries,
 )
-from opentulpa.agent.turn_prompt_builder.entries import (
+from kobo.agent.turn_prompt_builder.entries import (
     prompt_overhead_tokens as _prompt_overhead_tokens,
 )
 

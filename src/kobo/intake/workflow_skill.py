@@ -5,7 +5,7 @@ from __future__ import annotations
 import json
 from typing import Any
 
-from opentulpa.skills.service import build_skill_markdown
+from kobo.skills.service import build_skill_markdown
 
 
 def workflow_skill_name(workflow_id: str) -> str:

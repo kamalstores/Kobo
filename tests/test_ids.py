@@ -2,7 +2,7 @@ import re
 
 import pytest
 
-from opentulpa.core.ids import new_short_id
+from kobo.core.ids import new_short_id
 
 
 def test_new_short_id_format() -> None:

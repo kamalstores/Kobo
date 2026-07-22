@@ -1,10 +1,10 @@
-"""Sectioned prompt builders for the OpenTulpa agent."""
+"""Sectioned prompt builders for the Kobo agent."""
 
 from __future__ import annotations
 
 from typing import Literal
 
-from opentulpa.agent.lc_messages import SystemMessage
+from kobo.agent.lc_messages import SystemMessage
 
 PromptMode = Literal["literal_chat", "task_chat", "execution", "workflow_setup"]
 
@@ -12,7 +12,7 @@ PromptMode = Literal["literal_chat", "task_chat", "execution", "workflow_setup"]
 # before this marker byte-stable for provider prompt caching (OpenAI/Gemini
 # implicit; Anthropic explicit / automatic via OpenRouter).
 PROMPT_DYNAMIC_BOUNDARY = (
-    "[OPENTULPA_PROMPT_DYNAMIC_BOUNDARY]\n"
+    "[KOBO_PROMPT_DYNAMIC_BOUNDARY]\n"
     "Below this marker, injected context may change every turn (modes, time, "
     "retrieval, skills, aliases)."
 )
@@ -50,7 +50,7 @@ def build_prompt_mode_message(prompt_mode: PromptMode) -> SystemMessage:
             "Schema contract: required_fields are stable machine field ids, not customer-facing labels. Use concise ASCII snake_case ids such as service_name, vehicle_type, date, time, lead_name, phone, quoted_price. Put localized names, wording, and extraction notes in field_guidance or assistant_instructions, not in required_fields.\n"
             "Store compact owner-stated business facts such as prices, service menu highlights, hours, discounts, locations, and policies in business_facts so intake can trust them without requiring a source file. Do not paste uploaded files, spreadsheets, large tables, or extracted document text into business_facts; bind files through knowledge_file_ids instead.\n"
             "field_guidance keys must match required_fields ids. If the sink needs localized or human-readable column labels, express that in sink_config.field_mapping instead of changing required_fields ids.\n"
-            "Local CSV sink contract: use sink_type=local_csv and sink_config.file_path for paths such as tulpa_stuff/bookings.csv. Do not ask for more sink details when the owner already gave a local CSV path.\n"
+            "Local CSV sink contract: use sink_type=local_csv and sink_config.file_path for paths such as kobo_stuff/bookings.csv. Do not ask for more sink details when the owner already gave a local CSV path.\n"
             "Google Sheets sink contract: use sink_type=google_sheets_composio, sink_config.toolkit=googlesheets, sink_config.static_arguments.spreadsheetId for the spreadsheet id, sink_config.static_arguments.sheetName for the worksheet tab, and sink_config.field_mapping from required field ids to output column labels.\n"
             "When uploaded files are used, preserve original source file ids, prepare them with business_knowledge_index, query the business knowledge for representative facts, and bind those source file ids to the final workflow.\n"
             "Only commit the workflow after explicit user confirmation."

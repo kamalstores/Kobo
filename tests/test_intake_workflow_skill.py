@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import json
 
-from opentulpa.intake.workflow_skill import build_intake_workflow_skill
+from kobo.intake.workflow_skill import build_intake_workflow_skill
 
 
 def test_build_intake_workflow_skill_uses_shared_template_for_instagram_and_telegram() -> None:
@@ -21,7 +21,7 @@ def test_build_intake_workflow_skill_uses_shared_template_for_instagram_and_tele
         },
         "knowledge_file_ids": [],
         "sink_type": "local_csv",
-        "sink_config": {"file_path": "tulpa_stuff/bookings.csv"},
+        "sink_config": {"file_path": "kobo_stuff/bookings.csv"},
     }
 
     instagram = build_intake_workflow_skill({**base, "channel": "instagram_dm"})

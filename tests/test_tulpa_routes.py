@@ -3,7 +3,7 @@ from __future__ import annotations
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
 
-from opentulpa.api.routes import tulpa
+from kobo.api.routes import tulpa
 
 
 def test_internal_tulpa_run_terminal_uses_threadpool(monkeypatch) -> None:
@@ -22,7 +22,7 @@ def test_internal_tulpa_run_terminal_uses_threadpool(monkeypatch) -> None:
             "/internal/tulpa/run_terminal",
             json={
                 "command": "agent-context query hello --json",
-                "working_dir": "tulpa_stuff",
+                "working_dir": "kobo_stuff",
                 "timeout_seconds": 45,
             },
         )
@@ -35,7 +35,7 @@ def test_internal_tulpa_run_terminal_uses_threadpool(monkeypatch) -> None:
             "args": (),
             "kwargs": {
                 "command": "agent-context query hello --json",
-                "working_dir": "tulpa_stuff",
+                "working_dir": "kobo_stuff",
                 "timeout_seconds": 45,
             },
         }
@@ -57,14 +57,14 @@ def test_internal_tulpa_run_terminal_returns_400_for_missing_binary(monkeypatch)
             "/internal/tulpa/run_terminal",
             json={
                 "command": "phantom-cli status",
-                "working_dir": "tulpa_stuff",
+                "working_dir": "kobo_stuff",
                 "timeout_seconds": 45,
             },
         )
 
     assert response.status_code == 400
     assert response.json()["command"] == "phantom-cli status"
-    assert response.json()["working_dir"] == "tulpa_stuff"
+    assert response.json()["working_dir"] == "kobo_stuff"
     assert "No such file or directory" in response.json()["detail"]
 
 
@@ -79,10 +79,10 @@ def test_internal_tulpa_read_file_returns_404_for_missing_file(monkeypatch) -> N
     monkeypatch.setattr(tulpa, "sandbox_read_file", _fake_read_file)
 
     with TestClient(app) as client:
-        response = client.get("/internal/tulpa/read_file", params={"path": "tulpa_stuff/missing.txt"})
+        response = client.get("/internal/tulpa/read_file", params={"path": "kobo_stuff/missing.txt"})
 
     assert response.status_code == 404
-    assert response.json()["requested_path"] == "tulpa_stuff/missing.txt"
+    assert response.json()["requested_path"] == "kobo_stuff/missing.txt"
     assert "file not found under allowed read roots" in response.json()["detail"]
     assert "allowed_read_roots" in response.json()
 
@@ -95,7 +95,7 @@ def test_internal_tulpa_read_file_returns_403_for_disallowed_path(monkeypatch) -
         del max_chars
         raise PermissionError(
             "path outside allowed read roots; allowed roots: "
-            "tulpa_stuff/, src/opentulpa/integrations/"
+            "kobo_stuff/, src/kobo/integrations/"
         )
 
     monkeypatch.setattr(tulpa, "sandbox_read_file", _fake_read_file)
